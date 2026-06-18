@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Authentication</title>
+<link rel="stylesheet" href="./main.css">
+</head>
+<body class="auth-body">
+
+<div class="auth-outer">
+
+  <!-- TOP TERMINAL READOUT -->
+  <div class="auth-readout">
+    <span class="auth-readout-item">SYS: <span class="amber">ONLINE</span></span>
+    <span class="auth-readout-item">NODE: <span class="amber">7</span></span>
+    <span class="auth-readout-item">ENC: <span class="amber">AES-256</span></span>
+    <span class="auth-readout-item">UPTIME: <span class="amber" id="uptime">00:00:00</span></span>
+    <span class="auth-readout-item blink">▮ AWAITING INPUT</span>
+  </div>
+
+  <!-- MAIN BOX -->
+  <div class="auth-box">
+
+    <div class="auth-top-row">
+      <span class="auth-hex">⬡</span>
+      <h2>SECURE TERMINAL <span class="blink">_</span></h2>
+    </div>
+
+    <div class="auth-meta">ENCRYPTED NODE ACCESS — v2.1.4 — TRANSMISSION SECURED</div>
+
+    <div class="auth-field-label">&gt;&gt; ENTER ACCESS KEY</div>
+
+    <input
+      id="passcode"
+      type="password"
+      autocomplete="off"
+      placeholder="············"
+      onkeydown="if(event.key==='Enter') checkCode()"
+    >
+
+    <button onclick="checkCode()">AUTHENTICATE</button>
+
+    <div id="logs"></div>
+
+  </div>
+
+  <!-- BOTTOM SESSION LOG -->
+  <div class="auth-bottom">
+
+    <div class="auth-bottom-col">
+      <div class="auth-bottom-title">SESSION LOG</div>
+      <ul class="auth-log-list">
+        <li><span class="log-time">03:42:11</span> node_7 connected</li>
+        <li><span class="log-time">03:43:05</span> auth requested</li>
+        <li><span class="log-time">04:01:38</span> signal rerouted</li>
+        <li><span class="log-time">04:17:22</span> idle timeout</li>
+        <li><span class="log-time">05:03:44</span> node_7 reconnected</li>
+        <li><span class="log-time">05:04:01</span> tunnel active</li>
+        <li><span class="log-time">05:31:19</span> packet loss 0%</li>
+        <li><span class="log-time">06:12:55</span> key rotated</li>
+        <li><span class="log-time">07:44:08</span> node_3 dropped</li>
+        <li><span class="log-time">08:00:01</span> pong received</li>
+        <li><span class="log-time">09:11:33</span> encrypted msg ×3</li>
+        <li><span class="log-time">09:44:21</span> awaiting auth <span class="blink">_</span></li>
+      </ul>
+    </div>
+
+    <div class="auth-bottom-col">
+      <div class="auth-bottom-title">NODE STATUS</div>
+      <div class="auth-status-grid">
+        <div class="auth-status-row"><span>NODE_7</span><span class="amber">ONLINE</span></div>
+        <div class="auth-status-row"><span>NODE_3</span><span class="dimtext">OFFLINE</span></div>
+        <div class="auth-status-row"><span>NODE_12</span><span class="amber">STANDBY</span></div>
+        <div class="auth-status-row"><span>CIPHER</span><span>AES-256</span></div>
+        <div class="auth-status-row"><span>CHANNEL</span><span>SECURE</span></div>
+        <div class="auth-status-row"><span>PING</span><span>14ms</span></div>
+        <div class="auth-status-row"><span>PROTOCOL</span><span>TLS 1.3</span></div>
+        <div class="auth-status-row"><span>ATTEMPTS</span><span class="dimtext">0 / 3</span></div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="./app.js"></script>
+<script>
+// Uptime counter
+let s = 0;
+setInterval(() => {
+  s++;
+  const h = String(Math.floor(s/3600)).padStart(2,'0');
+  const m = String(Math.floor((s%3600)/60)).padStart(2,'0');
+  const sec = String(s%60).padStart(2,'0');
+  const el = document.getElementById('uptime');
+  if(el) el.textContent = h+':'+m+':'+sec;
+}, 1000);
+</script>
+</body>
+</html>
