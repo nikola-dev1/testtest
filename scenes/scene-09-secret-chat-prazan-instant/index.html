@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Channel</title>
+<link rel="stylesheet" href="./main.css">
+</head>
+<body class="chat-body">
+
+<div class="chat-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-header">
+      <span class="auth-hex">⬡</span> SECURE CHANNEL
+    </div>
+
+    <div class="chat-room active">
+      <span class="room-dot"></span>
+      test_chat
+      <span class="room-badge">LIVE</span>
+    </div>
+
+    <div class="sidebar-section-label">SESSION LOG</div>
+    <ul class="session-log">
+      <li><span class="log-time">03:42</span> node_7 connected</li>
+      <li><span class="log-time">03:43</span> auth confirmed</li>
+      <li><span class="log-time">04:01</span> signal rerouted</li>
+      <li><span class="log-time">04:17</span> idle timeout</li>
+      <li><span class="log-time">05:03</span> node_7 reconnected</li>
+      <li><span class="log-time">05:04</span> tunnel active</li>
+      <li><span class="log-time">05:31</span> packet loss 0%</li>
+      <li><span class="log-time">06:12</span> key rotated</li>
+      <li><span class="log-time">07:44</span> node_3 dropped</li>
+      <li><span class="log-time">08:00</span> pong received</li>
+      <li><span class="log-time">09:11</span> encrypted msg ×3</li>
+      <li><span class="log-time">09:44</span> session open <span class="blink">_</span></li>
+    </ul>
+
+    <div class="sidebar-section-label">STATUS</div>
+    <div class="status-block">
+      <div class="status-row"><span class="status-key">NODE</span><span class="status-val online">ONLINE</span></div>
+      <div class="status-row"><span class="status-key">ENCRYPTION</span><span class="status-val">AES-256</span></div>
+      <div class="status-row"><span class="status-key">CHANNEL</span><span class="status-val">SECURE</span></div>
+      <div class="status-row"><span class="status-key">PROTOCOL</span><span class="status-val">TLS 1.3</span></div>
+      <div class="status-row"><span class="status-key">PING</span><span class="status-val">14ms</span></div>
+      <div class="status-row"><span class="status-key">UPTIME</span><span class="status-val" id="chatUptime">00:00:00</span></div>
+    </div>
+
+    <div class="sidebar-section-label">ACTIVE NODES</div>
+    <div class="status-block">
+      <div class="status-row"><span class="status-key">NODE_7</span><span class="status-val online">● ONLINE</span></div>
+      <div class="status-row"><span class="status-key">NODE_3</span><span class="status-val offline">● OFFLINE</span></div>
+      <div class="status-row"><span class="status-key">NODE_12</span><span class="status-val standby">● STANDBY</span></div>
+      <div class="status-row"><span class="status-key">NODE_1</span><span class="status-val online">● ONLINE</span></div>
+      <div class="status-row"><span class="status-key">GATEWAY</span><span class="status-val online">● ACTIVE</span></div>
+    </div>
+
+    <div class="sidebar-section-label">ENCRYPTION</div>
+    <div class="status-block">
+      <div class="status-row"><span class="status-key">CIPHER</span><span class="status-val">AES-256</span></div>
+      <div class="status-row"><span class="status-key">KEY LEN</span><span class="status-val">256-bit</span></div>
+      <div class="status-row"><span class="status-key">HASH</span><span class="status-val">SHA-512</span></div>
+      <div class="status-row"><span class="status-key">SESSION</span><span class="status-val">9f3a..b2e1</span></div>
+      <div class="status-row"><span class="status-key">EXPIRES</span><span class="status-val">23:59:59</span></div>
+    </div>
+
+  </aside>
+
+  <!-- MAIN CHAT -->
+  <main class="chat-container">
+
+    <div class="chat-topbar">
+      <div class="chat-channel-name">
+        <span class="room-dot"></span> test_chat
+      </div>
+      <div class="chat-topbar-meta">
+        ENCRYPTED SESSION ACTIVE <span class="blink">_</span>
+      </div>
+    </div>
+
+    <div id="messages" class="messages"></div>
+
+    <div id="typing" class="typing">
+      <span class="typing-label">SVEDENBORG TYPING</span>
+      <span class="typing-dots">
+        <span>.</span><span>.</span><span>.</span>
+      </span>
+    </div>
+
+    <div class="chat-input-bar">
+      <span class="prompt">&gt;</span>
+      <input
+        id="msgInput"
+        class="chat-input"
+        type="text"
+        placeholder="ENTER MESSAGE..."
+        autocomplete="off"
+        onkeydown="if(event.key==='Enter') sendMessage()"
+      >
+      <button class="chat-send-btn" onclick="sendMessage()">SEND</button>
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+/* =========================================================
+   PRAZAN CET — nema preload poruka, nema odgovora.
+   Sta god glumac posalje ide kao ETAR:
+   ========================================================= */
+
+const YOU_NAME = "ETAR";
+
+function addMessage(text, type, username){
+  const wrap = document.getElementById("messages");
+  if(!wrap) return;
+  const div = document.createElement("div");
+  div.className = `message ${type}`;
+  div.setAttribute("data-user", username);
+  div.innerText = text;
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+function sendMessage(){
+  const input = document.getElementById("msgInput");
+  const text = input.value;
+  if(!text.trim()) return;
+
+  addMessage(text, "me", YOU_NAME);
+  input.value = "";
+  // Nema odgovora - samo ETAR salje, ovo je prazan cet.
+}
+
+// Boot sequence - pokrece se odmah kad se stranica otvori
+const bootLines = [
+  "SECURE CHANNEL v2.1.4",
+  "› loading AES-256 encryption module.......... [OK]",
+  "› establishing secure tunnel.................. [OK]",
+  "› 9f3ab2e1c04d7f83a1e5029c3b78d641f920e047",
+  "› verifying node integrity.................... [OK]",
+  "› synchronizing session keys.................. [OK]",
+  "› 0x4f2a 0x91cc 0x03e7 0x7b14 0xa9d3 0x5801",
+  "› channel encrypted........................... [OK]",
+  "─────────────────────────────────────────────────",
+  "  SESSION READY — awaiting transmission",
+];
+
+const wrap = document.getElementById('messages');
+let i = 0;
+const boot = setInterval(() => {
+  if(i >= bootLines.length){
+    clearInterval(boot);
+    return;
+  }
+  const div = document.createElement('div');
+  div.className = 'boot-line';
+  div.textContent = bootLines[i];
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+  i++;
+}, 10);
+
+// Uptime brojac (relativan, ne pokazuje realno vreme/datum)
+let s = 0;
+setInterval(() => {
+  s++;
+  const h = String(Math.floor(s/3600)).padStart(2,'0');
+  const m = String(Math.floor((s%3600)/60)).padStart(2,'0');
+  const sec = String(s%60).padStart(2,'0');
+  const el = document.getElementById('chatUptime');
+  if(el) el.textContent = h+':'+m+':'+sec;
+}, 1000);
+</script>
+</body>
+</html>

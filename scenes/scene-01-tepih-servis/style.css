@@ -1,0 +1,695 @@
+/* =========================================================
+   TEPIH SERVIS - stylesheet
+   ========================================================= */
+
+:root {
+  --purple-darkest: #4a1c66;
+  --purple-dark: #5e2a82;
+  --purple-mid: #7a3da3;
+  --purple-soft: #9b6bc2;
+  --purple-bg-light: #e9d9f3;
+  --page-bg: #f3eaf8;
+  --box-border: #c9a8de;
+  --text-dark: #4f4f4f;
+  --green-check: #4f9e3c;
+  --gold-line: #d8b9ef;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--page-bg);
+  color: var(--text-dark);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+a {
+  color: var(--purple-dark);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+.site-header {
+  position: relative;
+  background: linear-gradient(110deg, #b585d9 0%, #ddc4ee 30%, #f5edfb 55%, #ead2f5 80%, #c9a3e6 100%);
+  overflow: hidden;
+  border-bottom: 4px solid var(--purple-darkest);
+}
+
+.header-bubbles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 6% 75%, rgba(255,255,255,0.6) 0 45px, transparent 46px),
+    radial-gradient(circle at 16% 30%, rgba(255,255,255,0.4) 0 65px, transparent 66px),
+    radial-gradient(circle at 30% 85%, rgba(255,255,255,0.5) 0 28px, transparent 29px),
+    radial-gradient(circle at 4% 15%, rgba(255,255,255,0.35) 0 32px, transparent 33px),
+    radial-gradient(circle at 38% 18%, rgba(255,255,255,0.3) 0 22px, transparent 23px),
+    radial-gradient(circle at 92% 80%, rgba(255,255,255,0.35) 0 50px, transparent 51px),
+    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.3) 0 30px, transparent 31px);
+}
+
+.header-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 1500px;
+  margin: 0 auto;
+  min-height: 210px;
+}
+
+.header-img {
+  flex: 0 0 320px;
+  align-self: stretch;
+  overflow: hidden;
+}
+
+.header-img img {
+  width: 100%;
+  height: 210px;
+  object-fit: contain;
+  object-position: bottom center;
+}
+
+.header-img-left img {
+  object-position: left center;
+}
+
+.header-img-right img {
+  object-position: right center;
+}
+
+.header-title {
+  flex: 1 1 auto;
+  text-align: center;
+  padding: 10px 20px;
+  transform: translateX(-28px);
+}
+
+.header-title h1 {
+  font-family: "Arial Black", Arial, sans-serif;
+  font-weight: 900;
+  font-size: clamp(40px, 7vw, 92px);
+  letter-spacing: 5px;
+  line-height: 1;
+  background: linear-gradient(180deg, #e7caf6 0%, #a85fd6 30%, #6b2f8f 60%, #3d1556 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow:
+    2px 2px 0 rgba(255,255,255,0.65),
+    -1px -1px 0 rgba(74,28,102,0.45);
+  -webkit-text-stroke: 1px rgba(74,28,102,0.4);
+}
+
+.header-title h1 span {
+  display: inline;
+}
+
+.tagline {
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-size: clamp(16px, 2.2vw, 26px);
+  color: var(--purple-darkest);
+  margin-top: 6px;
+  letter-spacing: 1px;
+}
+
+/* =========================================================
+   NAVIGACIJA
+   ========================================================= */
+.main-nav {
+  background: var(--purple-darkest);
+  border-bottom: 3px solid var(--purple-bg-light);
+}
+
+.main-nav ul {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding-left: 264px;
+  display: flex;
+  list-style: none;
+  flex-wrap: wrap;
+}
+
+.main-nav li {
+  border-right: 1px solid rgba(255,255,255,0.15);
+}
+
+.main-nav li:last-child {
+  border-right: none;
+}
+
+.main-nav a {
+  display: block;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 15px;
+  letter-spacing: 1px;
+  padding: 16px 28px;
+  text-transform: uppercase;
+  transition: background 0.2s ease;
+}
+
+.main-nav a:hover,
+.main-nav a.active {
+  background: var(--purple-mid);
+  text-decoration: none;
+}
+
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  margin: 8px auto;
+  background: transparent;
+  border: 2px solid #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #fff;
+  margin: 0 auto;
+}
+
+/* =========================================================
+   LAYOUT
+   ========================================================= */
+.page-wrap {
+  max-width: 1500px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.sidebar {
+  flex: 0 0 280px;
+  padding: 18px 14px;
+}
+
+.sidebar-left {
+  border-right: 1px solid var(--box-border);
+}
+
+.sidebar-right {
+  border-left: 1px solid var(--box-border);
+}
+
+.content {
+  flex: 1 1 auto;
+  padding: 18px 24px;
+  min-width: 0;
+}
+
+/* =========================================================
+   BOXES (zajednicki stil za sidebar boxove)
+   ========================================================= */
+.box {
+  margin-bottom: 18px;
+  border: 2px solid var(--box-border);
+  outline: 4px solid #ffd500;
+  background: #ffffff;
+}
+
+.box-title {
+  background: var(--purple-dark);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 11px 14px;
+}
+
+.box-body {
+  padding: 12px 14px;
+  text-align: center;
+}
+
+/* Naše usluge */
+.services-list {
+  list-style: none;
+  padding: 6px 14px 12px;
+}
+
+.services-list li {
+  padding: 7px 0;
+  border-bottom: 1px dashed var(--gold-line);
+  font-size: 14px;
+}
+
+.services-list li:last-child {
+  border-bottom: none;
+}
+
+.services-list .arrow {
+  color: var(--purple-mid);
+  font-size: 11px;
+  margin-right: 8px;
+}
+
+/* Aktuelno */
+.kombi-img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.aktuelno-body p {
+  font-size: 14px;
+}
+
+.gratis {
+  color: var(--purple-mid);
+  font-weight: bold;
+  font-size: 20px;
+  margin-top: 4px;
+}
+
+/* Brojac poseta */
+.brojac-body {
+  background: #fafafa;
+}
+
+.brojac {
+  display: inline-block;
+  background: #1a1a1a;
+  color: #5fff5f;
+  font-family: "Courier New", monospace;
+  font-weight: bold;
+  font-size: 24px;
+  letter-spacing: 4px;
+  padding: 8px 12px;
+  border: 2px solid #333;
+  margin-bottom: 8px;
+}
+
+/* =========================================================
+   GLAVNI SADRZAJ
+   ========================================================= */
+.welcome-title {
+  color: var(--purple-dark);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--gold-line);
+  margin-bottom: 14px;
+}
+
+.welcome-flex {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.welcome-text {
+  flex: 1 1 auto;
+}
+
+.welcome-text p {
+  margin-bottom: 10px;
+}
+
+.priority-title {
+  color: var(--purple-mid);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  margin-top: 14px;
+}
+
+.welcome-img {
+  flex: 0 0 280px;
+}
+
+.welcome-img img {
+  border: 4px solid #ffffff;
+  outline: 1px solid var(--box-border);
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+/* Section bars (Zasto izabrati nas / Galerija radova) */
+.section-bar {
+  background: var(--purple-dark);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 11px 16px;
+  margin: 22px 0 14px;
+}
+
+/* Zasto izabrati nas */
+.why-flex {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.why-list {
+  list-style: none;
+  flex: 1 1 auto;
+}
+
+.why-list li {
+  padding: 6px 0;
+  font-size: 14px;
+}
+
+.why-list .check {
+  color: var(--green-check);
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.badge {
+  flex: 0 0 170px;
+  display: flex;
+  justify-content: center;
+}
+
+.badge-star {
+  position: relative;
+  width: 170px;
+  height: 170px;
+  background: linear-gradient(135deg, var(--purple-mid), var(--purple-darkest));
+  clip-path: polygon(
+    50% 0%, 61% 12%, 75% 4%, 79% 18%, 94% 14%, 92% 30%,
+    100% 38%, 88% 50%, 100% 62%, 92% 70%, 94% 86%, 79% 82%,
+    75% 96%, 61% 88%, 50% 100%, 39% 88%, 25% 96%, 21% 82%,
+    6% 86%, 8% 70%, 0% 62%, 12% 50%, 0% 38%, 8% 30%,
+    6% 14%, 21% 18%, 25% 4%, 39% 12%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.badge-star span {
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 1.4;
+  letter-spacing: 0.5px;
+  padding: 10px;
+}
+
+/* Galerija */
+.gallery {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.gallery-item {
+  flex: 1 1 calc(25% - 12px);
+  min-width: 110px;
+  border: 1px solid var(--box-border);
+  background: #ffffff;
+  padding: 4px;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+
+.more-link {
+  margin-top: 12px;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+/* =========================================================
+   DESNA KOLONA
+   ========================================================= */
+
+   #pigeon{
+font-size:70px;
+cursor:pointer;
+transition:1s;
+}
+.pigeon{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+}
+
+.pigeon img{
+    width:60px; /* ili koliko već */
+    transition: transform .3s ease;
+}
+
+/* hover efekat */
+.pigeon:hover img{
+    transform: scale(1.12) rotate(-3deg);
+    animation: wobble .5s ease infinite alternate;
+}
+
+@keyframes wobble{
+    from{
+        transform: scale(1.12) rotate(-3deg);
+    }
+    to{
+        transform: scale(1.18) rotate(3deg);
+    }
+}
+
+/* kada poleti */
+.pigeon.flying{
+    pointer-events:none;
+    z-index:9999;
+}
+
+.pigeon.flying img{
+    animation:none;
+}
+
+.contact-list {
+  list-style: none;
+  padding: 12px 14px;
+}
+
+.contact-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+.contact-list .icon {
+  flex: 0 0 28px;
+  height: 28px;
+  width: 28px;
+  background: var(--purple-mid);
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+
+.designed-by {
+  text-align: center;
+  padding: 14px;
+}
+
+.designer-logo {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  margin: 0 auto 8px;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+.site-footer {
+  background: var(--purple-darkest);
+  color: #d9c2ef;
+  text-align: center;
+  padding: 16px 14px;
+  margin-top: 10px;
+}
+
+.footer-nav {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.footer-nav a {
+  color: #ffffff;
+  font-size: 13px;
+}
+
+.footer-nav li {
+  color: var(--purple-soft);
+  font-size: 13px;
+}
+
+.copyright {
+  font-size: 12px;
+  color: #c9a8de;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 1100px) {
+  .header-img {
+    display: none;
+  }
+
+  .header-title h1 {
+    font-size: clamp(40px, 12vw, 70px);
+  }
+}
+
+@media (max-width: 900px) {
+  .main-nav ul {
+    padding-left: 0;
+  }
+
+  .page-wrap {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    flex: 1 1 auto;
+    width: 100%;
+    border: none !important;
+  }
+
+  .content {
+    order: -1;
+  }
+
+  .welcome-flex {
+    flex-direction: column;
+  }
+
+  .welcome-img {
+    flex: none;
+    width: 100%;
+  }
+
+  .why-flex {
+    flex-direction: column;
+  }
+
+  .badge {
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  .nav-toggle {
+    display: flex;
+  }
+
+  .main-nav ul {
+    flex-direction: column;
+    display: none;
+  }
+
+  .main-nav ul.open {
+    display: flex;
+  }
+
+  .main-nav li {
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .gallery-item {
+    flex: 1 1 calc(50% - 12px);
+  }
+
+  .tagline {
+    font-size: 14px;
+  }
+  
+  
+}
+
+.reviews-list {
+    list-style: none;
+    padding: 6px 14px 12px;
+  }
+
+  .review-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--gold-line);
+    text-align: left;
+  }
+
+  .review-item:last-child {
+    border-bottom: none;
+  }
+
+  .review-img {
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--purple-soft);
+  }
+
+  .review-item strong {
+    font-size: 13px;
+    color: var(--purple-darkest);
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  .review-item p {
+    font-size: 12px;
+    color: #555;
+    line-height: 1.55;
+    font-style: italic;
+  }
