@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tepih Servis - Čistoća koja se vidi, kvalitet koji traje</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="site-header">
+    <div class="header-bubbles" aria-hidden="true"></div>
+    <div class="header-inner">
+      <div class="header-img header-img-left">
+        <img src="images/header-radnik.png" alt="Radnik sa mašinom za pranje tepiha">
+      </div>
+      <div class="header-title">
+        <h1>TEPIH <span>SERVIS</span></h1>
+        <p class="tagline">čistoća koja se vidi, kvalitet koji traje</p>
+      </div>
+      <div class="header-img header-img-right">
+        <img src="images/header-tepisi.jpg" alt="Uvijeni tepisi">
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== NAVIGACIJA ===================== -->
+  <nav class="main-nav">
+    <button class="nav-toggle" id="navToggle" aria-label="Otvori meni" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul id="navList">
+      <li><a href="#pocetna" class="active">POČETNA</a></li>
+      <li><a href="#onama">O NAMA</a></li>
+      <li><a href="./usluge.html" >USLUGE</a></li>            
+
+      <li><a href="#cenovnik">CENOVNIK</a></li>
+      <li><a href="#galerija">GALERIJA</a></li>
+      <li><a href="#saveti">SAVETI</a></li>
+      <li><a href="#kontakt">KONTAKT</a></li>
+    </ul>
+  </nav>
+
+  <!-- ===================== GLAVNI SADRŽAJ ===================== -->
+  <div class="page-wrap">
+
+    <!-- LEVI SIDEBAR -->
+    <aside class="sidebar sidebar-left">
+
+      <div class="box">
+        <h2 class="box-title">NAŠE USLUGE</h2>
+        <ul class="services-list">
+          <li><span class="arrow">▶</span> Pranje tepiha</li>
+          <li><span class="arrow">▶</span> Pranje staza</li>
+          <li><span class="arrow">▶</span> Dubinsko pranje</li>
+          <li><span class="arrow">▶</span> Skidanje fleka</li>
+          <li><span class="arrow">▶</span> Pranje nameštaja</li>
+          <li><span class="arrow">▶</span> Preuzimanje i dostava</li>
+        </ul>
+      </div>
+
+      <div class="box">
+        <h2 class="box-title">AKTUELNO</h2>
+        <div class="box-body aktuelno-body">
+          <img src="images/kombi.png" alt="Kombi za preuzimanje i dostavu tepiha" class="kombi-img">
+          <p>Preuzimanje i dostava tepiha na kućnu adresu</p>
+          <p class="gratis">GRATIS!</p>
+        </div>
+      </div>
+
+      <div class="box">
+        <h2 class="box-title">BROJAČ POSETA</h2>
+        <div class="box-body brojac-body">
+          <div class="brojac" id="brojac">0010161</div>
+          <p>Hvala na poseti!</p>
+        </div>
+      </div>
+
+      <div class="box">
+        <h2 class="box-title">ZAŠTO IZABRATI NAS?</h2>
+        <ul class="services-list">
+          <li><span class="check" style="color:#4f9e3c;">✔</span> Višegodišnje iskustvo</li>
+          <li><span class="check" style="color:#4f9e3c;">✔</span> Kvalitetna oprema i sredstva</li>
+          <li><span class="check" style="color:#4f9e3c;">✔</span> Povoljne cene</li>
+          <li><span class="check" style="color:#4f9e3c;">✔</span> Brza i efikasna usluga</li>
+          <li><span class="check" style="color:#4f9e3c;">✔</span> Preuzimanje i dostava GRATIS</li>
+        </ul>
+      </div>
+
+      <div class="box">
+        <h2 class="box-title">SAVET STRUČNJAKA</h2>
+        <div class="box-body">
+          <img src="images/usisivac.png" alt="Usisivač" style="width:100%;height:90px;object-fit:contain;margin-bottom:10px;">
+        </div>
+        <ul class="services-list">
+          <li><span class="arrow" style="font-size:16px;">🔵</span> Redovno usisavajte tepih barem 2x nedeljno.</li>
+          <li><span class="arrow" style="font-size:16px;">☀️</span> Izbegavajte direktno izlaganje suncu kako boje ne bi izbledele.</li>
+          <li><span class="arrow" style="font-size:16px;">❗</span> Fleke odmah tretirajte, ne dozvolite da se osuše!</li>
+        </ul>
+      </div>
+
+      <div class="box">
+        <h2 class="box-title">AKCIJA MESECA</h2>
+        <div class="box-body" style="background:#fff9d6;text-align:center;padding:16px 14px;">
+          <div style="font-size:52px;font-weight:900;color:#c9a000;line-height:1;">10%</div>
+          <div style="font-size:18px;font-weight:800;color:#4a1c66;">POPUSTA</div>
+          <p style="font-size:13px;color:#4a1c66;margin:8px 0;">na sve usluge pranja nameštaja i tepiha</p>
+          <p style="font-size:12px;color:#888;font-style:italic;">važi do kraja meseca!</p>
+        </div>
+      </div>
+
+      <!-- NOVA SEKCIJA 1: PITANJA I ODGOVORI -->
+
+      <div class="box">
+        <h2 class="box-title">ČESTO POSTAVLJANA PITANJA</h2>
+        <ul class="services-list">
+          <li>
+            <span class="arrow">▶</span>
+            <strong>Koliko traje pranje?</strong><br>
+            <span style="font-size:13px;color:#666;">Najčešće 24–48h, zavisno od vrste i dimenzija tepiha.</span>
+          </li>
+          <li>
+            <span class="arrow">▶</span>
+            <strong>Da li dolazite na adresu?</strong><br>
+            <span style="font-size:13px;color:#666;">Da! Preuzimanje i dostava su potpuno besplatni.</span>
+          </li>
+          <li>
+            <span class="arrow">▶</span>
+            <strong>Perete li antikne tepihe?</strong><br>
+            <span style="font-size:13px;color:#666;">Da, koristimo specijalna sredstva za osetljive tkanine.</span>
+          </li>
+          <li>
+            <span class="arrow">▶</span>
+            <strong>Kako da zakažem?</strong><br>
+            <span style="font-size:13px;color:#666;">Pozovite nas ili pošaljite mejl — odgovaramo isti dan.</span>
+          </li>
+        </ul>
+      </div>
+      
+      
+      <!-- NOVA SEKCIJA 2: NAŠI PARTNERI -->
+      <div class="box">
+        <h2 class="box-title">NAŠI PARTNERI</h2>
+        <div class="box-body" style="text-align:left;padding:10px 14px;">
+          <ul class="services-list" style="padding:0;">
+            <li style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed #d8b9ef;">
+              <div style="flex:0 0 36px;height:36px;background:#e9d9f3;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:11px;color:#5e2a82;letter-spacing:0.5px;">KTX</div>
+              <div>
+                <div style="font-size:13px;font-weight:700;color:#4a1c66;">Karpet Tex</div>
+                <div style="font-size:11px;color:#888;">Uvoznik premium tepiha</div>
+              </div>
+            </li>
+            <li style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed #d8b9ef;">
+              <div style="flex:0 0 36px;height:36px;background:#e9d9f3;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:11px;color:#5e2a82;letter-spacing:0.5px;">ECO</div>
+              <div>
+                <div style="font-size:13px;font-weight:700;color:#4a1c66;">EcoWash Pro</div>
+                <div style="font-size:11px;color:#888;">Ekološka sredstva za pranje</div>
+              </div>
+            </li>
+            <li style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed #d8b9ef;">
+              <div style="flex:0 0 36px;height:36px;background:#e9d9f3;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:11px;color:#5e2a82;letter-spacing:0.5px;">HIT</div>
+              <div>
+                <div style="font-size:13px;font-weight:700;color:#4a1c66;">Hita d.o.o.</div>
+                <div style="font-size:11px;color:#888;">Profesionalne mašine za pranje</div>
+              </div>
+            </li>
+            <li style="display:flex;align-items:center;gap:10px;padding:8px 0;">
+              <div style="flex:0 0 36px;height:36px;background:#e9d9f3;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:11px;color:#5e2a82;letter-spacing:0.5px;">DOM</div>
+              <div>
+                <div style="font-size:13px;font-weight:700;color:#4a1c66;">Dom Centar</div>
+                <div style="font-size:11px;color:#888;">Partnerski prodajni objekat</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- CENTRALNA KOLONA  -->
+    <main class="content">
+
+      <h2 class="welcome-title">DOBRODOŠLI NA NAŠ SAJT!</h2>
+
+      <div class="welcome-flex">
+        <div class="welcome-text">
+          <p>Tepih servis je firma koja se bavi profesionalnim pranjem i održavanjem svih vrsta tepiha, staza, lišona i tapaciranog nameštaja.</p>
+          <p>Naš cilj je da Vaš tepih bude savršeno čist, prijatan i dugotrajan. Koristimo najsavremeniju opremu i ekološki prihvatljiva sredstva za pranje.</p>
+          <h3 class="priority-title">ČISTOĆA VAŠEG DOMA JE NAŠ PRIORITET!</h3>
+        </div>
+        <div class="welcome-img">
+          <img src="images/pranje-tepiha.jpg" alt="Profesionalno pranje tepiha">
+        </div>
+      </div>
+
+      <h2 class="section-bar">ZAŠTO IZABRATI NAS?</h2>
+
+      <div class="why-flex">
+        <ul class="why-list">
+          <li><span class="check">✔</span> Višegodišnje iskustvo</li>
+          <li><span class="check">✔</span> Kvalitetna oprema i sredstva</li>
+          <li><span class="check">✔</span> Povoljne cene</li>
+          <li><span class="check">✔</span> Brza i efikasna usluga</li>
+          <li><span class="check">✔</span> Preuzimanje i dostava GRATIS</li>
+        </ul>
+        <div class="badge">
+          <div class="badge-star">
+            <span>VAŠ TEPIH<br>U NAJBOLJIM<br>RUKAMA!</span>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="section-bar">GALERIJA RADOVA</h2>
+
+      <div class="gallery">
+        <a href="images/galerija-1.jpg" class="gallery-item"><img src="images/galerija-1.jpg" alt="Pranje tepiha - slika 1"></a>
+        <a href="images/galerija-2.jpg" class="gallery-item"><img src="images/galerija-2.jpg" alt="Tepih u dnevnoj sobi - slika 2"></a>
+        <a href="images/galerija-3.jpg" class="gallery-item"><img src="images/galerija-3.jpg" alt="Dubinsko pranje tepiha - slika 3"></a>
+        <a href="images/galerija-4.jpg" class="gallery-item"><img src="images/galerija-4.jpg" alt="Očišćen tepih - slika 4"></a>
+      </div>
+
+      <p class="more-link"><a href="#galerija">» pogledajte više slika</a></p>
+      
+      <h2 class="section-bar">CENOVNIK USLUGA</h2>
+
+      <table style="width:100%;border-collapse:collapse;font-size:14px;margin-bottom:10px;">
+        <thead>
+          <tr>
+            <th style="background:#5e2a82;color:#fff;padding:10px 14px;text-align:left;font-weight:800;letter-spacing:1px;border:1px solid #4a1c66;">USLUGA</th>
+            <th style="background:#5e2a82;color:#fff;padding:10px 14px;text-align:center;font-weight:800;letter-spacing:1px;border:1px solid #4a1c66;">CENA (RSD/m²)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:9px 14px;border:1px solid #c9a8de;background:#fff;">Pranje tepiha</td>
+            <td style="padding:9px 14px;border:1px solid #c9a8de;background:#fff;text-align:center;font-weight:bold;">250</td>
+          </tr>
+          <tr>
+            <td style="padding:9px 14px;border:1px solid #c9a8de;background:#e9d9f3;">Pranje staza</td>
+            <td style="padding:9px 14px;border:1px solid #c9a8de;background:#e9d9f3;text-align:center;font-weight:bold;">220</td>
+          </tr>
+          <tr>
+            <td style="padding:9px 14px;border:1px solid #c9a8de;background:#fff;">Dubinsko pranje</td>
+            <td style="padding:9px 14px;border:1px solid #c9a8de;background:#fff;text-align:center;font-weight:bold;">300</td>
+          </tr>
+          <tr>
+            <td style="padding:9px 14px;border:1px solid #c9a8de;background:#e9d9f3;">Skidanje fleka</td>
+            <td style="padding:9px 14px;border:1px solid #c9a8de;background:#e9d9f3;text-align:center;font-weight:bold;">od 150</td>
+          </tr>
+          <tr>
+            <td style="padding:9px 14px;border:1px solid #c9a8de;background:#fff;">Pranje nameštaja</td>
+            <td style="padding:9px 14px;border:1px solid #c9a8de;background:#fff;text-align:center;font-weight:bold;">350</td>
+          </tr>
+          <tr>
+            <td style="padding:9px 14px;border:1px solid #c9a8de;background:#e9d9f3;">Preuzimanje i dostava</td>
+            <td style="padding:9px 14px;border:1px solid #c9a8de;background:#e9d9f3;text-align:center;font-weight:900;color:#7a3da3;font-size:15px;">GRATIS</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:13px;color:#666;font-style:italic;margin-bottom:20px;">Cene su informativnog karaktera. Za veće površine odobravamo popuste! Kontaktirajte nas za tačnu procenu.</p>
+
+      <h2 class="section-bar">O NAMA</h2>
+      <div style="display:flex;gap:20px;align-items:flex-start;margin-top:12px;margin-bottom:20px;">
+        <div style="flex:1 1 auto;font-size:14px;line-height:1.7;">
+          <p style="margin-bottom:10px;">Tepih servis je porodična firma sa višegodišnjim iskustvom u održavanju tepiha i tapaciranog nameštaja. Naš cilj je da Vaš <span style="background:#f5c800;padding:0 3px;">dom zasija</span> — prijatan i dugotrajan.</p>
+          <p style="margin-bottom:10px;">Koristimo najsavremeniju opremu i ekološki prihvatljiva sredstva koja garantuju vrhunske rezultate bez oštećenja tkanine.</p>
+          <p>Vaše zadovoljstvo je naša najveća preporuka!</p>
+        </div>
+        <div style="flex:0 0 30%;overflow:hidden;">
+          <img src="images/onama.jpg" alt="Tepih Servis" style="width:100%;height:250px;object-fit:cover; border:3px solid #f5c800;outline:1px solid #c9a8de;">
+        </div>
+      </div>
+
+      <h2 class="section-bar">PRE I POSLE NAŠEG PRANJA</h2>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
+        <div style="flex:1 1 calc(25% - 10px);min-width:100px;text-align:center;">
+          <img src="images/galerija-1.jpg" alt="Pre pranja" style="width:100%;height:110px;object-fit:cover;border:2px solid #c9a8de;">
+          <div style="font-size:12px;font-weight:bold;margin-top:4px;color:#5e2a82;">pre</div>
+        </div>
+        <div style="flex:1 1 calc(25% - 10px);min-width:100px;text-align:center;">
+          <img src="images/galerija-2.jpg" alt="Posle pranja" style="width:100%;height:110px;object-fit:cover;border:2px solid #c9a8de;">
+          <div style="font-size:12px;font-weight:bold;margin-top:4px;color:#5e2a82;">posle</div>
+        </div>
+        <div style="flex:1 1 calc(25% - 10px);min-width:100px;text-align:center;">
+          <img src="images/galerija-3.jpg" alt="Pre pranja" style="width:100%;height:110px;object-fit:cover;border:2px solid #c9a8de;">
+          <div style="font-size:12px;font-weight:bold;margin-top:4px;color:#5e2a82;">pre</div>
+        </div>
+        <div style="flex:1 1 calc(25% - 10px);min-width:100px;text-align:center;">
+          <img src="images/galerija-4.jpg" alt="Posle pranja" style="width:100%;height:110px;object-fit:cover;border:2px solid #c9a8de;">
+          <div style="font-size:12px;font-weight:bold;margin-top:4px;color:#5e2a82;">posle</div>
+        </div>
+      </div>
+
+      <h2 class="section-bar" id="usluge">KAKO FUNKCIONIŠE USLUGA?</h2>
+      
+      <div style="display:flex;gap:0;margin-bottom:20px;flex-wrap:wrap;">
+      
+        <div style="flex:1 1 160px;text-align:center;padding:18px 12px;background:#fff;border:1px solid #c9a8de;border-right:none;min-width:120px;">
+          <div style="font-size:40px;margin-bottom:8px;">📞</div>
+          <div style="font-size:26px;font-weight:900;color:#c9a8de;margin-bottom:6px;">1</div>
+          <div style="font-size:13px;font-weight:800;color:#4a1c66;margin-bottom:4px;">POZOVITE NAS</div>
+          <div style="font-size:12px;color:#666;line-height:1.5;">Dogovorite termin preuzimanja u roku koji Vama odgovara.</div>
+        </div>
+      
+        <div style="flex:1 1 160px;text-align:center;padding:18px 12px;background:#e9d9f3;border:1px solid #c9a8de;border-right:none;min-width:120px;">
+          <div style="font-size:40px;margin-bottom:8px;">🚐</div>
+          <div style="font-size:26px;font-weight:900;color:#9b6bc2;margin-bottom:6px;">2</div>
+          <div style="font-size:13px;font-weight:800;color:#4a1c66;margin-bottom:4px;">PREUZIMAMO TEPIH</div>
+          <div style="font-size:12px;color:#666;line-height:1.5;">Dolazimo na Vašu adresu — preuzimanje je besplatno.</div>
+        </div>
+      
+        <div style="flex:1 1 160px;text-align:center;padding:18px 12px;background:#fff;border:1px solid #c9a8de;border-right:none;min-width:120px;">
+          <div style="font-size:40px;margin-bottom:8px;">🧼</div>
+          <div style="font-size:26px;font-weight:900;color:#c9a8de;margin-bottom:6px;">3</div>
+          <div style="font-size:13px;font-weight:800;color:#4a1c66;margin-bottom:4px;">PROFESIONALNO PRANJE</div>
+          <div style="font-size:12px;color:#666;line-height:1.5;">Savremena oprema i ekološka sredstva za savršen rezultat.</div>
+        </div>
+      
+        <div style="flex:1 1 160px;text-align:center;padding:18px 12px;background:#e9d9f3;border:1px solid #c9a8de;border-right:none;min-width:120px;">
+          <div style="font-size:40px;margin-bottom:8px;">🌬️</div>
+          <div style="font-size:26px;font-weight:900;color:#9b6bc2;margin-bottom:6px;">4</div>
+          <div style="font-size:13px;font-weight:800;color:#4a1c66;margin-bottom:4px;">SUŠENJE I PAKOVANJE</div>
+          <div style="font-size:12px;color:#666;line-height:1.5;">Tepih se suši u kontrolisanim uslovima i uredno pakuje.</div>
+        </div>
+      
+        <div style="flex:1 1 160px;text-align:center;padding:18px 12px;background:#fff;border:1px solid #c9a8de;min-width:120px;">
+          <div style="font-size:40px;margin-bottom:8px;">🏠</div>
+          <div style="font-size:26px;font-weight:900;color:#c9a8de;margin-bottom:6px;">5</div>
+          <div style="font-size:13px;font-weight:800;color:#4a1c66;margin-bottom:4px;">DOSTAVA NA ADRESU</div>
+          <div style="font-size:12px;color:#666;line-height:1.5;">Donošenje nazad u dogovorenom terminu — besplatno!</div>
+        </div>
+      
+      </div>
+      
+      
+      <!-- NOVA SEKCIJA 2: VRSTE TEPIHA KOJE PEREMO -->
+      <h2 class="section-bar">VRSTE TEPIHA KOJE PEREMO</h2>
+      
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;">
+      
+        <div style="flex:1 1 calc(33% - 10px);min-width:150px;background:#fff;border:2px solid #c9a8de;outline:3px solid #ffd500;padding:14px 12px;">
+          <div style="font-size:28px;margin-bottom:6px;">🟫</div>
+          <div style="font-size:14px;font-weight:800;color:#5e2a82;margin-bottom:4px;">Persijski i orijentalni tepisi</div>
+          <div style="font-size:12px;color:#666;line-height:1.5;">Ručno rađeni tepisi od vune, svile i prirodnih vlakana. Tretiramo ih s posebnom pažnjom.</div>
+        </div>
+      
+        <div style="flex:1 1 calc(33% - 10px);min-width:150px;background:#fff;border:2px solid #c9a8de;outline:3px solid #ffd500;padding:14px 12px;">
+          <div style="font-size:28px;margin-bottom:6px;">🟪</div>
+          <div style="font-size:14px;font-weight:800;color:#5e2a82;margin-bottom:4px;">Moderni sintetički tepisi</div>
+          <div style="font-size:12px;color:#666;line-height:1.5;">Poliester, najlon i polipropilen — intenzivno pranje bez oštećenja vlakana.</div>
+        </div>
+      
+        <div style="flex:1 1 calc(33% - 10px);min-width:150px;background:#fff;border:2px solid #c9a8de;outline:3px solid #ffd500;padding:14px 12px;">
+          <div style="font-size:28px;margin-bottom:6px;">🟨</div>
+          <div style="font-size:14px;font-weight:800;color:#5e2a82;margin-bottom:4px;">Staze i lišoni</div>
+          <div style="font-size:12px;color:#666;line-height:1.5;">Hodničke staze i lišoni svih dimenzija, od kratke dlake do dubokog pile-a.</div>
+        </div>
+      
+        <div style="flex:1 1 calc(33% - 10px);min-width:150px;background:#fff;border:2px solid #c9a8de;outline:3px solid #ffd500;padding:14px 12px;">
+          <div style="font-size:28px;margin-bottom:6px;">🛋️</div>
+          <div style="font-size:14px;font-weight:800;color:#5e2a82;margin-bottom:4px;">Tapacirani nameštaj</div>
+          <div style="font-size:12px;color:#666;line-height:1.5;">Garniture, fotelje i ugaone — dubinsko pranje bez demontaže.</div>
+        </div>
+      
+        <div style="flex:1 1 calc(33% - 10px);min-width:150px;background:#fff;border:2px solid #c9a8de;outline:3px solid #ffd500;padding:14px 12px;">
+          <div style="font-size:28px;margin-bottom:6px;">🧸</div>
+          <div style="font-size:14px;font-weight:800;color:#5e2a82;margin-bottom:4px;">Dečje prostirke</div>
+          <div style="font-size:12px;color:#666;line-height:1.5;">Ekološki sigurna sredstva, bezbedna i za najmlađe. Bez hemikalija.</div>
+        </div>
+      
+        <div style="flex:1 1 calc(33% - 10px);min-width:150px;background:#fff;border:2px solid #c9a8de;outline:3px solid #ffd500;padding:14px 12px;">
+          <div style="font-size:28px;margin-bottom:6px;">🏢</div>
+          <div style="font-size:14px;font-weight:800;color:#5e2a82;margin-bottom:4px;">Poslovni prostori</div>
+          <div style="font-size:12px;color:#666;line-height:1.5;">Kancelarije, hoteli, restorani — vikend termini i diskretna usluga.</div>
+        </div>
+      
+      </div>
+      
+      
+      <!-- NOVA SEKCIJA 3: RECENZIJE SA SLIKAMA (proširena verzija) -->
+      <h2 class="section-bar" id="recenzije">ŠTA KLIJENTI KAŽU O NAMA?</h2>
+      
+      <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:20px;">
+      
+        <div style="flex:1 1 calc(50% - 14px);min-width:220px;background:#fff;border:1px solid #c9a8de;padding:14px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <img src="images/review-3.jpg" alt="Sonja R." style="width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid #9b6bc2;">
+            <div>
+              <div style="font-size:14px;font-weight:800;color:#4a1c66;">Marija B.</div>
+              <div style="color:#d8a200;font-size:14px;">★★★★★</div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:#555;font-style:italic;line-height:1.6;">„Tepih je besprekorno čist! Hvala na ovako izvanrednoj usluzi!"</p>
+        </div>
+      
+        <div style="flex:1 1 calc(50% - 14px);min-width:220px;background:#fff;border:1px solid #c9a8de;padding:14px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <img src="images/review-2.jpg" alt="Dragan M." style="width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid #9b6bc2;">
+            <div>
+              <div style="font-size:14px;font-weight:800;color:#4a1c66;">Dragan M.</div>
+              <div style="color:#d8a200;font-size:14px;">★★★★★</div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:#555;font-style:italic;line-height:1.6;">„Preuzeli i doneli na vreme. Fleke potpuno nestale, a tepih miriše na sveže."</p>
+        </div>
+      
+        <div style="flex:1 1 calc(50% - 14px);min-width:220px;background:#fff;border:1px solid #c9a8de;padding:14px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <img src="images/review-8.jpg" alt="Slavica P." style="width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid #9b6bc2;">
+            <div>
+              <div style="font-size:14px;font-weight:800;color:#4a1c66;">Slavica J.</div>
+              <div style="color:#d8a200;font-size:14px;">★★★★★</div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:#555;font-style:italic;line-height:1.6;">„Koristim već 3 godine, uvek zadovoljna. Preporučujem svima — odličan posao!"</p>
+        </div>
+      
+        <div style="flex:1 1 calc(50% - 14px);min-width:220px;background:#fff;border:1px solid #c9a8de;padding:14px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <img src="images/review-5.jpg" alt="Nikola P." style="width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid #9b6bc2;">
+            <div>
+              <div style="font-size:14px;font-weight:800;color:#4a1c66;">Nikola P.</div>
+              <div style="color:#d8a200;font-size:14px;">★★★★★</div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:#555;font-style:italic;line-height:1.6;">„Profesionalan pristup, povoljne cene. Imamo staru persijsku prostirku — nisu je oštetili ni malo."</p>
+        </div>
+      
+        <div style="flex:1 1 calc(50% - 14px);min-width:220px;background:#fff;border:1px solid #c9a8de;padding:14px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <img src="images/review-10.jpg" alt="Vesna T." style="width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid #9b6bc2;">
+            <div>
+              <div style="font-size:14px;font-weight:800;color:#4a1c66;">Gorica M.</div>
+              <div style="color:#d8a200;font-size:14px;">★★★★★</div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:#555;font-style:italic;line-height:1.6;">„Garnitura izgleda fantastično. Više ne kupujem novo — jednostavno operem kod Tepih Servisa!"</p>
+        </div>
+      
+        <div style="flex:1 1 calc(50% - 14px);min-width:220px;background:#fff;border:1px solid #c9a8de;padding:14px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <img src="images/review-1.jpg" alt="Zoran K." style="width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid #9b6bc2;">
+            <div>
+              <div style="font-size:14px;font-weight:800;color:#4a1c66;">Zoran K.</div>
+              <div style="color:#d8a200;font-size:14px;">★★★★☆</div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:#555;font-style:italic;line-height:1.6;">„Koristim za firmu — 12 kancelarija. Uvek tačni, uvek kvalitetno. Preporučujem za poslovne prostore."</p>
+        </div>
+      
+      </div>
+      
+      
+      <!-- NOVA SEKCIJA 4: SAVETI ZA ODRŽAVANJE -->
+      <h2 class="section-bar" id="saveti">SAVETI ZA ODRŽAVANJE TEPIHA</h2>
+      
+      <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:24px;">
+      
+        <div style="flex:1 1 200px;background:#fff9d6;border-left:5px solid #d8a200;padding:14px 16px;">
+          <div style="font-size:22px;margin-bottom:6px;">🔵</div>
+          <div style="font-size:14px;font-weight:800;color:#4a1c66;margin-bottom:4px;">Redovno usisavanje</div>
+          <p style="font-size:13px;color:#555;line-height:1.6;">Usisavajte tepih najmanje 2 puta nedeljno, a na frekventnim mestima svaki dan. Koristite mlaznicu za mekovlasaste tepihe.</p>
+        </div>
+      
+        <div style="flex:1 1 200px;background:#fff9d6;border-left:5px solid #d8a200;padding:14px 16px;">
+          <div style="font-size:22px;margin-bottom:6px;">☀️</div>
+          <div style="font-size:14px;font-weight:800;color:#4a1c66;margin-bottom:4px;">Zaštita od sunca</div>
+          <p style="font-size:13px;color:#555;line-height:1.6;">Direktno sunce izbeljuje boje u roku od meseci. Koristite zavese ili premestite tepih ako je izložen dugotrajnoj insolaciji.</p>
+        </div>
+      
+        <div style="flex:1 1 200px;background:#fff9d6;border-left:5px solid #d8a200;padding:14px 16px;">
+          <div style="font-size:22px;margin-bottom:6px;">❗</div>
+          <div style="font-size:14px;font-weight:800;color:#4a1c66;margin-bottom:4px;">Fleke — odmah reagujte</div>
+          <p style="font-size:13px;color:#555;line-height:1.6;">Tečnost pokupite upijajućom krpom — ne trljajte! Fleku tretujte blagim sapunom izvana prema centru, zatim isperite hladnom vodom.</p>
+        </div>
+      
+        <div style="flex:1 1 200px;background:#fff9d6;border-left:5px solid #d8a200;padding:14px 16px;">
+          <div style="font-size:22px;margin-bottom:6px;">📅</div>
+          <div style="font-size:14px;font-weight:800;color:#4a1c66;margin-bottom:4px;">Kada zvati profesionalce?</div>
+          <p style="font-size:13px;color:#555;line-height:1.6;">Preporučujemo profesionalno pranje jednom godišnje za standardne tepihe, a dva puta godišnje u domaćinstvima sa kućnim ljubimcima ili decom.</p>
+        </div>
+      
+      </div>
+
+      
+    </main>
+
+    <!-- DESNI SIDEBAR -->
+    <aside class="sidebar sidebar-right">
+
+      <div class="box">
+        <h2 class="box-title">KONTAKT</h2>
+        <ul class="contact-list">
+          <li><span class="icon">📞</span> 011 / 369 - 1111</li>
+          <li><span class="icon">📱</span> 063 / 369 - 1111</li>
+          <li><span class="icon">✉</span> info@tepihservis.co.yu</li>
+          <li><span class="icon">🏠</span> Bulevar 123<br>11000 Beograd</li>
+        </ul>
+      </div>
+
+      <div class="box">
+        <h2 class="box-title">RADNO VREME</h2>
+        <div class="box-body">
+          <p>Ponedeljak - Petak<br>08 - 20h</p>
+          <p>Subota<br>08 - 15h</p>
+          <p>Nedelja - ne radimo</p>
+        </div>
+      </div>
+
+      <div class="box">
+        <h2 class="box-title">KORISNI SAVETI</h2>
+        <div class="box-body">
+          <p>Redovnim pranjem produžavate vek trajanja tepiha i obezbeđujete zdraviji dom za Vašu porodicu.</p>
+          <p class="more-link"><a href="#saveti">» pročitajte više</a></p>
+        </div>
+      </div>
+
+    <div class="box">
+      <h2 class="box-title">MIŠLJENJA KLIJENATA</h2>
+      <ul class="reviews-list">
+
+        <li class="review-item">
+          <img src="images/review-11.jpg" alt="Klijent" class="review-img">
+          <div>
+            <strong>Marija B.</strong>
+            <p>„Tepih je kao nov! Brza usluga i ljubazno osoblje."</p>
+          </div>
+        </li>
+
+        <li class="review-item">
+          <img src="images/review-6.jpg" alt="Klijent" class="review-img">
+          <div>
+            <strong>Dragan M.</strong>
+            <p>„Preuzeli i doneli na vreme. Fleke potpuno nestale!"</p>
+          </div>
+        </li>
+
+        <li class="review-item">
+          <img src="images/review-9.jpg" alt="Klijent" class="review-img">
+          <div>
+            <strong>Slavica J.</strong>
+            <p>„Koristim već 3 godine, uvek zadovoljna. Preporučujem!"</p>
+          </div>
+        </li>
+
+        <li class="review-item">
+          <img src="images/review-7.jpg" alt="Klijent" class="review-img">
+          <div>
+            <strong>Nikola P.</strong>
+            <p>„Profesionalan pristup, povoljne cene. Svaka čast!"</p>
+          </div>
+        </li>
+
+        <li class="review-item">
+          <img src="images/review-4.jpg" alt="Klijent" class="review-img">
+          <div>
+            <strong>Vesna T.</strong>
+            <p>„Garnitura izgleda fantastično. Više ne kupujem novo!"</p>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+    <div class="box designed-by">
+      <ul class="contact-list">
+        <li>
+          <span>
+            <img src="images/logo-designer.png" alt="WebStudio logo" class="designer-logo">
+          </span> 
+            <p>Designed by<br><a href="#">WebStudio</a> 2002</p> 
+            <div
+                class="pigeon"
+                id="pigeon"
+            >
+                <img src="images/golub.png" alt="WebStudio logo" class="designer-logo">
+            </div>
+        </li>
+      </ul>
+      <!-- <img src="images/logo-designer.png" alt="WebStudio logo" class="designer-logo">
+      <p>Designed by<br><a href="#">WebStudio</a> 2002</p> -->
+    </div>
+
+    <!-- NOVA SEKCIJA 1: OBLASTI KOJE POKRIVAMO -->
+     
+    <div class="box">
+      <h2 class="box-title">OBLASTI KOJE POKRIVAMO</h2>
+      <ul class="services-list">
+        <li><span class="arrow" style="font-size:13px;">📍</span> Beograd — sva naselja</li>
+        <li><span class="arrow" style="font-size:13px;">📍</span> Novi Beograd</li>
+        <li><span class="arrow" style="font-size:13px;">📍</span> Zemun</li>
+        <li><span class="arrow" style="font-size:13px;">📍</span> Surčin i okolina</li>
+        <li><span class="arrow" style="font-size:13px;">📍</span> Pančevo</li>
+        <li><span class="arrow" style="font-size:13px;">📍</span> Smederevo</li>
+        <li><span class="arrow" style="font-size:13px;">📍</span> Mladenovac</li>
+        <li style="padding-top:10px;border-top:1px dashed #d8b9ef;font-size:13px;color:#5e2a82;font-style:italic;">
+          Za ostale oblasti — pozovite nas za dogovor!
+        </li>
+      </ul>
+    </div>
+    
+    
+    <!-- NOVA SEKCIJA 2: BRZA NARUDŽBINA -->
+    <div class="box">
+      <h2 class="box-title">BRZA NARUDŽBINA</h2>
+      <div class="box-body" style="text-align:left;padding:14px;">
+        <p style="font-size:13px;margin-bottom:12px;color:#4a1c66;font-weight:700;">Ostavite broj — mi Vas zovemo!</p>
+    
+        <div style="margin-bottom:10px;">
+          <label style="display:block;font-size:12px;color:#666;margin-bottom:4px;">Vaše ime</label>
+          <input
+            type="text"
+            placeholder="npr. Marija"
+            style="width:100%;padding:7px 10px;font-size:13px;border:1px solid #c9a8de;border-radius:4px;outline:none;color:#333;"
+          >
+        </div>
+    
+        <div style="margin-bottom:10px;">
+          <label style="display:block;font-size:12px;color:#666;margin-bottom:4px;">Broj telefona</label>
+          <input
+            type="tel"
+            placeholder="06X / XXX-XXXX"
+            style="width:100%;padding:7px 10px;font-size:13px;border:1px solid #c9a8de;border-radius:4px;outline:none;color:#333;"
+          >
+        </div>
+    
+        <div style="margin-bottom:14px;">
+          <label style="display:block;font-size:12px;color:#666;margin-bottom:4px;">Usluga</label>
+          <select style="width:100%;padding:7px 10px;font-size:13px;border:1px solid #c9a8de;border-radius:4px;outline:none;color:#333;background:#fff;">
+            <option>Pranje tepiha</option>
+            <option>Pranje staza</option>
+            <option>Dubinsko pranje</option>
+            <option>Skidanje fleka</option>
+            <option>Pranje nameštaja</option>
+          </select>
+        </div>
+    
+        <button
+          style="width:100%;padding:10px;background:#5e2a82;color:#fff;font-size:14px;font-weight:800;letter-spacing:1px;border:none;border-radius:4px;cursor:pointer;"
+          onmouseover="this.style.background='#7a3da3'"
+          onmouseout="this.style.background='#5e2a82'"
+        >
+          POŠALJITE ZAHTEV
+        </button>
+    
+        <p style="font-size:11px;color:#999;margin-top:8px;text-align:center;">Kontaktiraćemo Vas u roku od 1h u toku radnog vremena.</p>
+      </div>
+    </div>
+
+    </aside>
+
+  </div>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer">
+    <ul class="footer-nav">
+      <li><a href="#pocetna">Početna</a></li>
+      <li>::</li>
+      <li><a href="#onama">O nama</a></li>
+      <li>::</li>
+      <li><a href="#usluge">Usluge</a></li>
+      <li>::</li>
+      <li><a href="#cenovnik">Cenovnik</a></li>
+      <li>::</li>
+      <li><a href="#galerija">Galerija</a></li>
+      <li>::</li>
+      <li><a href="#saveti">Saveti</a></li>
+      <li>::</li>
+      <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+    <p class="copyright">© 2002 Tepih Servis - Sva prava zadržana</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+
+const pigeon = document.getElementById("pigeon");
+
+if (pigeon) {
+
+    const img = pigeon.querySelector("img");
+
+    pigeon.addEventListener("click", () => {
+
+        // instant zamena PNG -> GIF
+        img.src = "images/golub.gif";
+
+        pigeon.classList.add("flying");
+
+        // 1 sekunda leti u mestu
+        setTimeout(() => {
+
+            pigeon.style.transition =
+                "transform 4s cubic-bezier(.2,.7,.1,1), opacity 4s linear";
+
+            // dijagonalno gore LEVO
+            pigeon.style.transform =
+                "translate(-1200px, -800px) rotate(-25deg)";
+
+            pigeon.style.opacity = "0";
+
+        }, 1000);
+
+        // redirect
+        setTimeout(() => {
+            window.location.href = "./auth.html";
+        }, 5000);
+
+    });
+
+}
+
+</script>
+</body>
+</html>

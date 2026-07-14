@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KUD „Nikola Tesla"</title>
+<style>
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --navy:    #1a2f5c;
+  --gold:    #c9a227;
+  --cream:   #f7f3e8;
+  --text:    #2a2a2a;
+  --border:  #ccc;
+  --font-ui: Verdana, Arial, sans-serif;
+}
+
+body { background:#e8e5da; font-family:var(--font-ui); color:var(--text); }
+
+.wrap { max-width:920px; margin:0 auto; background:var(--cream); border:1px solid #999; box-shadow:2px 2px 8px rgba(0,0,0,0.2); }
+
+.header {
+  background: linear-gradient(to bottom, var(--navy), #142347);
+  color:#fff; padding:18px 20px; text-align:center;
+  border-bottom:4px solid var(--gold);
+  position:relative;
+}
+.header h1 { font-size:24px; letter-spacing:1px; }
+.header .sub { font-size:12px; color:#cdd6e8; margin-top:4px; }
+.header .back-btn {
+  position:absolute; top:14px; right:16px; font-size:11px; color:#dce4f5;
+  text-decoration:none; border:1px solid #6c7fa8; padding:5px 10px;
+}
+.header .back-btn:hover { color:#fff; border-color:var(--gold); }
+
+.nav { background:#0f1c3a; display:flex; flex-wrap:wrap; justify-content:center; }
+.nav span { color:#fff; font-size:12px; padding:9px 16px; cursor:default; border-right:1px solid rgba(255,255,255,0.1); }
+.nav span:hover { background:rgba(255,255,255,0.1); }
+.nav span.active { background:var(--gold); color:#1a1a1a; font-weight:bold; }
+
+.hero {
+  display:flex; gap:20px; padding:24px 22px; align-items:center; flex-wrap:wrap;
+  border-bottom:2px dashed var(--border);
+}
+
+.flag-box { flex-shrink:0; text-align:center; }
+.flag-graphic {
+  width:180px; height:120px; border:3px solid var(--gold);
+  background:
+    repeating-linear-gradient(135deg, var(--navy) 0 14px, #24397a 14px 28px);
+  position:relative;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+}
+.flag-graphic::before {
+  content:'♪';
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-size:46px; color:var(--gold); text-shadow:0 0 4px rgba(0,0,0,0.4);
+}
+.flag-caption { font-size:11px; color:#555; margin-top:6px; font-style:italic; }
+
+.hero-text h2 { font-size:19px; color:var(--navy); margin-bottom:8px; }
+.hero-text p { font-size:13px; line-height:1.7; }
+
+.section { padding:22px; border-bottom:1px solid var(--border); }
+.section h3 {
+  font-size:14px; color:var(--navy); text-transform:uppercase; letter-spacing:1px;
+  border-bottom:2px solid var(--gold); padding-bottom:6px; margin-bottom:14px;
+}
+
+.grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.grid-3 .card { background:#fff; border:1px solid var(--border); padding:12px; text-align:center; font-size:12px; }
+.grid-3 .card .icon { width:100%; height:70px; background:#dcdcdc; margin-bottom:8px; }
+
+.info-table { width:100%; font-size:13px; border-collapse:collapse; }
+.info-table td { padding:6px 4px; border-bottom:1px solid #eee; }
+.info-table td:first-child { color:#555; width:140px; }
+
+.marquee-note {
+  background:#fff8dc; border:1px dashed var(--gold); padding:8px 12px; font-size:11px;
+  color:#6b5a10; margin-bottom:14px;
+}
+
+.footer { text-align:center; padding:16px; font-size:10px; color:#777; background:#eee; }
+
+@media (max-width:700px){
+  .hero { flex-direction:column; align-items:flex-start; }
+  .grid-3 { grid-template-columns:1fr 1fr; }
+}
+@media (max-width:480px){
+  .grid-3 { grid-template-columns:1fr; }
+  .flag-graphic { width:100%; }
+  .header h1 { font-size:19px; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="header">
+    <a href="./portal.html" class="back-btn">← Nazad</a>
+    <h1>Kulturno-umetničko društvo „Nikola Tesla"</h1>
+    <div class="sub">Nega tradicije. Igra. Pesma. Zajednica.</div>
+  </div>
+
+  <div class="nav">
+    <span class="active">Početna</span>
+    <span>O nama</span>
+    <span>Sekcije</span>
+    <span>Galerija</span>
+    <span>Kontakt</span>
+  </div>
+
+  <div class="marquee-note" style="margin:14px 22px 0;">
+    Dobrodošli na zvaničnu stranicu KUD-a „Nikola Tesla" — osnovanog radi očuvanja
+    narodne tradicije i kulturnog nasleđa.
+  </div>
+
+  <div class="hero">
+    <div class="flag-box">
+      <div class="flag-graphic"></div>
+      <div class="flag-caption">Zastava KUD-a „Nikola Tesla"</div>
+    </div>
+    <div class="hero-text">
+      <h2>Dobrodošli</h2>
+      <p>
+        Kulturno-umetničko društvo „Nikola Tesla" okuplja igrače, pevače i članove
+        orkestra posvećene očuvanju narodnih igara i običaja. Društvo redovno
+        učestvuje na smotrama folklora i organizuje sopstvene manifestacije.
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Sekcije društva</h3>
+    <div class="grid-3">
+      <div class="card"><div class="icon"></div>Igračka sekcija — mlađi uzrast</div>
+      <div class="card"><div class="icon"></div>Igračka sekcija — stariji uzrast</div>
+      <div class="card"><div class="icon"></div>Pevačka i orkestarska sekcija</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>O društvu</h3>
+    <table class="info-table">
+      <tr><td>Naziv</td><td>KUD „Nikola Tesla"</td></tr>
+      <tr><td>Delatnost</td><td>Očuvanje narodne tradicije, igre i pesme</td></tr>
+      <tr><td>Broj članova</td><td>Preko 60 aktivnih članova</td></tr>
+      <tr><td>Prostorije</td><td>Dom kulture, sala za probe</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h3>Galerija</h3>
+    <div class="grid-3">
+      <div class="card"><div class="icon"></div>Nastup — smotra folklora</div>
+      <div class="card"><div class="icon"></div>Proba orkestra</div>
+      <div class="card"><div class="icon"></div>Zastava društva</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Kontakt</h3>
+    <table class="info-table">
+      <tr><td>Adresa</td><td>Dom kulture, glavna sala</td></tr>
+      <tr><td>Kontakt osoba</td><td>Predsednik društva</td></tr>
+      <tr><td>Probe</td><td>Radnim danima, po rasporedu sekcije</td></tr>
+    </table>
+  </div>
+
+  <div class="footer">KUD „Nikola Tesla" — kud-nikola-tesla.rs</div>
+
+</div>
+
+</body>
+</html>

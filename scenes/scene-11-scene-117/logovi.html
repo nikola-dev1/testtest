@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proxy Log Viewer — Robert Goran</title>
+<style>
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --gray:       #c0c0c0;
+  --gray-dark:  #808080;
+  --white:      #ffffff;
+  --black:      #000000;
+  --text-dim:   #555555;
+  --highlight:  #e2e2e2;
+  --flag:       #d8d8d8;
+  --font-ui:    Tahoma, Verdana, Arial, sans-serif;
+  --font-mono:  'Courier New', Courier, monospace;
+}
+
+body {
+  background: #6e6e6e;
+  font-family: var(--font-ui);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 24px 12px;
+}
+
+.window {
+  width: 100%;
+  max-width: 1100px;
+  background: var(--gray);
+  border: 2px solid;
+  border-color: #f2f2f2 #4d4d4d #4d4d4d #f2f2f2;
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.4);
+}
+
+.titlebar {
+  background: linear-gradient(to right, #050505, #5c5c5c);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px 4px 10px;
+  font-size: 13px;
+}
+
+.titlebar-left { display:flex; align-items:center; gap:8px; }
+.titlebar-icon { width:14px; height:14px; background:#000; border:1px solid #fff; }
+.titlebar-right { display:flex; align-items:center; gap:10px; }
+.back-btn { font-size:11px; color:#ddd; text-decoration:none; border:1px solid #777; padding:3px 9px; }
+.back-btn:hover { color:#fff; border-color:#aaa; }
+.titlebar-buttons { display:flex; gap:3px; }
+.titlebar-buttons span {
+  width:18px; height:16px; background:var(--gray);
+  border:1px solid; border-color:#fff #4d4d4d #4d4d4d #fff;
+  font-size:11px; line-height:14px; text-align:center; color:#000;
+}
+
+.menubar {
+  display:flex; gap:18px; padding:4px 12px; font-size:12px;
+  border-bottom:1px solid var(--gray-dark); background:var(--gray);
+}
+.menubar span:hover { background:var(--highlight); }
+
+.toolbar {
+  display:flex; align-items:center; gap:6px; padding:6px 10px;
+  background:var(--gray); border-bottom:1px solid var(--gray-dark); flex-wrap:wrap;
+}
+.toolbar-btn {
+  font-family:var(--font-ui); font-size:11px; padding:4px 10px;
+  background:var(--gray); border:1px solid; border-color:#fff #4d4d4d #4d4d4d #fff; cursor:default;
+}
+.toolbar-sep { width:1px; height:20px; background:var(--gray-dark); margin:0 4px; }
+
+/* ADRESNA TRAKA sa autocomplete efektom */
+.address-bar {
+  display:flex; align-items:center; gap:8px; padding:8px 10px;
+  background:var(--gray); border-bottom:1px solid var(--gray-dark);
+}
+.address-bar .lbl { font-size:11px; color:#333; white-space:nowrap; }
+.address-wrap {
+  position:relative; flex:1; min-width:160px;
+  border:1px solid; border-color:#4d4d4d #fff #fff #4d4d4d; background:#fff;
+}
+.address-ghost {
+  position:absolute; left:6px; top:50%; transform:translateY(-50%);
+  font-family:var(--font-mono); font-size:12px; color:#aaa; pointer-events:none; white-space:pre;
+}
+.address-input {
+  position:relative; width:100%; font-family:var(--font-mono); font-size:12px;
+  padding:5px 6px; border:none; outline:none; background:transparent;
+}
+.go-btn {
+  font-family:var(--font-ui); font-size:11px; padding:5px 14px;
+  background:var(--gray); border:1px solid; border-color:#fff #4d4d4d #4d4d4d #fff; cursor:pointer;
+}
+
+.content {
+  background: var(--white); margin: 8px; border: 1px solid;
+  border-color: #4d4d4d #fff #fff #4d4d4d; max-height: 640px; overflow-y: auto;
+}
+
+table.logtable { width:100%; border-collapse:collapse; font-family:var(--font-mono); font-size:12px; }
+table.logtable th {
+  background:var(--gray); border-bottom:1px solid var(--gray-dark); text-align:left;
+  padding:5px 10px; font-family:var(--font-ui); font-size:11px; color:#222;
+  position:sticky; top:0;
+}
+table.logtable td { padding:4px 10px; border-bottom:1px solid #eee; }
+table.logtable tr:nth-child(even) { background:#f4f4f4; }
+.col-num { width:40px; color:var(--text-dim); }
+.col-status { width:60px; color:#333; }
+
+.flagged { background: var(--flag) !important; font-weight:bold; }
+.flagged td { color:#000; }
+.flagged a { color:#000; text-decoration: underline; cursor:pointer; }
+.flagged a:hover { text-decoration: none; }
+
+.statusbar {
+  display:flex; justify-content:space-between; padding:6px 12px; font-size:11px;
+  color:#222; border-top:1px solid #fff; background:var(--gray);
+}
+
+@media (max-width: 700px) {
+  body { padding: 8px 4px; }
+  .menubar { display:none; }
+  table.logtable th, table.logtable td { padding:4px 6px; font-size:11px; }
+  .address-bar { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<div class="window">
+
+  <div class="titlebar">
+    <div class="titlebar-left">
+      <span class="titlebar-icon"></span>
+      <span>ProxyWatch Log Viewer — Robert Goran / RG-0442</span>
+    </div>
+    <div class="titlebar-right">
+      <a href="./redakcijski-nalog.html" class="back-btn">← Nazad</a>
+      <div class="titlebar-buttons"><span>_</span><span>□</span><span>x</span></div>
+    </div>
+  </div>
+
+  <div class="menubar">
+    <span>Nalog</span><span>Log</span><span>Filter</span><span>Izvoz</span><span>Pomoć</span>
+  </div>
+
+  <div class="toolbar">
+    <span class="toolbar-btn">Osveži</span>
+    <span class="toolbar-btn">Grupiši po domenu</span>
+  </div>
+
+  <div class="address-bar">
+    <span class="lbl">Adresa:</span>
+    <div class="address-wrap">
+      <span class="address-ghost" id="ghost"></span>
+      <input type="text" class="address-input" id="addr" autocomplete="off" placeholder="unesi domen...">
+    </div>
+    <span class="go-btn" onclick="goToDomain()">Idi</span>
+  </div>
+
+  <div style="padding:6px 12px; font-size:11px; color:#555; background:#eee; border-bottom:1px solid #999;">
+    Napomena: prikazani su samo posećeni domeni i broj poseta — sadržaj komunikacije (mejlovi, poruke) nije dostupan preko ovog alata.
+  </div>
+
+  <div class="content" id="content">
+    <table class="logtable">
+      <tr><th class="col-num">#</th><th>Domen / Putanja</th><th class="col-status">Status</th></tr>
+
+      <tr><td class="col-num">1</td><td>arhiva.vek.rs/pretraga?q=nikola+tesla</td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">2</td><td>arhiva.vek.rs/1978/naucni-dodatak</td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">3</td><td>arhiv-teslamuzej.rs/izumi</td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">4</td><td>arhiva.vek.rs/tesla-pisma-1892</td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">5</td><td>arhiva.vek.rs/tesla-pisma-1893</td><td class="col-status">200</td></tr>
+      <tr class="flagged"><td class="col-num">6</td><td><a href="./statistika.html">tepih-servis.rs/</a></td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">7</td><td>enciklopedija-arhiv.org/nikola-tesla</td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">8</td><td>arhiva.vek.rs/tesla-izumi-patenti</td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">9</td><td>arhiva.vek.rs/pretraga?q=posiljka+tesla</td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">10</td><td>drustvo-tesla-arhiv.org/dokumenti</td><td class="col-status">200</td></tr>
+      <tr class="flagged"><td class="col-num">11</td><td><a href="./statistika.html">tepih-servis.rs/</a></td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">12</td><td>arhiva.vek.rs/arhiva-1976-1980</td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">13</td><td>arhiva.vek.rs/redakcija-interno</td><td class="col-status">403</td></tr>
+      <tr><td class="col-num">14</td><td>elektro-arhiv.rs/wardenclyffe-toranj</td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">15</td><td>arhiva.vek.rs/pretraga?q=tesla+dnevnik</td><td class="col-status">200</td></tr>
+      <tr class="flagged"><td class="col-num">16</td><td><a href="./statistika.html">tepih-servis.rs/cenovnik.html</a></td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">17</td><td>arhiva.vek.rs/tesla-pisma-1894</td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">18</td><td>webmail.vek.rs/inbox</td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">19</td><td>arhiva.vek.rs/tesla-1943-smrt</td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">20</td><td>drustvo-tesla-arhiv.org/clanstvo</td><td class="col-status">200</td></tr>
+      <tr class="flagged"><td class="col-num">21</td><td><a href="./statistika.html">tepih-servis.rs/</a></td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">22</td><td>arhiva.vek.rs/pretraga?q=tesla+posiljka+1943</td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">23</td><td>pretraga-net.rs/search?q=tesla+pisma+original</td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">24</td><td>arhiva.vek.rs/tesla-izumi-patenti</td><td class="col-status">200</td></tr>
+      <tr class="flagged"><td class="col-num">25</td><td><a href="./statistika.html">tepih-servis.rs/galerija.html</a></td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">26</td><td>arhiv-teslamuzej.rs/dokumenti-1899</td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">27</td><td>elektro-arhiv.rs/tesla-patenti-spisak</td><td class="col-status">200</td></tr>
+      <tr class="flagged"><td class="col-num">28</td><td><a href="./statistika.html">tepih-servis.rs/</a></td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">29</td><td>arhiva.vek.rs/arhiva-1940-1945</td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">30</td><td>enciklopedija-arhiv.org/wardenclyffe</td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">31</td><td>arhiva.vek.rs/tesla-pisma-1895</td><td class="col-status">200</td></tr>
+      <tr class="flagged"><td class="col-num">32</td><td><a href="./statistika.html">tepih-servis.rs/kontakt.html</a></td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">33</td><td>drustvo-tesla-arhiv.org/predavanja</td><td class="col-status">200</td></tr>
+      <tr><td class="col-num">34</td><td>arhiva.vek.rs/pretraga?q=posiljka+1943</td><td class="col-status">200</td></tr>
+
+    </table>
+  </div>
+
+  <div class="statusbar">
+    <span>Prikazano: 34 unosa</span>
+    <span>Filter: bez vremenskih oznaka</span>
+  </div>
+
+</div>
+
+<script>
+const DOMAIN = "tepih-servis.rs";
+const input = document.getElementById("addr");
+const ghost = document.getElementById("ghost");
+
+input.addEventListener("input", () => {
+  const v = input.value;
+  if(v.length > 0 && DOMAIN.toLowerCase().startsWith(v.toLowerCase())){
+    ghost.textContent = v + DOMAIN.slice(v.length);
+  } else {
+    ghost.textContent = "";
+  }
+});
+
+input.addEventListener("keydown", (e) => {
+  if(e.key === "Tab" || e.key === "ArrowRight"){
+    if(ghost.textContent){ input.value = ghost.textContent; ghost.textContent = ""; e.preventDefault(); }
+  }
+  if(e.key === "Enter"){ goToDomain(); }
+});
+
+function goToDomain(){
+  const v = input.value.trim().toLowerCase();
+  if(v === DOMAIN || v === DOMAIN.replace(".rs","") || DOMAIN.startsWith(v)){
+    window.location.href = "./statistika.html";
+  }
+}
+</script>
+
+</body>
+</html>
