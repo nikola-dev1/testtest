@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nezavisna Linija — Portal</title>
+<style>
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --bg:       #f2f2ef;
+  --ink:      #1a1a1a;
+  --accent:   #8a1f1f;
+  --gray:     #777;
+  --border:   #ddd;
+  --font-ui:  Georgia, 'Times New Roman', serif;
+  --font-sans:Arial, Helvetica, sans-serif;
+}
+
+body { background:var(--bg); font-family:var(--font-sans); color:var(--ink); }
+
+.topbar { background:var(--ink); color:#fff; font-size:11px; padding:5px 20px; display:flex; justify-content:space-between; }
+.topbar span { color:#ccc; }
+
+.masthead { padding:22px 20px 14px; text-align:center; border-bottom:3px solid var(--ink); }
+.masthead .logo { font-family:var(--font-ui); font-size:38px; font-weight:bold; letter-spacing:1px; }
+.masthead .tagline { font-size:12px; color:var(--gray); margin-top:4px; letter-spacing:2px; text-transform:uppercase; }
+
+.navbar { background:var(--accent); display:flex; gap:0; flex-wrap:wrap; justify-content:center; }
+.navbar span { color:#fff; font-size:12px; padding:9px 16px; letter-spacing:0.5px; cursor:default; }
+.navbar span:hover { background:rgba(0,0,0,0.15); }
+
+.wrap { max-width:900px; margin:0 auto; padding:24px 20px; }
+
+.section-label {
+  font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--accent);
+  border-bottom:1px solid var(--border); padding-bottom:6px; margin-bottom:16px; font-weight:bold;
+}
+
+.article {
+  display:flex; gap:16px; padding:18px 0; border-bottom:1px solid var(--border);
+}
+.article-thumb { width:120px; height:80px; background:#ccc; flex-shrink:0; overflow:hidden; }
+.article-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+.article-body h2 { font-family:var(--font-ui); font-size:20px; line-height:1.3; margin-bottom:6px; }
+.article-body h2 a { color:var(--ink); text-decoration:none; }
+.article-body h2 a:hover { color:var(--accent); }
+.article-meta { font-size:11px; color:var(--gray); margin-bottom:8px; }
+.article-excerpt { font-size:13px; color:#333; line-height:1.6; }
+
+.search-box {
+  margin-top:30px; padding:18px; background:#fff; border:1px solid var(--border);
+}
+.search-box h3 { font-size:13px; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px; color:var(--gray); }
+.search-row { display:flex; gap:8px; }
+.search-row input {
+  flex:1; padding:9px 10px; border:1px solid #ccc; font-size:13px; font-family:var(--font-sans);
+}
+.search-row button {
+  padding:9px 18px; background:var(--ink); color:#fff; border:none; font-size:12px; cursor:pointer;
+}
+
+.result-list { margin-top:14px; display:none; }
+.result-list.show { display:block; }
+.result-item {
+  padding:12px 0; border-top:1px solid #eee;
+}
+.result-item a { color:#1a4fa0; font-size:14px; text-decoration:none; }
+.result-item a:hover { text-decoration:underline; }
+.result-item .url { font-size:11px; color:#3c7a3c; margin-top:2px; }
+.result-item .desc { font-size:12px; color:#333; margin-top:4px; }
+
+.footer { text-align:center; padding:20px; font-size:10px; color:var(--gray); border-top:1px solid var(--border); margin-top:30px; }
+
+@media (max-width:600px){
+  .article { flex-direction:column; }
+  .article-thumb { width:100%; height:140px; }
+  .masthead .logo { font-size:28px; }
+}
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <span>Nezavisna Linija — nezavisna-linija.rs</span>
+    <span>Društvo · Istraga · Arhiv</span>
+  </div>
+
+  <div class="masthead">
+    <div class="logo">NEZAVISNA LINIJA</div>
+    <div class="tagline">Ono što drugi ne pišu</div>
+  </div>
+
+  <div class="navbar">
+    <span>Naslovna</span><span>Istraga</span><span>Društvo</span><span>Arhiv</span><span>Kolumne</span><span>Kontakt</span>
+  </div>
+
+  <div class="wrap">
+
+    <div class="section-label">Autor: Robert Goran</div>
+
+    <div class="article">
+      <div class="article-thumb"><img src="./images/clanak-1-pismo.jpg" alt=""></div>
+      <div class="article-body">
+        <h2><a href="#">Teslina pošiljka, sakriveno od nas?</a></h2>
+        <div class="article-meta">Robert Goran — Istraga</div>
+        <div class="article-excerpt">
+          Dokumenti na koje smo naišli otvaraju pitanja o pošiljci vezanoj za Nikolu Teslu
+          koja godinama nije bila deo zvanične priče. Nastavljamo istragu.
+        </div>
+      </div>
+    </div>
+
+    <div class="article">
+      <div class="article-thumb"><img src="./images/clanak-2-teslina-istorija.jpg" alt=""></div>
+      <div class="article-body">
+        <h2><a href="#">Zvanična istorija i Tesla</a></h2>
+        <div class="article-meta">Robert Goran — Kolumna</div>
+        <div class="article-excerpt">
+          Koliko od onoga što znamo o Teslinom radu zaista potiče iz proverenih izvora,
+          a koliko je uklopljeno u kasniju, zvaničnu verziju događaja?
+        </div>
+      </div>
+    </div>
+
+    <div class="article">
+      <div class="article-thumb"><img src="./images/clanak-3.jpg" alt=""></div>
+      <div class="article-body">
+        <h2><a href="#">Kako su Amerikanci saznali za Teslinu pošiljku...</a></h2>
+        <div class="article-meta">Robert Goran — Istraga</div>
+        <div class="article-excerpt">
+          Trag vodi kroz nekoliko institucija i udruženja koja se, na prvi pogled,
+          ne dovode u vezu sa ovom pričom.
+        </div>
+      </div>
+    </div>
+
+    <div class="search-box">
+      <h3>Pretraga arhiva</h3>
+      <div class="search-row">
+        <input type="text" id="searchInput" placeholder="unesi pojam za pretragu..." value="KUD Nikola Tesla">
+        <button onclick="doSearch()">Pretraži</button>
+      </div>
+
+      <div class="result-list" id="results">
+        <div class="result-item">
+          <a href="./kud-nikola-tesla.html">KUD „Nikola Tesla" — zvanična stranica</a>
+          <div class="url">kud-nikola-tesla.rs</div>
+          <div class="desc">Kulturno-umetničko društvo „Nikola Tesla" — sekcije, aktivnosti, galerija, kontakt.</div>
+        </div>
+        <div class="result-item">
+          <a href="#">Spisak kulturno-umetničkih društava po regionu</a>
+          <div class="url">registar-kud.rs</div>
+          <div class="desc">Pregled registrovanih kulturno-umetničkih društava.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">Nezavisna Linija — nezavisna-linija.rs</div>
+
+<script>
+function doSearch(){
+  document.getElementById('results').classList.add('show');
+}
+</script>
+
+</body>
+</html>

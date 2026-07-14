@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>tepih servis - new angle</title>
+<style>
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: #000;
+}
+
+/* ---- TOPBAR ---- */
+.topbar {
+  width: 100%;
+  padding: 12px 24px;
+  border-bottom: 1px solid #ddd;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo {
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-weight: bold;
+  font-size: 28px;
+  letter-spacing: 1px;
+  background: linear-gradient(180deg, #a8d4e8 0%, #5ba3c9 40%, #4a91ba 60%, #3a7fa8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(2px 2px 0px rgba(90,130,160,0.5)) drop-shadow(3px 3px 1px rgba(60,100,130,0.2));
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.search-wrap {
+  display: flex;
+  align-items: center;
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10), 0 0 0 1px rgba(200,210,220,0.7);
+  height: 44px;
+  flex: 1;
+  max-width: 600px;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  padding: 0 20px;
+  background: #fff;
+  color: #333;
+  border-radius: 999px 0 0 999px;
+}
+
+.search-btn {
+  flex: 0 0 54px;
+  min-width: 54px;
+  height: 100%;
+  background: #4a91ba;
+  border: none;
+  border-radius: 0 999px 999px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-btn svg {
+  width: 20px; height: 20px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+}
+
+/* ---- TABS ---- */
+.tabs {
+  border-bottom: 1px solid #ddd;
+  padding: 0 24px 0 210px;
+  display: flex;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.tab {
+  padding: 10px 16px;
+  color: #444;
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+}
+
+.tab.active {
+  color: #4a91ba;
+  border-bottom-color: #4a91ba;
+  font-weight: bold;
+}
+
+/* ---- LAYOUT ---- */
+.layout {
+  display: flex;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 18px 24px;
+  gap: 40px;
+}
+
+.results-col { flex: 1 1 auto; min-width: 0; }
+.sidebar-col { flex: 0 0 230px; }
+
+.result-info {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 18px;
+}
+
+/* ---- FEATURED ---- */
+.result-featured {
+  display: block;
+  text-decoration: none;
+  margin-bottom: 20px;
+  padding: 12px 14px;
+  border: 2px solid #c9a3e6;
+  background: #f9f3ff;
+  border-radius: 4px;
+}
+
+.result-featured:hover { background: #f3eafc; }
+
+.result-featured .r-url { font-size: 13px; color: #4a7c40; margin-bottom: 3px; }
+
+.result-featured .r-title {
+  font-size: 20px;
+  color: #0000cc;
+  text-decoration: underline;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.result-featured .r-desc { font-size: 13px; color: #222; line-height: 1.6; }
+
+/* ---- REGULAR RESULTS ---- */
+.result { display: block; text-decoration: none; margin-bottom: 20px; }
+
+.r-url { font-size: 13px; color: #4a7c40; margin-bottom: 2px; }
+
+.r-title {
+  font-size: 18px;
+  color: #0000cc;
+  text-decoration: underline;
+  margin-bottom: 5px;
+}
+
+.result:hover .r-title { color: #cc0000; }
+
+.r-desc { font-size: 13px; color: #444; line-height: 1.6; }
+
+.result-divider {
+  border: none;
+  border-top: 1px solid #ececec;
+  margin: 0 0 18px 0;
+}
+
+/* ---- SIDEBAR ---- */
+.sidebar-box {
+  border: 1px solid #ddd;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+  font-size: 13px;
+}
+
+.sidebar-box h3 {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 6px;
+}
+
+.sidebar-box ul { list-style: none; }
+
+.sidebar-box ul li {
+  padding: 5px 0;
+  border-bottom: 1px dotted #eee;
+}
+
+.sidebar-box ul li:last-child { border-bottom: none; }
+
+.sidebar-box ul li a { color: #0000cc; text-decoration: underline; font-size: 13px; }
+.sidebar-box ul li a:hover { color: #cc0000; }
+
+.sidebar-ad {
+  border: 1px dashed #ccc;
+  background: #fffef0;
+  padding: 12px 14px;
+  font-size: 12px;
+  color: #666;
+}
+
+.ad-label {
+  font-size: 10px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.ad-title {
+  color: #0000cc;
+  text-decoration: underline;
+  font-size: 14px;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 4px;
+  cursor: pointer;
+}
+
+.ad-url { color: #4a7c40; font-size: 12px; }
+
+@media (max-width: 768px) {
+  .sidebar-col {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .topbar {
+    padding: 10px 14px;
+    gap: 12px;
+  }
+
+  .logo {
+    font-size: 22px;
+  }
+
+  .search-wrap {
+    height: 40px;
+  }
+
+  .search-input {
+    font-size: 14px;
+    padding: 0 14px;
+  }
+
+  .search-btn {
+    flex: 0 0 46px;
+    min-width: 46px;
+  }
+
+  .search-btn svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .tabs {
+    padding: 0 14px;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .layout {
+    padding: 16px 14px;
+    gap: 0;
+  }
+
+  .result-info,
+  .result-featured,
+  .result,
+  .pagination {
+    padding-left: 0;
+    margin-left: 0;
+  }
+}
+
+/* ---- PAGINATION ---- */
+.pagination {
+  margin-top: 10px;
+  font-size: 14px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pagination span { color: #777; }
+.pagination .cur { color: #4a91ba; font-weight: bold; }
+.pagination a { color: #0000cc; text-decoration: underline; }
+
+/* ---- FOOTER ---- */
+.pg-footer {
+  text-align: center;
+  padding: 30px 20px;
+  font-size: 13px;
+  color: #777;
+  border-top: 1px solid #eee;
+  margin-top: 20px;
+}
+
+.pg-footer a { color: #0000cc; text-decoration: underline; margin: 0 8px; }
+
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo" onclick="window.location.href='index.html'">new angle</div>
+  <div class="search-wrap">
+    <input class="search-input" value="tepih servis" readonly>
+    <button class="search-btn" aria-label="Pretraži">
+      <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <span class="tab active">Sve</span>
+  <span class="tab">Slike</span>
+  <span class="tab">Vesti</span>
+  <span class="tab">Mape</span>
+  <span class="tab">Više &raquo;</span>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="layout">
+
+  <div class="results-col">
+
+    <div class="result-info">Oko 14.300 rezultata (0.41 sekundi)</div>
+
+    <!-- FEATURED - vodi na tepih servis -->
+    <a href="tepih-servis.html" class="result-featured">
+      <div class="r-url">www.tepih-servis.co.yu/</div>
+      <div class="r-title">Tepih Servis — Čistoća koja se vidi, kvalitet koji traje</div>
+      <div class="r-desc">
+        <b>Tepih servis</b> je firma koja se bavi profesionalnim pranjem i održavanjem svih vrsta
+        <b>tepiha</b>, staza, lišona i tapaciranog nameštaja. Naš cilj je da Vaš <b>tepih</b> bude
+        savršeno čist, prijatan i dugotrajan. Preuzimanje i dostava na kućnu adresu — <b>GRATIS!</b>
+        Koristimo najsavremeniju opremu i ekološki prihvatljiva sredstva za pranje.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <a href="#" class="result">
+      <div class="r-url">www.cityclean.rs/tepih-servis</div>
+      <div class="r-title">City Clean — Profesionalni tepih servis Beograd</div>
+      <div class="r-desc">
+        Mašinsko pranje i sušenje svih vrsta <b>tepiha</b> i staza. Radimo i vikendom.
+        Povoljne cene za pranje <b>tepiha</b> u Beogradu. Pozovite nas za besplatnu procenu —
+        dolazimo na Vašu adresu u roku od 24 sata.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <a href="#" class="result">
+      <div class="r-url">www.carpetwash.net</div>
+      <div class="r-title">Carpet Wash Center — Dubinsko pranje i restauracija tepiha</div>
+      <div class="r-desc">
+        Specijalizovani centar za dubinsko pranje <b>tepiha</b>, uklanjanje fleka i neprijatnih mirisa.
+        Radimo sa svim vrstama <b>tepiha</b>: ćilimi, staze, persijanci, sintetika.
+        Višegodišnje iskustvo i zadovoljni klijenti širom Beograda.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <a href="#" class="result">
+      <div class="r-url">www.pranjetepiha.info</div>
+      <div class="r-title">Pranje tepiha — cene i usluge — Beograd 2002</div>
+      <div class="r-desc">
+        Sve informacije o cenama pranja <b>tepiha</b> u Beogradu i okolini.
+        Poredite <b>tepih servise</b>, čitajte iskustva korisnika i pronađite pravi servis za Vas.
+        Cene od 150 din/m². Brzo i kvalitetno.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <a href="#" class="result">
+      <div class="r-url">www.tepihbeograd.co.yu</div>
+      <div class="r-title">Tepih Beograd — Pranje tepiha na kućnoj adresi</div>
+      <div class="r-desc">
+        Dolazimo po Vaš <b>tepih</b>, operemo ga i vratimo na adresu. Savremena oprema za
+        dubinsko pranje. <b>Tepih servis</b> sa tradicijom od 1994. godine.
+        Pon–Pet 08–20h, Sub 08–15h.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <a href="#" class="result">
+      <div class="r-url">www.mojdom.co.yu/tepih-saveti</div>
+      <div class="r-title">Moj Dom — Saveti za održavanje tepiha i staza</div>
+      <div class="r-desc">
+        Naučite kako da produžite vek svog <b>tepiha</b>. Stručni saveti i preporuke za
+        redovno pranje i održavanje. Lista proverenih <b>tepih servisa</b> u Srbiji
+        sa ocenama i komentarima korisnika.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <a href="#" class="result">
+      <div class="r-url">www.yellowpages.co.yu/tepih-servis</div>
+      <div class="r-title">Žute Strane — Tepih servis Srbija — Adresar firmi</div>
+      <div class="r-desc">
+        Kompletan adresar <b>tepih servisa</b> u Srbiji. Pronađite <b>tepih servis</b>
+        u Vašem gradu — Beograd, Novi Sad, Niš, Kragujevac. Telefoni, adrese i radno vreme.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <a href="#" class="result">
+      <div class="r-url">forum.srb.net/domacica/tepih-pranje</div>
+      <div class="r-title">Forum Domaćica — Iskustva sa tepih servisima</div>
+      <div class="r-desc">
+        Korisnici dele iskustva sa lokalnim <b>tepih servisima</b>.
+        "Odnela sam <b>tepih</b> i bio je kao nov posle..." Čitajte preporuke i upozorenja
+        članova foruma pre nego što izaberete <b>tepih servis</b>.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <a href="#" class="result">
+      <div class="r-url">www.kvart.co.yu/oglasi/tepih-servis</div>
+      <div class="r-title">Kvart.co.yu — Mali oglasi: Tepih servis Beograd</div>
+      <div class="r-desc">
+        Mali oglasi — <b>tepih servis</b>. Ponude i potražnja u Beogradu.
+        "Tražim pouzdanog majstora za pranje <b>tepiha</b> na adresi — Zemun."
+        "Nudim profesionalni <b>tepih servis</b> — Novi Beograd, povoljno."
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <span>Stranica:</span>
+      <span class="cur">1</span>
+      <a href="#">2</a>
+      <a href="#">3</a>
+      <a href="#">4</a>
+      <a href="#">5</a>
+      <a href="#">Sledeća &raquo;</a>
+    </div>
+
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar-col">
+
+    <div class="sidebar-ad">
+      <div class="ad-label">Sponzorisano</div>
+      <span class="ad-title">Tepih Servis EXTRA</span>
+      <div style="font-size:12px; color:#555; margin-bottom:4px;">
+        Pranje tepiha od 120 din/m². Dolazimo na adresu. Pozovite danas!
+      </div>
+      <div class="ad-url">www.tepihextra.co.yu</div>
+    </div>
+
+    <div class="sidebar-ad" style="margin-top:12px;">
+      <div class="ad-label">Sponzorisano</div>
+      <span class="ad-title">BG Carpet Cleaning</span>
+      <div style="font-size:12px; color:#555; margin-bottom:4px;">
+        Profesionalno dubinsko pranje. Brza usluga, povoljne cene.
+      </div>
+      <div class="ad-url">www.bgcarpet.co.yu</div>
+    </div>
+
+    <div class="sidebar-box" style="margin-top:18px;">
+      <h3>Srodni pojmovi</h3>
+      <ul>
+        <li><a href="#">pranje tepiha beograd</a></li>
+        <li><a href="#">dubinsko pranje tepiha</a></li>
+        <li><a href="#">tepih servis cene</a></li>
+        <li><a href="#">pranje cilima</a></li>
+        <li><a href="#">skidanje fleka sa tepiha</a></li>
+        <li><a href="#">pranje namestaja</a></li>
+        <li><a href="#">tepih servis novi sad</a></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-box">
+      <h3>Korisni linkovi</h3>
+      <ul>
+        <li><a href="#">Žute strane — tepih</a></li>
+        <li><a href="#">Bele strane — servis</a></li>
+        <li><a href="#">Oglasi.co.yu</a></li>
+        <li><a href="#">Forum Domaćica</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="pg-footer">
+  <a href="#">Početna</a>
+  <a href="#">O nama</a>
+  <a href="#">Reklamiranje</a>
+  <a href="#">Pomoć</a>
+  <br><br>
+  &copy; 2002 new angle — Sva prava zadržana
+</div>
+
+</body>
+</html>
