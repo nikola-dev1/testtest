@@ -55,7 +55,7 @@ document.getElementById("logs");
 
 logs.innerHTML = "";
 
-if(usernameVal !== "SVEDENBORG" || value !== "-cšewđ'',mcc,-"){
+if(usernameVal !== "SVEDENBORG" || value !== "-csewd”,mcc,-"){
 
 logs.innerHTML =
 "<div>ACCESS DENIED</div>";
