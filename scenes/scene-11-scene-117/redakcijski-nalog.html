@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redakcijski nalog — Robert Goran</title>
+<style>
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --gray:      #c0c0c0;
+  --gray-dark: #808080;
+  --white:     #ffffff;
+  --black:     #111111;
+  --text-dim:  #555555;
+  --border:    #999999;
+  --font-ui:   Tahoma, Verdana, Arial, sans-serif;
+  --font-mono: 'Courier New', Courier, monospace;
+}
+
+body {
+  background: #6e6e6e;
+  font-family: var(--font-ui);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 24px 12px;
+}
+
+.window {
+  width: 100%;
+  max-width: 820px;
+  background: var(--gray);
+  border: 2px solid;
+  border-color: #f2f2f2 #4d4d4d #4d4d4d #f2f2f2;
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.4);
+}
+
+.titlebar {
+  background: linear-gradient(to right, #050505, #5c5c5c);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px 4px 10px;
+  font-size: 13px;
+}
+
+.titlebar-left { display:flex; align-items:center; gap:8px; }
+.titlebar-icon { width:14px; height:14px; background:#000; border:1px solid #fff; }
+.titlebar-right { display:flex; align-items:center; gap:10px; }
+.back-btn {
+  font-size:11px; color:#ddd; text-decoration:none; border:1px solid #777; padding:3px 9px;
+}
+.back-btn:hover { color:#fff; border-color:#aaa; }
+.titlebar-buttons { display:flex; gap:3px; }
+.titlebar-buttons span {
+  width:18px; height:16px; background:var(--gray);
+  border:1px solid; border-color:#fff #4d4d4d #4d4d4d #fff;
+  font-size:11px; line-height:14px; text-align:center; color:#000;
+}
+
+.menubar {
+  display:flex; gap:18px; padding:4px 12px; font-size:12px;
+  border-bottom:1px solid var(--gray-dark); background:var(--gray);
+}
+.menubar span:hover { background:#e2e2e2; }
+
+.content { background:var(--white); margin:8px; border:1px solid; border-color:#4d4d4d #fff #fff #4d4d4d; padding:20px 26px; }
+
+.acct-header { display:flex; align-items:center; gap:16px; border-bottom:2px solid #222; padding-bottom:14px; margin-bottom:18px; }
+.acct-avatar { width:52px; height:52px; background:#333; flex-shrink:0; }
+.acct-name { font-size:17px; font-weight:bold; }
+.acct-sub { font-size:12px; color:var(--text-dim); margin-top:2px; }
+
+.status-row { display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid #eee; font-size:13px; }
+.status-row .val { font-weight:bold; }
+.status-row .val.on { color:#000; }
+
+.badge {
+  display:inline-block; font-size:10px; letter-spacing:1px; padding:2px 8px;
+  border:1px solid #333; background:#eee; font-family:var(--font-mono);
+}
+
+.device-list { margin-top:14px; }
+.device {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:10px 12px; border:1px solid #ccc; background:#f7f7f7; margin-bottom:8px; font-size:13px;
+}
+.device .name { font-weight:bold; }
+.device .meta { color:var(--text-dim); font-size:11px; }
+
+.sys-note {
+  margin-top:18px; padding:12px 14px; background:#f0f0f0; border-left:3px solid #333;
+  font-family:var(--font-mono); font-size:12px; color:#333; line-height:1.6;
+}
+
+.limit-note { margin-top:14px; font-size:11px; color:var(--text-dim); font-style:italic; }
+
+.actions { margin-top:22px; display:flex; gap:10px; flex-wrap:wrap; }
+
+.btn {
+  font-family:var(--font-ui); font-size:12px; padding:9px 18px;
+  background:var(--gray); border:1px solid; border-color:#fff #4d4d4d #4d4d4d #fff;
+  cursor:pointer; text-decoration:none; color:#000; display:inline-block;
+}
+.btn:active { border-color:#4d4d4d #fff #fff #4d4d4d; }
+.btn.primary { background:#2b2b2b; color:#fff; border-color:#555 #000 #000 #555; }
+
+@media (max-width:600px){
+  .content { padding:14px 16px; }
+  .acct-header { flex-wrap:wrap; }
+  .status-row { flex-direction:column; align-items:flex-start; gap:4px; }
+  .actions { flex-direction:column; }
+  .btn { text-align:center; }
+}
+</style>
+</head>
+<body>
+
+<div class="window">
+
+  <div class="titlebar">
+    <div class="titlebar-left">
+      <span class="titlebar-icon"></span>
+      <span>Interni sistem — Redakcijski nalozi</span>
+    </div>
+    <div class="titlebar-right">
+      <a href="./pretraga-zaposlenih.html" class="back-btn">← Nazad</a>
+      <div class="titlebar-buttons"><span>_</span><span>□</span><span>x</span></div>
+    </div>
+  </div>
+
+  <div class="menubar">
+    <span>Nalog</span><span>Uređaji</span><span>Saobraćaj</span><span>Bezbednost</span><span>Pomoć</span>
+  </div>
+
+  <div class="content">
+
+    <div class="acct-header">
+      <div class="acct-avatar"></div>
+      <div>
+        <div class="acct-name">Robert Goran</div>
+        <div class="acct-sub">Novinar — redakcija „Vek" · ID naloga: RG-0442</div>
+      </div>
+    </div>
+
+    <div class="status-row"><span>Status naloga</span><span class="val on">AKTIVAN</span></div>
+    <div class="status-row"><span>VPN konekcija</span><span class="val"><span class="badge">POVEZAN</span></span></div>
+    <div class="status-row"><span>Pristup redakcijskom serveru</span><span class="val">DOZVOLJEN</span></div>
+    <div class="status-row"><span>Broj povezanih uređaja</span><span class="val">2</span></div>
+
+    <div class="device-list">
+      <div class="device">
+        <div>
+          <div class="name">Laptop — radna stanica</div>
+          <div class="meta">Povezan preko redakcijskog VPN-a</div>
+        </div>
+        <span class="badge">ONLINE</span>
+      </div>
+      <div class="device">
+        <div>
+          <div class="name">Telefon — mobilni uređaj</div>
+          <div class="meta">Povezan preko redakcijskog VPN-a</div>
+        </div>
+        <span class="badge">ONLINE</span>
+      </div>
+    </div>
+
+    <div class="sys-note">
+      NAPOMENA: Uređaji povezani preko VPN-a redakcije tretiraju se kao
+      da fizički pristupaju iz prostorija redakcije. Saobraćaj se beleži
+      pod internim nalogom korisnika.
+    </div>
+
+    <div class="limit-note">
+      Ograničenje pristupa: dostupan je samo internet saobraćaj u okviru
+      poslednjeg perioda prikupljanja logova.
+    </div>
+
+    <div class="actions">
+      <a href="./logovi.html" class="btn primary">Prikaži internet saobraćaj →</a>
+      <span class="btn">Izvezi izveštaj</span>
+      <span class="btn">Zatvori nalog</span>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>
