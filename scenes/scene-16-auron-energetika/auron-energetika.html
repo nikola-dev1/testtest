@@ -1,0 +1,2117 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auron Energetika — Bežični prenos energije</title>
+<style>
+
+/* ============================================================
+   TOKENS & RESET
+   ============================================================ */
+:root {
+  --navy-deep:   #060e1f;
+  --navy:        #0a1628;
+  --navy-mid:    #0d1f3c;
+  --navy-panel:  #0f2545;
+  --blue-core:   #1a6fd4;
+  --blue-bright: #2e9cee;
+  --blue-glow:   #4db8ff;
+  --blue-dim:    #1a3a6a;
+  --white:       #ffffff;
+  --off-white:   #e8eef8;
+  --text-muted:  #6a82a8;
+  --text-body:   #a0bcd8;
+  --light-bg:    #f0f4fa;
+  --grid-color:  rgba(26,111,212,0.08);
+  --grid-size:   40px;
+  --nav-h:       72px;
+  --ease-out:    cubic-bezier(0.22,1,0.36,1);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; font-size:16px; }
+body {
+  font-family: 'Arial', Helvetica, sans-serif;
+  background: var(--navy-deep);
+  color: var(--white);
+  overflow-x: hidden;
+  cursor: default;
+}
+img { display:block; max-width:100%; }
+a { text-decoration:none; color:inherit; }
+
+/* ============================================================
+   LOADING SCREEN
+   ============================================================ */
+#loader {
+  position: fixed;
+  inset: 0;
+  background: var(--navy-deep);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  transition: opacity 0.6s var(--ease-out), visibility 0.6s;
+}
+#loader.hidden { opacity:0; visibility:hidden; }
+
+.loader-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.loader-logo img { height: 40px; width: auto; }
+.loader-logo-text {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: var(--white);
+}
+.loader-logo-sub {
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--text-muted);
+}
+
+.loader-bar-track {
+  width: 240px;
+  height: 2px;
+  background: rgba(77,184,255,0.15);
+  position: relative;
+  overflow: hidden;
+}
+.loader-bar-fill {
+  position: absolute;
+  top:0; left:0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue-core), var(--blue-glow));
+  width: 0%;
+  transition: width 0.05s linear;
+  box-shadow: 0 0 12px var(--blue-glow);
+}
+.loader-label {
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   DOT-GRID BACKGROUND (reusable)
+   ============================================================ */
+.dot-grid {
+  background-image: radial-gradient(circle, rgba(26,111,212,0.25) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+}
+
+.dot-grid-light {
+  background-image: radial-gradient(circle, rgba(26,111,212,0.12) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+#nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  padding: 0 60px;
+  gap: 48px;
+  transition: background 0.3s, backdrop-filter 0.3s, border-color 0.3s;
+  border-bottom: 1px solid transparent;
+}
+#nav.scrolled {
+  background: rgba(6,14,31,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom-color: rgba(26,111,212,0.2);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.nav-logo img { height: 32px; width: auto; }
+.nav-logo-text {
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: var(--white);
+}
+.nav-logo-sub {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  line-height: 1;
+}
+
+.nav-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+  margin-left: auto;
+}
+.nav-links a {
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  color: var(--text-body);
+  text-transform: uppercase;
+  transition: color 0.2s;
+  position: relative;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0; right: 0;
+  height: 1px;
+  background: var(--blue-glow);
+  transform: scaleX(0);
+  transition: transform 0.25s var(--ease-out);
+}
+.nav-links a:hover { color: var(--white); }
+.nav-links a:hover::after { transform: scaleX(1); }
+
+.nav-cta {
+  margin-left: 16px;
+  padding: 9px 22px;
+  border: 1px solid var(--blue-core);
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--white);
+  text-transform: uppercase;
+  transition: background 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+.nav-cta:hover {
+  background: var(--blue-core);
+  border-color: var(--blue-core);
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 120px 60px 80px;
+  background: var(--navy-deep);
+}
+
+/* animated dot grid overlay */
+#hero .dot-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.7;
+  animation: gridDrift 20s linear infinite;
+}
+@keyframes gridDrift {
+  0%   { background-position: 0 0; }
+  100% { background-position: var(--grid-size) var(--grid-size); }
+}
+
+/* radial glow center-right */
+#hero::after {
+  content: '';
+  position: absolute;
+  right: 5%; top: 15%;
+  width: 55vw; height: 70vh;
+  background: radial-gradient(ellipse at center,
+    rgba(77,184,255,0.07) 0%,
+    rgba(26,111,212,0.04) 40%,
+    transparent 70%);
+  pointer-events: none;
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 60px;
+  max-width: 1360px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.hero-left {}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--blue-glow);
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: block;
+  width: 32px; height: 1px;
+  background: var(--blue-glow);
+}
+
+.hero-h1 {
+  font-size: clamp(40px, 4.5vw, 72px);
+  font-weight: 900;
+  line-height: 1.0;
+  letter-spacing: -0.5px;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+.hero-h1 em {
+  font-style: normal;
+  color: var(--blue-glow);
+}
+
+.hero-sub-title {
+  font-size: clamp(20px, 2.5vw, 36px);
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: var(--blue-core);
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+
+.hero-desc {
+  font-size: 17px;
+  color: var(--text-body);
+  line-height: 1.75;
+  max-width: 480px;
+  margin-bottom: 44px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  padding: 14px 34px;
+  background: var(--blue-core);
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: 1px solid var(--blue-core);
+  transition: background 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+.btn-primary:hover { background: var(--blue-bright); transform: translateY(-1px); }
+
+.btn-secondary {
+  padding: 14px 34px;
+  background: transparent;
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: 1px solid rgba(77,184,255,0.35);
+  transition: border-color 0.2s, color 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+.btn-secondary:hover { border-color: var(--blue-glow); color: var(--blue-glow); transform: translateY(-1px); }
+
+/* hero stats row */
+.hero-stats {
+  display: flex;
+  gap: 40px;
+  margin-top: 52px;
+  padding-top: 40px;
+  border-top: 1px solid rgba(26,111,212,0.2);
+}
+.stat-item {}
+.stat-num {
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--white);
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+.stat-num span { color: var(--blue-glow); }
+.stat-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+/* hero right — tower visual */
+.hero-right {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-right img {
+  width: 100%;
+  max-width: 560px;
+  height: 560px;
+  object-fit: contain;
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 0 40px rgba(77,184,255,0.2));
+  animation: float 6s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-14px); }
+}
+
+/* pulse rings behind tower */
+.hero-rings {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(77,184,255,0.12);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  animation: pulse-ring 4s ease-out infinite;
+}
+.ring:nth-child(1) { width:240px; height:240px; animation-delay:0s; }
+.ring:nth-child(2) { width:380px; height:380px; animation-delay:0.8s; }
+.ring:nth-child(3) { width:520px; height:520px; animation-delay:1.6s; }
+.ring:nth-child(4) { width:660px; height:660px; animation-delay:2.4s; }
+@keyframes pulse-ring {
+  0%   { opacity:0; transform:translate(-50%,-50%) scale(0.85); }
+  30%  { opacity:1; }
+  100% { opacity:0; transform:translate(-50%,-50%) scale(1.05); }
+}
+
+/* ============================================================
+   SCROLL REVEAL
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+}
+.reveal.visible { opacity:1; transform:translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ============================================================
+   SECTION COMMON
+   ============================================================ */
+.section-wrap {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 60px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--blue-glow);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.eyebrow::before {
+  content: '';
+  display: block;
+  width: 24px; height: 1px;
+  background: var(--blue-glow);
+}
+
+.section-title {
+  font-size: clamp(28px, 3vw, 46px);
+  font-weight: 900;
+  letter-spacing: -0.3px;
+  line-height: 1.1;
+  color: var(--white);
+  margin-bottom: 16px;
+}
+
+.section-title.dark { color: var(--navy-deep); }
+.eyebrow.dark { color: var(--blue-core); }
+.eyebrow.dark::before { background: var(--blue-core); }
+
+.section-desc {
+  font-size: 17px;
+  color: var(--text-body);
+  line-height: 1.75;
+  max-width: 560px;
+}
+.section-desc.dark { color: #4a5a7a; }
+
+/* divider line */
+.h-line {
+  height: 1px;
+  background: linear-gradient(90deg, var(--blue-core) 0%, transparent 100%);
+  opacity: 0.3;
+}
+
+/* ============================================================
+   SECTION: TECHNOLOGY (3 pillars)
+   ============================================================ */
+#technology {
+  padding: 120px 0;
+  background: var(--navy);
+  position: relative;
+  overflow: hidden;
+}
+#technology .dot-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.4;
+}
+
+.tech-header {
+  margin-bottom: 72px;
+}
+
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+
+.tech-card {
+  background: rgba(13,31,60,0.7);
+  border: 1px solid rgba(26,111,212,0.15);
+  padding: 44px 36px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s, background 0.3s;
+  cursor: default;
+}
+.tech-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--blue-core), var(--blue-glow));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s var(--ease-out);
+}
+.tech-card:hover { border-color: rgba(26,111,212,0.35); background: rgba(15,37,69,0.9); }
+.tech-card:hover::before { transform: scaleX(1); }
+
+.tech-icon {
+  width: 52px; height: 52px;
+  margin-bottom: 24px;
+  position: relative;
+}
+.tech-icon svg {
+  width: 100%; height: 100%;
+  stroke: var(--blue-glow);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tech-num {
+  position: absolute;
+  top: 36px; right: 36px;
+  font-size: 64px;
+  font-weight: 900;
+  color: rgba(26,111,212,0.08);
+  line-height: 1;
+  letter-spacing: -2px;
+  pointer-events: none;
+}
+
+.tech-card-title {
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: var(--white);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  line-height: 1.2;
+}
+
+.tech-card-desc {
+  font-size: 14px;
+  color: var(--text-body);
+  line-height: 1.75;
+}
+
+/* ============================================================
+   SECTION: REZON PROJECT (full-width dark)
+   ============================================================ */
+#rezon {
+  padding: 120px 0;
+  background: var(--navy-deep);
+  position: relative;
+  overflow: hidden;
+}
+
+.rezon-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.rezon-visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rezon-visual img {
+  width: 100%;
+  max-width: 500px;
+  object-fit: contain;
+  position: relative;
+  z-index: 2;
+}
+
+/* animated concentric rings for rezon */
+.rezon-rings {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+.r-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(77,184,255,0.1);
+  animation: rzone-pulse 3s ease-in-out infinite;
+}
+.r-ring:nth-child(1) { width:200px; height:200px; animation-delay:0s; }
+.r-ring:nth-child(2) { width:310px; height:310px; animation-delay:0.5s; }
+.r-ring:nth-child(3) { width:420px; height:420px; animation-delay:1s; }
+@keyframes rzone-pulse {
+  0%,100% { opacity:0.3; transform:scale(1); }
+  50%      { opacity:0.7; transform:scale(1.02); }
+}
+
+.rezon-content {}
+
+.rezon-formula {
+  display: inline-block;
+  border: 1px solid rgba(77,184,255,0.3);
+  padding: 14px 28px;
+  font-size: 20px;
+  color: var(--blue-glow);
+  font-style: italic;
+  letter-spacing: 1px;
+  margin: 28px 0;
+  background: rgba(26,111,212,0.06);
+}
+
+.rezon-bullets {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 32px;
+}
+.rezon-bullets li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  font-size: 15px;
+  color: var(--text-body);
+  line-height: 1.6;
+}
+.rezon-bullets li::before {
+  content: '';
+  display: block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--blue-glow);
+  margin-top: 8px;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px var(--blue-glow);
+}
+
+/* flow diagram */
+.flow-diagram {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 40px;
+  padding: 24px 0;
+  border-top: 1px solid rgba(26,111,212,0.15);
+}
+.flow-node {
+  flex: 1 1 0;
+  text-align: center;
+}
+.flow-node-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.flow-node-box {
+  border: 1px solid rgba(26,111,212,0.3);
+  padding: 10px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--white);
+  text-transform: uppercase;
+  background: rgba(26,111,212,0.08);
+}
+.flow-node-box.active {
+  border-color: var(--blue-glow);
+  background: rgba(77,184,255,0.12);
+  color: var(--blue-glow);
+  box-shadow: 0 0 20px rgba(77,184,255,0.15);
+}
+.flow-arrow-sep {
+  color: var(--blue-core);
+  font-size: 18px;
+  padding: 0 8px;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   SECTION: TEAM (dr Mara)
+   ============================================================ */
+#team {
+  padding: 120px 0;
+  background: var(--light-bg);
+  position: relative;
+  overflow: hidden;
+}
+#team .dot-grid-light {
+  position: absolute;
+  inset: 0;
+}
+
+.team-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.team-header { margin-bottom: 64px; }
+
+.team-grid {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+/* Mara card */
+.team-portrait-card {
+  background: var(--white);
+  border: 1px solid #d0daea;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(10,30,80,0.1);
+  transition: box-shadow 0.3s, transform 0.3s;
+  cursor: default;
+}
+.team-portrait-card:hover {
+  box-shadow: 0 28px 80px rgba(10,30,80,0.15);
+  transform: translateY(-4px);
+}
+
+.portrait-img-wrap {
+  width: 100%;
+  height: 380px;
+  overflow: hidden;
+  background: #c8d8ea;
+  position: relative;
+}
+.portrait-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 0.6s var(--ease-out);
+}
+.team-portrait-card:hover .portrait-img-wrap img {
+  transform: scale(1.04);
+}
+
+/* subtle glow overlay on hover (the moment actor looks at her) */
+.portrait-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(26,111,212,0.15) 100%);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.team-portrait-card:hover .portrait-overlay { opacity: 1; }
+
+.portrait-info {
+  padding: 24px 28px;
+  border-top: 2px solid var(--blue-core);
+}
+.portrait-name {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--navy-deep);
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.portrait-name span { color: var(--blue-core); }
+.portrait-role {
+  font-size: 13px;
+  color: #6a7a9a;
+  letter-spacing: 1px;
+}
+
+/* team bio / info right */
+.team-content {}
+
+.team-bio {
+  font-size: 17px;
+  color: #4a5a7a;
+  line-height: 1.8;
+  margin-bottom: 36px;
+  max-width: 560px;
+}
+
+.expertise-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.expertise-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 18px;
+  background: var(--white);
+  border: 1px solid #d8e4f0;
+  border-left: 3px solid var(--blue-core);
+}
+.expertise-item svg {
+  width: 20px; height: 20px;
+  stroke: var(--blue-core);
+  fill: none;
+  stroke-width: 1.8;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.expertise-text {}
+.expertise-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy-mid);
+  letter-spacing: 0.5px;
+  margin-bottom: 3px;
+}
+.expertise-desc {
+  font-size: 12px;
+  color: #6a7a9a;
+  line-height: 1.5;
+}
+
+.quote-block {
+  border-left: 3px solid var(--blue-core);
+  padding: 16px 24px;
+  background: rgba(26,111,212,0.04);
+}
+.quote-text {
+  font-size: 16px;
+  color: var(--navy-mid);
+  font-style: italic;
+  line-height: 1.7;
+}
+
+/* ============================================================
+   SECTION: APPLICATIONS
+   ============================================================ */
+#applications {
+  padding: 120px 0;
+  background: var(--navy);
+  position: relative;
+  overflow: hidden;
+}
+#applications .dot-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+}
+
+.apps-header { margin-bottom: 64px; }
+
+.apps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.app-card {
+  background: rgba(13,31,60,0.8);
+  border: 1px solid rgba(26,111,212,0.15);
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s;
+  cursor: default;
+}
+.app-card:hover { border-color: rgba(77,184,255,0.35); transform: translateY(-4px); }
+
+.app-card-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.app-card-body {
+  padding: 28px 24px;
+}
+.app-card-icon {
+  width: 36px; height: 36px;
+  margin-bottom: 16px;
+}
+.app-card-icon svg {
+  width: 100%; height: 100%;
+  stroke: var(--blue-glow);
+  fill: none;
+  stroke-width: 1.5;
+}
+.app-card-title {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: var(--white);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.app-card-desc {
+  font-size: 14px;
+  color: var(--text-body);
+  line-height: 1.7;
+}
+
+/* ============================================================
+   SECTION: IMPACT / STATS
+   ============================================================ */
+#impact {
+  padding: 100px 0;
+  background: var(--navy-deep);
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(26,111,212,0.15);
+  border-bottom: 1px solid rgba(26,111,212,0.15);
+}
+
+/* animated energy line */
+#impact::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(77,184,255,0.2) 20%,
+    rgba(77,184,255,0.5) 50%,
+    rgba(77,184,255,0.2) 80%,
+    transparent 100%);
+  animation: energyLine 3s ease-in-out infinite;
+}
+@keyframes energyLine {
+  0%,100% { opacity:0.3; transform: scaleX(0.95) translateY(-50%); }
+  50%      { opacity:1; transform: scaleX(1) translateY(-50%); }
+}
+
+.impact-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+.impact-stat {
+  text-align: center;
+  padding: 20px;
+  border-right: 1px solid rgba(26,111,212,0.15);
+  position: relative;
+  z-index: 1;
+}
+.impact-stat:last-child { border-right: none; }
+.impact-stat-num {
+  font-size: 52px;
+  font-weight: 900;
+  color: var(--white);
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.impact-stat-num .accent { color: var(--blue-glow); }
+.impact-stat-label {
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+/* animated counter */
+.count-up { display: inline-block; }
+
+/* ============================================================
+   SECTION: NETWORK / HOW IT WORKS
+   ============================================================ */
+#how {
+  padding: 120px 0;
+  background: var(--light-bg);
+  position: relative;
+  overflow: hidden;
+}
+#how .dot-grid-light {
+  position: absolute;
+  inset: 0;
+}
+
+.how-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.how-header { margin-bottom: 64px; }
+
+.steps-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  position: relative;
+}
+
+/* connecting line between steps */
+.steps-list::after {
+  content: '';
+  position: absolute;
+  top: 36px; left: 12%; right: 12%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--blue-core), var(--blue-bright));
+  z-index: 0;
+}
+
+.step-item {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.step-dot {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 2px solid var(--blue-core);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  box-shadow: 0 0 0 8px rgba(26,111,212,0.06);
+  transition: background 0.3s, box-shadow 0.3s;
+}
+.step-dot svg {
+  width: 28px; height: 28px;
+  stroke: var(--blue-core);
+  fill: none;
+  stroke-width: 1.8;
+}
+.step-item:hover .step-dot {
+  background: var(--blue-core);
+  box-shadow: 0 0 0 8px rgba(26,111,212,0.12), 0 0 24px rgba(26,111,212,0.3);
+}
+.step-item:hover .step-dot svg { stroke: var(--white); }
+
+.step-title {
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  color: var(--navy-deep);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.step-desc {
+  font-size: 13px;
+  color: #5a6a8a;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   SECTION: CONTACT
+   ============================================================ */
+#contact {
+  padding: 120px 0;
+  background: var(--navy);
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.contact-info {}
+.contact-info .section-desc {
+  color: var(--text-body);
+  margin-bottom: 40px;
+}
+
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 15px;
+  color: var(--text-body);
+}
+.contact-row svg {
+  width: 20px; height: 20px;
+  stroke: var(--blue-glow);
+  fill: none;
+  stroke-width: 1.5;
+  flex-shrink: 0;
+}
+.contact-row strong { color: var(--white); margin-right: 4px; }
+
+/* collab tags */
+.ctag {
+  display: inline-block;
+  padding: 7px 16px;
+  border: 1px solid rgba(77,184,255,0.25);
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--text-body);
+  background: rgba(26,111,212,0.06);
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  cursor: default;
+}
+.ctag:hover {
+  border-color: var(--blue-glow);
+  color: var(--blue-glow);
+  background: rgba(77,184,255,0.1);
+}
+
+/* ticker tape */
+#ticker {
+  background: var(--navy-panel);
+  border-top: 1px solid rgba(26,111,212,0.2);
+  border-bottom: 1px solid rgba(26,111,212,0.2);
+  padding: 12px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+}
+#ticker::before, #ticker::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 80px;
+  z-index: 2;
+}
+#ticker::before { left:0; background: linear-gradient(90deg, var(--navy-panel), transparent); }
+#ticker::after  { right:0; background: linear-gradient(-90deg, var(--navy-panel), transparent); }
+.ticker-track {
+  display: inline-flex;
+  gap: 0;
+  animation: tickerScroll 28s linear infinite;
+}
+.ticker-track:hover { animation-play-state: paused; }
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 40px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+.ticker-item .dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--blue-glow);
+  box-shadow: 0 0 6px var(--blue-glow);
+  flex-shrink: 0;
+}
+@keyframes tickerScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* animated energy bar at hero bottom */
+.energy-bar {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--blue-core) 20%,
+    var(--blue-glow) 50%,
+    var(--blue-core) 80%,
+    transparent 100%);
+  background-size: 200% 100%;
+  animation: energySweep 3s linear infinite;
+}
+@keyframes energySweep {
+  0%   { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+/* live signal indicator in nav */
+.signal-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: #2ecc71;
+  text-transform: uppercase;
+  margin-left: 8px;
+}
+.signal-dot::before {
+  content: '';
+  display: block;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #2ecc71;
+  box-shadow: 0 0 0 0 rgba(46,204,113,0.4);
+  animation: signalPulse 2s ease-out infinite;
+}
+@keyframes signalPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(46,204,113,0.5); }
+  70%  { box-shadow: 0 0 0 7px rgba(46,204,113,0); }
+  100% { box-shadow: 0 0 0 0 rgba(46,204,113,0); }
+}
+
+/* horizontal scrolling tech specs */
+.specs-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  margin-top: 60px;
+  padding-bottom: 8px;
+}
+.specs-scroll::-webkit-scrollbar { display:none; }
+.specs-row {
+  display: flex;
+  gap: 2px;
+  min-width: max-content;
+}
+.spec-box {
+  background: rgba(13,31,60,0.8);
+  border: 1px solid rgba(26,111,212,0.15);
+  padding: 24px 28px;
+  min-width: 200px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.spec-box:hover { border-color: rgba(77,184,255,0.3); background: rgba(15,37,69,0.9); }
+.spec-box-val {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--white);
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+.spec-box-val .u { font-size: 14px; color: var(--blue-glow); font-weight: 400; margin-left: 2px; }
+.spec-box-key {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+/* form */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.form-group { display: flex; flex-direction: column; gap: 8px; }
+.form-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+.form-input,
+.form-textarea {
+  background: rgba(13,31,60,0.7);
+  border: 1px solid rgba(26,111,212,0.2);
+  padding: 13px 16px;
+  font-size: 14px;
+  color: var(--white);
+  font-family: inherit;
+  transition: border-color 0.2s, background 0.2s;
+  outline: none;
+}
+.form-input::placeholder, .form-textarea::placeholder { color: var(--text-muted); }
+.form-input:focus, .form-textarea:focus {
+  border-color: var(--blue-glow);
+  background: rgba(26,111,212,0.08);
+}
+.form-textarea { resize: vertical; min-height: 120px; }
+
+.form-submit {
+  padding: 15px 40px;
+  background: var(--blue-core);
+  border: 1px solid var(--blue-core);
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background 0.2s, transform 0.2s;
+}
+.form-submit:hover { background: var(--blue-bright); transform: translateY(-1px); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+#footer {
+  background: var(--navy-deep);
+  padding: 60px 0 32px;
+  border-top: 1px solid rgba(26,111,212,0.15);
+}
+
+.footer-inner {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+
+.footer-brand {}
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.footer-logo img { height: 28px; width: auto; }
+.footer-brand-name {
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: var(--white);
+}
+.footer-brand-sub {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+}
+.footer-tagline {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  max-width: 260px;
+  margin-bottom: 0;
+}
+
+.footer-col {}
+.footer-col-title {
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  color: var(--blue-glow);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.footer-links a {
+  font-size: 14px;
+  color: var(--text-muted);
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--white); }
+
+.footer-bottom {
+  padding-top: 24px;
+  border-top: 1px solid rgba(26,111,212,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-copy {
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+.footer-legal {
+  display: flex;
+  gap: 24px;
+}
+.footer-legal a {
+  font-size: 12px;
+  color: var(--text-muted);
+  transition: color 0.2s;
+}
+.footer-legal a:hover { color: var(--white); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1100px) {
+  .section-wrap { padding: 0 40px; }
+  #nav { padding: 0 40px; }
+  #hero { padding: 100px 40px 60px; }
+  .tech-grid { grid-template-columns: 1fr 1fr; }
+  .footer-inner { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 900px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  .rezon-inner { grid-template-columns: 1fr; }
+  .rezon-visual { display: none; }
+  .team-grid { grid-template-columns: 1fr; }
+  .contact-inner { grid-template-columns: 1fr; }
+  .steps-list { grid-template-columns: 1fr 1fr; gap: 40px; }
+  .steps-list::after { display: none; }
+  .apps-grid { grid-template-columns: 1fr 1fr; }
+  .impact-grid { grid-template-columns: 1fr 1fr; }
+  .nav-links { display: none; }
+}
+
+@media (max-width: 600px) {
+  .section-wrap { padding: 0 24px; }
+  #nav { padding: 0 24px; }
+  #hero { padding: 90px 24px 60px; }
+  .tech-grid { grid-template-columns: 1fr; }
+  .apps-grid { grid-template-columns: 1fr; }
+  .impact-grid { grid-template-columns: 1fr 1fr; }
+  .steps-list { grid-template-columns: 1fr; gap: 32px; }
+  .expertise-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .footer-inner { grid-template-columns: 1fr; gap: 32px; }
+  .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+  .hero-stats { gap: 24px; flex-wrap: wrap; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     LOADING SCREEN
+     ============================================================ -->
+<div id="loader">
+  <div class="loader-logo">
+    <img src="images/auron-logo-light.png" alt="Auron">
+    <div>
+      <div class="loader-logo-text">AURON</div>
+      <div class="loader-logo-sub">ENERGETIKA</div>
+    </div>
+  </div>
+  <div class="loader-bar-track">
+    <div class="loader-bar-fill" id="loaderBar"></div>
+  </div>
+  <div class="loader-label" id="loaderLabel">Inicijalizacija sistema...</div>
+</div>
+
+
+<!-- ============================================================
+     NAV
+     ============================================================ -->
+<nav id="nav">
+  <a class="nav-logo" href="auron-energetika.html">
+    <img src="images/auron-logo-light.png" alt="Auron Energetika">
+    <div>
+      <div class="nav-logo-text">AURON</div>
+      <div class="nav-logo-sub">ENERGETIKA</div>
+    </div>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#technology">Tehnologija</a></li>
+    <li><a href="#rezon">Projekat Rezon</a></li>
+    <li><a href="tim.html">Tim</a></li>
+    <li><a href="#applications">Primene</a></li>
+    <li><a href="#how">Kako funkcioniše</a></li>
+  </ul>
+
+  <a href="#contact" class="nav-cta">Kontakt</a>
+  <span class="signal-dot">Sistem aktivan</span>
+</nav>
+
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section id="hero">
+  <div class="dot-grid"></div>
+
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Projekat Rezon — Generacija budućnosti</div>
+
+      <h1 class="hero-h1">
+        Energija<br>
+        <em>bez žica.</em><br>
+        Bez granica.
+      </h1>
+
+      <div class="hero-sub-title">Bežični prenos energije</div>
+
+      <p class="hero-desc">
+        Auron Energetika razvija tehnologiju rezonantnog elektromagnetnog prenosa koja eliminiše fizičku infrastrukturu i otvara novo poglavlje u globalnoj energetici.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#rezon" class="btn-primary">Saznaj više o Rezonu</a>
+        <a href="#contact" class="btn-secondary">Postani partner</a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-num"><span class="count-up" data-target="94">0</span><span>%</span></div>
+          <div class="stat-label">Efikasnost prenosa</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num"><span class="count-up" data-target="0">0</span><span style="color:var(--blue-glow)">km</span></div>
+          <div class="stat-label">Fizičke infrastrukture</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num"><span class="count-up" data-target="3">0</span><span>+</span></div>
+          <div class="stat-label">Aktivna istraživanja</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-rings">
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="ring"></div>
+      </div>
+      <img src="images/hero-tower.png" alt="Projekat Rezon — Bežični prenos energije">
+    </div>
+  </div>
+  <div class="energy-bar"></div>
+</section>
+
+<!-- TICKER -->
+<div id="ticker">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<!-- ============================================================
+     TECHNOLOGY
+     ============================================================ -->
+<section id="technology">
+  <div class="dot-grid"></div>
+  <div class="section-wrap">
+
+    <div class="tech-header reveal">
+      <div class="eyebrow">Naša tehnologija</div>
+      <h2 class="section-title">Tri stuba Auron sistema</h2>
+    </div>
+
+    <div class="tech-grid">
+
+      <div class="tech-card reveal reveal-delay-1">
+        <div class="tech-num">01</div>
+        <div class="tech-icon">
+          <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="8"/><circle cx="24" cy="24" r="16" stroke-dasharray="4 4"/><circle cx="24" cy="24" r="22" stroke-dasharray="2 6" stroke-opacity="0.4"/></svg>
+        </div>
+        <div class="tech-card-title">Rezonantni<br>elektromagnetni prenos</div>
+        <div class="tech-card-desc">Energija putuje između odašiljača i prijemnika koji osciluju na identičnoj rezonantnoj frekvenciji — minimalni gubici, maksimalna efikasnost prenosa na rastojanju.</div>
+      </div>
+
+      <div class="tech-card reveal reveal-delay-2">
+        <div class="tech-num">02</div>
+        <div class="tech-icon">
+          <svg viewBox="0 0 48 48"><polyline points="4,24 10,14 18,34 26,10 34,30 40,20 44,24"/></svg>
+        </div>
+        <div class="tech-card-title">Adaptivno<br>upravljanje mrežom</div>
+        <div class="tech-card-desc">Inteligentni sistem u realnom vremenu prati i optimizuje tok energije kroz distribuiranu mrežu, automatski kompenzujući gubitke i preopterećenja.</div>
+      </div>
+
+      <div class="tech-card reveal reveal-delay-3">
+        <div class="tech-num">03</div>
+        <div class="tech-icon">
+          <svg viewBox="0 0 48 48"><rect x="8" y="16" width="32" height="22" rx="2"/><path d="M16 16V12a8 8 0 0 1 16 0v4"/><circle cx="24" cy="27" r="3"/><line x1="24" y1="30" x2="24" y2="34"/></svg>
+        </div>
+        <div class="tech-card-title">Bezbednosni<br>protokoli</div>
+        <div class="tech-card-desc">Višeslojni sistem zaštite koji osigurava da elektromagnetno polje ostaje unutar definisanih bezbedonosnih parametara, kompatibilnih sa medicinskim standardima.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     REZON PROJECT
+     ============================================================ -->
+<section id="rezon">
+  <div class="section-wrap">
+    <div class="rezon-inner">
+
+      <div class="rezon-visual reveal">
+        <div class="rezon-rings">
+          <div class="r-ring"></div>
+          <div class="r-ring"></div>
+          <div class="r-ring"></div>
+        </div>
+        <img src="images/wave-resonant.png" alt="Rezonantni prenos energije">
+      </div>
+
+      <div class="rezon-content">
+        <div class="eyebrow reveal">Projekat Rezon</div>
+        <h2 class="section-title reveal">Usko grlo<br>je rešeno</h2>
+
+        <p class="section-desc reveal" style="color:var(--text-body);">
+          Globalne energetske mreže pate od preopterećenja, ograničenih kapaciteta i ogromnih gubitaka u prenosu. REZON cilja direktno tu tačku — ne pokušava da reši sve, ali rešava ono što blokira razvoj.
+        </p>
+
+        <div class="rezon-formula reveal">
+          f = 1 / (2π√LC)
+        </div>
+
+        <ul class="rezon-bullets reveal">
+          <li>Rezonantna frekvencija definiše par odašiljač–prijemnik bez fizičkog kontakta</li>
+          <li>Energija se prenosi kroz vazduh sa efikasnošću do 94% na kratkim rastojanjima</li>
+          <li>Sistem je skalabilan — od punjenja mobilnih uređaja do industrijskih postrojenja</li>
+          <li>Nema kablova, nema fizičke infrastrukture, nema gubitaka u distribuciji</li>
+        </ul>
+
+        <div class="flow-diagram reveal">
+          <div class="flow-node">
+            <div class="flow-node-label">Ulaz</div>
+            <div class="flow-node-box">Proizvodnja</div>
+          </div>
+          <div class="flow-arrow-sep">→</div>
+          <div class="flow-node">
+            <div class="flow-node-label">Rezon rešenje</div>
+            <div class="flow-node-box active">Prenos</div>
+          </div>
+          <div class="flow-arrow-sep">→</div>
+          <div class="flow-node">
+            <div class="flow-node-label">Izlaz</div>
+            <div class="flow-node-box">Distribucija</div>
+          </div>
+          <div class="flow-arrow-sep">→</div>
+          <div class="flow-node">
+            <div class="flow-node-label">Krajnji</div>
+            <div class="flow-node-box">Korisnik</div>
+          </div>
+        </div>
+      </div>
+
+    <!-- horizontalni tech specs -->
+    <div class="specs-scroll reveal" style="margin-top:60px;">
+      <div class="specs-row">
+        <div class="spec-box"><div class="spec-box-val">94<span class="u">%</span></div><div class="spec-box-key">Efikasnost prenosa</div></div>
+        <div class="spec-box"><div class="spec-box-val">6.78<span class="u">MHz</span></div><div class="spec-box-key">Rezonantna frekvencija</div></div>
+        <div class="spec-box"><div class="spec-box-val">±0.01<span class="u">%</span></div><div class="spec-box-key">Tolerancija frekvencije</div></div>
+        <div class="spec-box"><div class="spec-box-val">&lt;0.5<span class="u">W/kg</span></div><div class="spec-box-key">SAR vrednost (bezbednost)</div></div>
+        <div class="spec-box"><div class="spec-box-val">5<span class="u">kW</span></div><div class="spec-box-key">Maks. snaga prenosa</div></div>
+        <div class="spec-box"><div class="spec-box-val">1.2<span class="u">m</span></div><div class="spec-box-key">Efikasni domet</div></div>
+        <div class="spec-box"><div class="spec-box-val">IP67</div><div class="spec-box-key">Zaštita sistema</div></div>
+        <div class="spec-box"><div class="spec-box-val">-40/+85<span class="u">°C</span></div><div class="spec-box-key">Radni temperaturni opseg</div></div>
+      </div>
+    </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     IMPACT STATS
+     ============================================================ -->
+<section id="impact">
+  <div class="section-wrap">
+    <div class="impact-grid">
+      <div class="impact-stat reveal">
+        <div class="impact-stat-num"><span class="count-up accent" data-target="94">0</span><span class="accent">%</span></div>
+        <div class="impact-stat-label">Efikasnost<br>prenosa</div>
+      </div>
+      <div class="impact-stat reveal reveal-delay-1">
+        <div class="impact-stat-num"><span class="count-up" data-target="60">0</span><span class="accent">%</span></div>
+        <div class="impact-stat-label">Manje gubitaka<br>vs. klasična mreža</div>
+      </div>
+      <div class="impact-stat reveal reveal-delay-2">
+        <div class="impact-stat-num"><span class="count-up" data-target="0">0</span><span class="accent"> km</span></div>
+        <div class="impact-stat-label">Fizičke<br>infrastrukture</div>
+      </div>
+      <div class="impact-stat reveal reveal-delay-3">
+        <div class="impact-stat-num"><span class="count-up" data-target="3">0</span><span class="accent">+</span></div>
+        <div class="impact-stat-label">Aktivnih<br>istraživačkih projekata</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     TEAM
+     ============================================================ -->
+<section id="team">
+  <div class="dot-grid-light"></div>
+  <div class="section-wrap">
+    <div class="team-inner">
+
+      <div class="team-header reveal">
+        <div class="eyebrow dark">Istraživački tim</div>
+        <h2 class="section-title dark">Ljudi koji stoje<br>iza Auron sistema</h2>
+      </div>
+
+      <div class="team-grid">
+
+        <!-- Mara portrait -->
+        <div class="team-portrait-card reveal" id="maraCard">
+          <div class="portrait-img-wrap">
+            <img src="images/speaker-mara.png" alt="dr Mara Rastovac">
+            <div class="portrait-overlay"></div>
+          </div>
+          <div class="portrait-info">
+            <div class="portrait-name">dr <span>Mara Rastovac</span></div>
+            <div class="portrait-role">Glavni istraživač · Auron Energetika</div>
+          </div>
+        </div>
+
+        <!-- Bio & expertise -->
+        <div class="team-content reveal reveal-delay-1">
+          <p class="team-bio">
+            Dr Mara Rastovac vodi istraživački program bežičnog prenosa energije u Auron Energetici. Sa iskustvom u primenjenoj elektromagnetici i energetskim sistemima, ona je arhitekt Projekta REZON od prvog dana.
+          </p>
+
+          <div class="expertise-grid">
+            <div class="expertise-item">
+              <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              <div class="expertise-text">
+                <div class="expertise-title">Primenjena elektromagnetika</div>
+                <div class="expertise-desc">Rezonantni sistemi, frekvencijska analiza, gubitak energije u prenosu</div>
+              </div>
+            </div>
+            <div class="expertise-item">
+              <svg viewBox="0 0 24 24"><polygon points="13,2 4,14 12,14 11,22 20,10 12,10"/></svg>
+              <div class="expertise-text">
+                <div class="expertise-title">Energetski sistemi</div>
+                <div class="expertise-desc">Distribuirane mreže, adaptivno upravljanje, integracija obnovljivih izvora</div>
+              </div>
+            </div>
+            <div class="expertise-item">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+              <div class="expertise-text">
+                <div class="expertise-title">Bezbednosni protokoli</div>
+                <div class="expertise-desc">Medicinski standardi, SAR vrednosti, regulatorna usklađenost</div>
+              </div>
+            </div>
+            <div class="expertise-item">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+              <div class="expertise-text">
+                <div class="expertise-title">Naučne publikacije</div>
+                <div class="expertise-desc">Istraživački radovi iz oblasti bežičnog prenosa i energetske efikasnosti</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="quote-block">
+            <p class="quote-text">"Teslin san nije bio neizvodljiv — bio je preran. Mi sada imamo materijale, računarsku snagu i razumevanje koje je njemu nedostajalo. REZON je taj san, konačno primenjen."</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     APPLICATIONS
+     ============================================================ -->
+<section id="applications">
+  <div class="dot-grid"></div>
+  <div class="section-wrap">
+
+    <div class="apps-header reveal">
+      <div class="eyebrow">Primena</div>
+      <h2 class="section-title">Primene danas i sutra</h2>
+      <p class="section-desc" style="margin-top:16px;">Otvaramo prostor za potpuno drugačiji sistem — u medicini, transportu i pametnim prostorima.</p>
+    </div>
+
+    <div class="apps-grid">
+
+      <div class="app-card reveal reveal-delay-1">
+        <img class="app-card-img" src="images/use-implant.png" alt="Medicinski implanti">
+        <div class="app-card-body">
+          <div class="app-card-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div class="app-card-title">Medicinski implanti</div>
+          <div class="app-card-desc">Sigurno i kontinuirano napajanje uređaja u telu — bez operacija za zamenu baterija. Primenjivo na pejsmejkere, neuralne implante i insulinske pumpe.</div>
+        </div>
+      </div>
+
+      <div class="app-card reveal reveal-delay-2">
+        <img class="app-card-img" src="images/use-ev.png" alt="Električna vozila">
+        <div class="app-card-body">
+          <div class="app-card-icon">
+            <svg viewBox="0 0 24 24"><rect x="1" y="9" width="22" height="11" rx="2"/><path d="M5 9V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2"/><line x1="12" y1="14" x2="12" y2="17"/></svg>
+          </div>
+          <div class="app-card-title">Električna vozila</div>
+          <div class="app-card-desc">Punjenje bez fizičkog kontakta — parkiranje iznad ploče za punjenje je dovoljno. Nema kablova, nema habanja priključaka, nema korisničke greške.</div>
+        </div>
+      </div>
+
+      <div class="app-card reveal reveal-delay-3">
+        <img class="app-card-img" src="images/use-smarthome.png" alt="Pametni prostori">
+        <div class="app-card-body">
+          <div class="app-card-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/><path d="M3 12v9h18V12"/></svg>
+          </div>
+          <div class="app-card-title">Pametni prostori</div>
+          <div class="app-card-desc">Kancelarije, hoteli i domovi bez vidljivih kablova. Svaki uređaj prima energiju bežično — čistiji prostor, veća fleksibilnost u dizajnu enterijera.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     HOW IT WORKS
+     ============================================================ -->
+<section id="how">
+  <div class="dot-grid-light"></div>
+  <div class="section-wrap">
+    <div class="how-inner">
+
+      <div class="how-header reveal">
+        <div class="eyebrow dark">Proces</div>
+        <h2 class="section-title dark">Kako funkcioniše</h2>
+        <p class="section-desc dark" style="margin-top:16px;">Četiri koraka koja odvajaju konvencionalni prenos od Auron sistema.</p>
+      </div>
+
+      <div class="steps-list">
+
+        <div class="step-item reveal reveal-delay-1">
+          <div class="step-dot">
+            <svg viewBox="0 0 24 24"><circle cx="8" cy="12" r="3"/><circle cx="16" cy="12" r="3"/><path d="M8 9V6M8 15v3M16 9V6M16 15v3"/></svg>
+          </div>
+          <div class="step-title">Odašiljač<br>generiše polje</div>
+          <div class="step-desc">Primarni kalem generiše oscilujuće elektromagnetno polje na definisanoj rezonantnoj frekvenciji.</div>
+        </div>
+
+        <div class="step-item reveal reveal-delay-2">
+          <div class="step-dot">
+            <svg viewBox="0 0 24 24"><polyline points="5,12 10,8 14,16 19,12"/><line x1="2" y1="12" x2="22" y2="12" stroke-opacity="0.3"/></svg>
+          </div>
+          <div class="step-title">Polje putuje<br>kroz prostor</div>
+          <div class="step-desc">Elektromagnetni talas prolazi kroz vazduh bez fizičkog kontakta — domet i smjer su precizno kontrolisani.</div>
+        </div>
+
+        <div class="step-item reveal reveal-delay-3">
+          <div class="step-dot">
+            <svg viewBox="0 0 24 24"><path d="M4 12 C4 8 8 8 8 12 C8 16 12 16 12 12 C12 8 16 8 16 12 C16 16 20 16 20 12"/></svg>
+          </div>
+          <div class="step-title">Prijemnik<br>se usklađuje</div>
+          <div class="step-desc">Sekundarni kalem prepoznaje rezonantnu frekvenciju i počinje da prima energiju — bez električne veze.</div>
+        </div>
+
+        <div class="step-item reveal reveal-delay-4">
+          <div class="step-dot">
+            <svg viewBox="0 0 24 24"><polygon points="13,2 4,14 12,14 11,22 20,10 12,10"/></svg>
+          </div>
+          <div class="step-title">Energija se<br>prenosi i koristi</div>
+          <div class="step-desc">Prenesena energija se konvertuje i isporučuje krajnjem uređaju — efikasno, bezbedno, bez otpada.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     CONTACT
+     ============================================================ -->
+<section id="contact">
+  <div class="section-wrap">
+    <div class="contact-inner">
+
+      <div class="contact-info reveal">
+        <div class="eyebrow">Kontakt</div>
+        <h2 class="section-title">Postanite deo<br>energetske budućnosti</h2>
+        <p class="section-desc" style="margin-top:16px;">Tražimo istraživačke partnere, investitore i institucije zainteresovane za primenu Rezon tehnologije.</p>
+
+        <div class="collab-areas" style="margin-top:40px;">
+          <div class="collab-label" style="font-size:11px;letter-spacing:2.5px;color:var(--text-muted);text-transform:uppercase;margin-bottom:20px;">Oblast saradnje</div>
+          <div class="collab-tags" style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span class="ctag">Istraživačka partnerstva</span>
+            <span class="ctag">Investicije</span>
+            <span class="ctag">Akademska saradnja</span>
+            <span class="ctag">Industrijska primena</span>
+            <span class="ctag">Medicinska industrija</span>
+            <span class="ctag">Energetske kompanije</span>
+            <span class="ctag">EU fondovi</span>
+            <span class="ctag">Državne institucije</span>
+          </div>
+          <p style="font-size:14px;color:var(--text-muted);line-height:1.7;margin-top:28px;">Sve upite razmatramo individualno. Odgovor stižu u najkraćem mogućem roku od strane nadležnog člana tima.</p>
+        </div>
+      </div>
+
+      <div class="contact-form reveal reveal-delay-2">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Ime i prezime</label>
+            <input class="form-input" type="text" placeholder="Vaše ime">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Organizacija</label>
+            <input class="form-input" type="text" placeholder="Naziv firme / institucije">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email adresa</label>
+          <input class="form-input" type="email" placeholder="email@kompanija.rs">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Oblast saradnje</label>
+          <input class="form-input" type="text" placeholder="Istraživanje, investicija, primena...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Poruka</label>
+          <textarea class="form-textarea" placeholder="Opišite Vašu zainteresovanost ili pitanje..."></textarea>
+        </div>
+        <button class="form-submit">Pošalji upit</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer id="footer">
+  <div class="section-wrap">
+
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <img src="images/auron-logo-light.png" alt="Auron">
+          <div>
+            <div class="footer-brand-name">AURON</div>
+            <div class="footer-brand-sub">ENERGETIKA</div>
+          </div>
+        </div>
+        <p class="footer-tagline">Razvijamo tehnologiju rezonantnog bežičnog prenosa energije — za svet bez kablova i bez granica.</p>
+      </div>
+
+      <div class="footer-col">
+        <div class="footer-col-title">Kompanija</div>
+        <ul class="footer-links">
+          <li><a href="tim.html">Tim</a></li>
+          <li><a href="#technology">Tehnologija</a></li>
+          <li><a href="#rezon">Projekat Rezon</a></li>
+          <li><a href="#contact">Kontakt</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <div class="footer-col-title">Tehnologija</div>
+        <ul class="footer-links">
+          <li><a href="#how">Kako funkcioniše</a></li>
+          <li><a href="#applications">Primene</a></li>
+          <li><a href="#impact">Uticaj</a></li>
+          <li><a href="#rezon">Istraživanje</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <div class="footer-col-title">Saradnja</div>
+        <ul class="footer-links">
+          <li><a href="#contact">Partnerstvo</a></li>
+          <li><a href="#contact">Investicije</a></li>
+          <li><a href="#contact">Akademska saradnja</a></li>
+          <li><a href="#contact">Mediji</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-copy">© Auron Energetika. Sva prava zadržana.</div>
+      <div class="footer-legal">
+        <a href="#">Politika privatnosti</a>
+        <a href="#">Uslovi korišćenja</a>
+        <a href="#">Kolačići</a>
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+
+/* ---- LOADER ---- */
+(function() {
+  const bar    = document.getElementById('loaderBar');
+  const label  = document.getElementById('loaderLabel');
+  const loader = document.getElementById('loader');
+  const phases = [
+    [20,  'Učitavanje resursa...'],
+    [50,  'Kalibracija sistema...'],
+    [80,  'Pokretanje interfejsa...'],
+    [100, 'Spreman.'],
+  ];
+  let current = 0;
+
+  function nextPhase() {
+    if (current >= phases.length) {
+      setTimeout(() => loader.classList.add('hidden'), 300);
+      return;
+    }
+    const [pct, text] = phases[current++];
+    bar.style.width = pct + '%';
+    label.textContent = text;
+    setTimeout(nextPhase, pct === 100 ? 400 : 500);
+  }
+  setTimeout(nextPhase, 200);
+})();
+
+
+/* ---- NAV SCROLL ---- */
+(function() {
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
+})();
+
+
+/* ---- SCROLL REVEAL ---- */
+(function() {
+  const els = document.querySelectorAll('.reveal');
+  if (!window.IntersectionObserver) {
+    els.forEach(el => el.classList.add('visible'));
+    return;
+  }
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(el => obs.observe(el));
+})();
+
+
+/* ---- COUNT-UP ---- */
+(function() {
+  const els = document.querySelectorAll('.count-up');
+  if (!window.IntersectionObserver) return;
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el     = e.target;
+      const target = parseInt(el.dataset.target, 10);
+      if (target === 0) { el.textContent = '0'; obs.unobserve(el); return; }
+      const dur    = 1400;
+      const start  = performance.now();
+      function tick(now) {
+        const t   = Math.min(1, (now - start) / dur);
+        const ease = 1 - Math.pow(1 - t, 3);
+        el.textContent = Math.round(ease * target);
+        if (t < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+      obs.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+
+  els.forEach(el => obs.observe(el));
+})();
+
+
+/* ---- TICKER ---- */
+(function() {
+  const items = [
+    'Projekat Rezon — Faza II istraživanja',
+    'Efikasnost prenosa: 94%',
+    'Rezonantna frekvencija: 6.78 MHz',
+    'Bežični prenos energije — bez fizičke infrastrukture',
+    'SAR vrednost ispod regulatornog limita',
+    'Aktivna istraživanja: medicinska, transportna, rezidencijalna primena',
+    'Auron Energetika — Energija budućnosti',
+    'REZON sistem — skalabilan od mW do kW',
+    'Istraživački tim: primenjena elektromagnetika i energetski sistemi',
+  ];
+  const track = document.getElementById('tickerTrack');
+  if (!track) return;
+  const doubled = [...items, ...items];
+  doubled.forEach(text => {
+    const span = document.createElement('span');
+    span.className = 'ticker-item';
+    span.innerHTML = `<span class="dot"></span>${text}`;
+    track.appendChild(span);
+  });
+})();
+
+/* ---- FORM SUBMIT (dummy) ---- */
+document.querySelector('.form-submit').addEventListener('click', function() {
+  this.textContent = 'Upit poslat ✓';
+  this.style.background = '#1a8a4a';
+  this.style.borderColor = '#1a8a4a';
+  setTimeout(() => {
+    this.textContent = 'Pošalji upit';
+    this.style.background = '';
+    this.style.borderColor = '';
+  }, 3000);
+});
+
+</script>
+
+</body>
+</html>

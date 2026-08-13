@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tim — Auron Energetika</title>
+<style>
+
+/* ============================================================
+   TOKENS & RESET
+   ============================================================ */
+:root {
+  --navy-deep:  #060e1f;
+  --navy:       #0a1628;
+  --navy-mid:   #0d1f3c;
+  --navy-panel: #0f2545;
+  --blue-core:  #1a6fd4;
+  --blue-bright:#2e9cee;
+  --blue-glow:  #4db8ff;
+  --white:      #ffffff;
+  --off-white:  #e8eef8;
+  --text-muted: #6a82a8;
+  --text-body:  #a0bcd8;
+  --light-bg:   #f0f4fa;
+  --light-mid:  #e4ecf6;
+  --nav-h:      72px;
+  --ease-out:   cubic-bezier(0.22,1,0.36,1);
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family: Arial, Helvetica, sans-serif; background: var(--navy-deep); color: var(--white); overflow-x: hidden; }
+img { display:block; max-width:100%; }
+a { text-decoration:none; color:inherit; }
+
+.dot-grid { background-image: radial-gradient(circle, rgba(26,111,212,0.22) 1px, transparent 1px); background-size: 40px 40px; }
+.dot-grid-light { background-image: radial-gradient(circle, rgba(26,111,212,0.1) 1px, transparent 1px); background-size: 40px 40px; }
+
+/* ============================================================
+   NAV
+   ============================================================ */
+#nav {
+  position:fixed; top:0; left:0; right:0; height:var(--nav-h); z-index:1000;
+  display:flex; align-items:center; padding:0 60px; gap:48px;
+  transition:background 0.3s, border-color 0.3s;
+  border-bottom:1px solid transparent;
+}
+#nav.scrolled { background:rgba(6,14,31,0.92); backdrop-filter:blur(12px); border-bottom-color:rgba(26,111,212,0.2); }
+.nav-logo { display:flex; align-items:center; gap:12px; flex-shrink:0; }
+.nav-logo img { height:32px; width:auto; }
+.nav-logo-text { font-size:17px; font-weight:900; letter-spacing:3px; color:var(--white); }
+.nav-logo-sub { font-size:10px; letter-spacing:2px; color:var(--text-muted); line-height:1; }
+.nav-links { display:flex; gap:36px; list-style:none; margin-left:auto; }
+.nav-links a { font-size:13px; letter-spacing:1.5px; color:var(--text-body); text-transform:uppercase; transition:color 0.2s; position:relative; }
+.nav-links a::after { content:''; position:absolute; bottom:-4px; left:0; right:0; height:1px; background:var(--blue-glow); transform:scaleX(0); transition:transform 0.25s var(--ease-out); }
+.nav-links a:hover { color:var(--white); }
+.nav-links a:hover::after, .nav-links a.active::after { transform:scaleX(1); }
+.nav-links a.active { color:var(--white); }
+.nav-cta { margin-left:16px; padding:9px 22px; border:1px solid var(--blue-core); font-size:12px; letter-spacing:2px; color:var(--white); text-transform:uppercase; transition:background 0.2s; flex-shrink:0; }
+.nav-cta:hover { background:var(--blue-core); }
+.signal-dot { display:inline-flex; align-items:center; gap:6px; font-size:10px; letter-spacing:1.5px; color:#2ecc71; text-transform:uppercase; margin-left:8px; }
+.signal-dot::before { content:''; display:block; width:7px; height:7px; border-radius:50%; background:#2ecc71; animation:signalPulse 2s ease-out infinite; }
+@keyframes signalPulse { 0%{box-shadow:0 0 0 0 rgba(46,204,113,0.5)} 70%{box-shadow:0 0 0 7px rgba(46,204,113,0)} 100%{box-shadow:0 0 0 0 rgba(46,204,113,0)} }
+
+/* ============================================================
+   REVEAL
+   ============================================================ */
+.reveal { opacity:0; transform:translateY(28px); transition:opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out); }
+.reveal.visible { opacity:1; transform:translateY(0); }
+.reveal-delay-1 { transition-delay:0.1s; }
+.reveal-delay-2 { transition-delay:0.2s; }
+.reveal-delay-3 { transition-delay:0.3s; }
+
+/* ============================================================
+   COMMON
+   ============================================================ */
+.section-wrap { max-width:1360px; margin:0 auto; padding:0 60px; }
+.eyebrow { display:inline-flex; align-items:center; gap:10px; font-size:11px; letter-spacing:3px; color:var(--blue-glow); text-transform:uppercase; margin-bottom:16px; }
+.eyebrow::before { content:''; display:block; width:24px; height:1px; background:var(--blue-glow); }
+.eyebrow.dark { color:var(--blue-core); }
+.eyebrow.dark::before { background:var(--blue-core); }
+.section-title { font-size:clamp(28px,3vw,46px); font-weight:900; line-height:1.1; color:var(--white); margin-bottom:16px; }
+.section-title.dark { color:var(--navy-deep); }
+
+/* ============================================================
+   HERO — split portrait / data
+   ============================================================ */
+#hero { min-height:100vh; padding-top:var(--nav-h); display:grid; grid-template-columns:1fr 1fr; position:relative; overflow:hidden; }
+
+.hero-portrait-panel { background:var(--navy-mid); position:relative; display:flex; flex-direction:column; justify-content:flex-end; overflow:hidden; min-height:100vh; }
+.portrait-full { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:top center; filter:saturate(0.85); transition:filter 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
+.hero-portrait-panel:hover .portrait-full { filter:saturate(1.05); transform:scale(1.02); }
+.portrait-gradient { position:absolute; bottom:0; left:0; right:0; height:60%; background:linear-gradient(180deg,transparent 0%,rgba(6,14,31,0.85) 100%); z-index:1; }
+.portrait-caption { position:relative; z-index:2; padding:40px 48px; }
+.portrait-name { font-size:clamp(26px,2.5vw,38px); font-weight:900; color:var(--white); letter-spacing:0.5px; margin-bottom:6px; line-height:1.1; }
+.portrait-name .dr { font-weight:400; font-size:0.65em; color:var(--blue-glow); letter-spacing:2px; display:block; margin-bottom:4px; }
+.portrait-role { font-size:13px; letter-spacing:2px; color:var(--text-muted); text-transform:uppercase; margin-bottom:20px; }
+.portrait-bar { height:2px; width:60px; background:linear-gradient(90deg,var(--blue-core),var(--blue-glow)); margin-bottom:20px; }
+.portrait-tags { display:flex; flex-wrap:wrap; gap:8px; }
+.ptag { padding:5px 14px; border:1px solid rgba(77,184,255,0.3); font-size:11px; letter-spacing:1.5px; color:var(--blue-glow); text-transform:uppercase; background:rgba(77,184,255,0.06); }
+
+.hero-content-panel { background:var(--navy-deep); position:relative; overflow:hidden; display:flex; align-items:center; }
+.hero-content-panel .dot-grid { position:absolute; inset:0; opacity:0.5; }
+.hero-content-inner { position:relative; z-index:1; padding:80px 60px; }
+.hero-eyebrow { display:inline-flex; align-items:center; gap:10px; font-size:11px; letter-spacing:3px; color:var(--blue-glow); text-transform:uppercase; margin-bottom:24px; }
+.hero-eyebrow::before { content:''; display:block; width:32px; height:1px; background:var(--blue-glow); }
+.hero-h1 { font-size:clamp(32px,3vw,52px); font-weight:900; line-height:1.1; color:var(--white); margin-bottom:24px; }
+.hero-h1 em { font-style:normal; color:var(--blue-glow); }
+.hero-desc { font-size:16px; color:var(--text-body); line-height:1.8; max-width:460px; margin-bottom:40px; }
+
+.metric-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-bottom:40px; }
+.metric-card { background:rgba(13,31,60,0.8); border:1px solid rgba(26,111,212,0.15); padding:20px 24px; position:relative; overflow:hidden; transition:border-color 0.3s; }
+.metric-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:1px; background:linear-gradient(90deg,var(--blue-core),transparent); transform:scaleX(0); transform-origin:left; transition:transform 0.4s var(--ease-out); }
+.metric-card:hover { border-color:rgba(77,184,255,0.3); }
+.metric-card:hover::after { transform:scaleX(1); }
+.metric-val { font-size:28px; font-weight:900; color:var(--white); letter-spacing:-0.5px; line-height:1; margin-bottom:6px; }
+.metric-val .u { font-size:14px; color:var(--blue-glow); font-weight:400; }
+.metric-key { font-size:10px; letter-spacing:2px; color:var(--text-muted); text-transform:uppercase; line-height:1.4; }
+
+.research-status { display:flex; flex-direction:column; gap:12px; }
+.rs-label { font-size:11px; letter-spacing:2.5px; color:var(--text-muted); text-transform:uppercase; margin-bottom:4px; }
+.rs-item { display:flex; align-items:center; gap:14px; padding:12px 16px; background:rgba(13,31,60,0.6); border:1px solid rgba(26,111,212,0.12); }
+.rs-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.rs-dot.active { background:#2ecc71; box-shadow:0 0 8px rgba(46,204,113,0.5); animation:signalPulse 2s ease-out infinite; }
+.rs-dot.progress { background:var(--blue-glow); box-shadow:0 0 8px rgba(77,184,255,0.4); }
+.rs-dot.pending { background:#f39c12; box-shadow:0 0 8px rgba(243,156,18,0.3); }
+.rs-name { font-size:13px; color:var(--off-white); flex:1; letter-spacing:0.3px; }
+.rs-phase { font-size:10px; letter-spacing:1.5px; color:var(--text-muted); text-transform:uppercase; }
+
+/* ============================================================
+   PROFIL — ekspertiza + karijera
+   ============================================================ */
+#profile { padding:120px 0; background:var(--light-bg); position:relative; overflow:hidden; }
+#profile .dot-grid-light { position:absolute; inset:0; }
+.profile-inner { position:relative; z-index:1; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+
+.exp-bars { display:flex; flex-direction:column; gap:20px; }
+.exp-bar-label { display:flex; justify-content:space-between; margin-bottom:8px; }
+.exp-bar-name { font-size:13px; font-weight:700; color:var(--navy-mid); letter-spacing:0.5px; }
+.exp-bar-pct { font-size:12px; color:var(--blue-core); font-weight:700; }
+.exp-bar-track { height:4px; background:#d0daea; position:relative; overflow:hidden; }
+.exp-bar-fill { position:absolute; top:0; left:0; bottom:0; background:linear-gradient(90deg,var(--blue-core),var(--blue-glow)); width:0%; transition:width 1.2s var(--ease-out); box-shadow:0 0 8px rgba(77,184,255,0.3); }
+
+.timeline { position:relative; padding-left:28px; }
+.timeline::before { content:''; position:absolute; left:0; top:8px; bottom:8px; width:1px; background:linear-gradient(180deg,var(--blue-core),transparent); }
+.tl-item { position:relative; margin-bottom:32px; }
+.tl-dot { position:absolute; left:-32px; top:6px; width:9px; height:9px; border-radius:50%; background:var(--blue-core); border:2px solid var(--light-bg); box-shadow:0 0 0 3px rgba(26,111,212,0.2); }
+.tl-period { font-size:10px; letter-spacing:2px; color:var(--blue-core); text-transform:uppercase; margin-bottom:4px; }
+.tl-title { font-size:15px; font-weight:700; color:var(--navy-mid); margin-bottom:4px; }
+.tl-org { font-size:13px; color:#6a7a9a; margin-bottom:6px; }
+.tl-desc { font-size:13px; color:#5a6a8a; line-height:1.65; }
+
+/* ============================================================
+   CITAT
+   ============================================================ */
+#quote-section { padding:100px 0; background:var(--navy-deep); position:relative; overflow:hidden; border-top:1px solid rgba(26,111,212,0.15); border-bottom:1px solid rgba(26,111,212,0.15); }
+.quote-inner { display:grid; grid-template-columns:280px 1fr; gap:80px; align-items:center; }
+.quote-portrait { position:relative; }
+.quote-portrait img { width:280px; height:340px; object-fit:cover; object-position:top center; filter:grayscale(0.15); }
+.quote-portrait::after { content:''; position:absolute; bottom:-12px; right:-12px; width:60%; height:60%; border-bottom:2px solid var(--blue-core); border-right:2px solid var(--blue-core); pointer-events:none; }
+.big-quote { font-size:clamp(18px,2vw,26px); color:var(--white); line-height:1.7; font-style:italic; font-weight:300; margin-bottom:32px; position:relative; padding-left:32px; }
+.big-quote::before { content:'"'; position:absolute; left:0; top:-12px; font-size:72px; color:var(--blue-core); font-style:normal; line-height:1; opacity:0.5; }
+.quote-attr { font-size:13px; letter-spacing:2px; color:var(--text-muted); text-transform:uppercase; }
+.quote-attr strong { color:var(--white); }
+
+/* ============================================================
+   PUBLIKACIJE
+   ============================================================ */
+#research { padding:120px 0; background:var(--navy); position:relative; overflow:hidden; }
+#research .dot-grid { position:absolute; inset:0; opacity:0.35; }
+.pub-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; margin-top:48px; }
+.pub-card { background:rgba(13,31,60,0.7); border:1px solid rgba(26,111,212,0.15); padding:32px 28px; position:relative; overflow:hidden; transition:border-color 0.3s, background 0.3s; cursor:default; }
+.pub-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--blue-core),var(--blue-glow)); transform:scaleX(0); transform-origin:left; transition:transform 0.4s var(--ease-out); }
+.pub-card:hover { border-color:rgba(77,184,255,0.3); background:rgba(15,37,69,0.9); }
+.pub-card:hover::before { transform:scaleX(1); }
+.pub-type { font-size:10px; letter-spacing:2.5px; color:var(--blue-glow); text-transform:uppercase; margin-bottom:16px; }
+.pub-title { font-size:15px; font-weight:700; color:var(--white); line-height:1.4; margin-bottom:12px; }
+.pub-venue { font-size:12px; color:var(--text-muted); font-style:italic; margin-bottom:16px; }
+.pub-tags { display:flex; flex-wrap:wrap; gap:6px; }
+.pub-tag { padding:3px 10px; border:1px solid rgba(26,111,212,0.25); font-size:10px; letter-spacing:1px; color:var(--text-muted); text-transform:uppercase; }
+
+/* ============================================================
+   LIVE STATUS
+   ============================================================ */
+#system-status { padding:120px 0; background:var(--navy-mid); position:relative; overflow:hidden; }
+#system-status .dot-grid { position:absolute; inset:0; opacity:0.3; }
+.status-inner { position:relative; z-index:1; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+
+.oscilloscope { background:#020c18; border:1px solid rgba(26,111,212,0.3); padding:24px; position:relative; }
+.osc-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+.osc-label { font-size:10px; letter-spacing:2px; color:var(--blue-glow); text-transform:uppercase; }
+.osc-live { font-size:10px; letter-spacing:2px; color:#2ecc71; text-transform:uppercase; display:flex; align-items:center; gap:6px; }
+.osc-live::before { content:''; width:6px; height:6px; border-radius:50%; background:#2ecc71; animation:signalPulse 1.5s ease-out infinite; }
+canvas#oscCanvas { display:block; width:100%; height:140px; }
+.osc-grid { position:absolute; inset:56px 24px 72px; background-image:linear-gradient(rgba(26,111,212,0.08) 1px,transparent 1px),linear-gradient(90deg,rgba(26,111,212,0.08) 1px,transparent 1px); background-size:25% 33%; pointer-events:none; }
+.osc-footer { display:flex; justify-content:space-between; margin-top:12px; }
+.osc-stat-val { font-size:16px; font-weight:700; color:var(--blue-glow); letter-spacing:0.5px; }
+.osc-stat-key { font-size:9px; letter-spacing:2px; color:var(--text-muted); text-transform:uppercase; margin-top:2px; }
+
+.status-list { display:flex; flex-direction:column; gap:16px; }
+.status-item { display:grid; grid-template-columns:1fr auto; align-items:center; gap:16px; padding:18px 20px; background:rgba(6,14,31,0.6); border:1px solid rgba(26,111,212,0.12); }
+.status-item-name { font-size:13px; font-weight:700; color:var(--white); margin-bottom:4px; }
+.status-item-desc { font-size:12px; color:var(--text-muted); }
+.status-progress { height:2px; background:rgba(26,111,212,0.15); margin-top:8px; position:relative; overflow:hidden; }
+.status-progress-fill { position:absolute; top:0; left:0; bottom:0; background:linear-gradient(90deg,var(--blue-core),var(--blue-glow)); width:0%; transition:width 1.4s var(--ease-out); }
+.status-badge { padding:4px 12px; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; font-weight:700; white-space:nowrap; }
+.badge-ok     { background:rgba(46,204,113,0.12); color:#2ecc71; border:1px solid rgba(46,204,113,0.3); }
+.badge-active { background:rgba(77,184,255,0.12); color:var(--blue-glow); border:1px solid rgba(77,184,255,0.3); }
+.badge-hold   { background:rgba(243,156,18,0.12); color:#f39c12; border:1px solid rgba(243,156,18,0.3); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+#footer { background:var(--navy-deep); padding:60px 0 32px; border-top:1px solid rgba(26,111,212,0.15); }
+.footer-inner { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:48px; margin-bottom:48px; }
+.footer-logo { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+.footer-logo img { height:28px; width:auto; }
+.footer-brand-name { font-size:17px; font-weight:900; letter-spacing:3px; color:var(--white); }
+.footer-brand-sub { font-size:10px; letter-spacing:2px; color:var(--text-muted); }
+.footer-tagline { font-size:14px; color:var(--text-muted); line-height:1.7; max-width:260px; }
+.footer-col-title { font-size:11px; letter-spacing:2.5px; color:var(--blue-glow); text-transform:uppercase; margin-bottom:20px; }
+.footer-links { list-style:none; display:flex; flex-direction:column; gap:10px; }
+.footer-links a { font-size:14px; color:var(--text-muted); transition:color 0.2s; }
+.footer-links a:hover { color:var(--white); }
+.footer-bottom { padding-top:24px; border-top:1px solid rgba(26,111,212,0.1); display:flex; justify-content:space-between; align-items:center; }
+.footer-copy { font-size:12px; color:var(--text-muted); }
+.footer-legal { display:flex; gap:24px; }
+.footer-legal a { font-size:12px; color:var(--text-muted); transition:color 0.2s; }
+.footer-legal a:hover { color:var(--white); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:1100px) { .section-wrap{padding:0 40px;} #nav{padding:0 40px;} .hero-content-inner{padding:60px 40px;} .pub-grid{grid-template-columns:1fr 1fr;} }
+@media (max-width:900px) { #hero{grid-template-columns:1fr;} .hero-portrait-panel{min-height:60vh;} .profile-inner{grid-template-columns:1fr; gap:48px;} .quote-inner{grid-template-columns:1fr;} .quote-portrait{display:none;} .status-inner{grid-template-columns:1fr; gap:48px;} .footer-inner{grid-template-columns:1fr 1fr;} .nav-links{display:none;} .pub-grid{grid-template-columns:1fr;} }
+@media (max-width:600px) { .section-wrap{padding:0 24px;} #nav{padding:0 24px;} .metric-grid{grid-template-columns:1fr;} .footer-inner{grid-template-columns:1fr; gap:32px;} .footer-bottom{flex-direction:column; gap:12px;} }
+
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="nav-logo" href="auron-energetika.html">
+    <img src="images/auron-logo-light.png" alt="Auron Energetika">
+    <div><div class="nav-logo-text">AURON</div><div class="nav-logo-sub">ENERGETIKA</div></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#technology">Tehnologija</a></li>
+    <li><a href="index.html#rezon">Projekat Rezon</a></li>
+    <li><a href="tim.html" class="active">Tim</a></li>
+    <li><a href="index.html#applications">Primene</a></li>
+    <li><a href="index.html#how">Kako funkcioniše</a></li>
+  </ul>
+  <a href="index.html#contact" class="nav-cta">Kontakt</a>
+  <span class="signal-dot">Sistem aktivan</span>
+</nav>
+
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-portrait-panel">
+    <img class="portrait-full" src="images/speaker-mara.png" alt="dr Mara Rastovac">
+    <div class="portrait-gradient"></div>
+    <div class="portrait-caption">
+      <div class="portrait-bar"></div>
+      <div class="portrait-name"><span class="dr">Dr</span>Mara Rastovac</div>
+      <div class="portrait-role">Glavni istraživač · Auron Energetika</div>
+      <div class="portrait-tags">
+        <span class="ptag">Elektromagnetika</span>
+        <span class="ptag">Energetski sistemi</span>
+        <span class="ptag">Projekat Rezon</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-content-panel">
+    <div class="dot-grid"></div>
+    <div class="hero-content-inner">
+      <div class="hero-eyebrow">Istraživački tim</div>
+      <h1 class="hero-h1">Arhitekt<br><em>bežične energije</em></h1>
+      <p class="hero-desc">Dr Mara Rastovac je vodeći istraživač u oblasti rezonantnog elektromagnetnog prenosa energije. Od osnivanja Projekta REZON, ona definiše tehničku strategiju i nadzire sve faze istraživačkog programa.</p>
+
+      <div class="metric-grid">
+        <div class="metric-card"><div class="metric-val"><span class="count-up" data-target="12">0</span><span class="u">+</span></div><div class="metric-key">Godina istraživanja</div></div>
+        <div class="metric-card"><div class="metric-val"><span class="count-up" data-target="94">0</span><span class="u">%</span></div><div class="metric-key">Efikasnost REZON sistema</div></div>
+        <div class="metric-card"><div class="metric-val"><span class="count-up" data-target="27">0</span></div><div class="metric-key">Istraživačkih radova</div></div>
+        <div class="metric-card"><div class="metric-val"><span class="count-up" data-target="3">0</span></div><div class="metric-key">Aktivnih projekata</div></div>
+      </div>
+
+      <div class="research-status">
+        <div class="rs-label">Status istraživanja</div>
+        <div class="rs-item"><div class="rs-dot active"></div><div class="rs-name">REZON — Faza II: Optimizacija efikasnosti</div><div class="rs-phase">Aktivno</div></div>
+        <div class="rs-item"><div class="rs-dot progress"></div><div class="rs-name">Medicinska primena — SAR protokoli</div><div class="rs-phase">U toku</div></div>
+        <div class="rs-item"><div class="rs-dot pending"></div><div class="rs-name">Industrijsko skaliranje — 50kW sistem</div><div class="rs-phase">Planiranje</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- PROFIL -->
+<section id="profile">
+  <div class="dot-grid-light"></div>
+  <div class="section-wrap">
+    <div class="profile-inner">
+
+      <div class="reveal">
+        <div class="eyebrow dark">Oblast ekspertize</div>
+        <h2 class="section-title dark" style="margin-bottom:40px;">Tehničke<br>kompetencije</h2>
+        <div class="exp-bars">
+          <div class="exp-bar-item"><div class="exp-bar-label"><span class="exp-bar-name">Rezonantni elektromagnetni prenos</span><span class="exp-bar-pct">97%</span></div><div class="exp-bar-track"><div class="exp-bar-fill" data-width="97"></div></div></div>
+          <div class="exp-bar-item"><div class="exp-bar-label"><span class="exp-bar-name">Primenjena elektromagnetika</span><span class="exp-bar-pct">92%</span></div><div class="exp-bar-track"><div class="exp-bar-fill" data-width="92"></div></div></div>
+          <div class="exp-bar-item"><div class="exp-bar-label"><span class="exp-bar-name">Energetski sistemi i mreže</span><span class="exp-bar-pct">88%</span></div><div class="exp-bar-track"><div class="exp-bar-fill" data-width="88"></div></div></div>
+          <div class="exp-bar-item"><div class="exp-bar-label"><span class="exp-bar-name">Bezbednosni i medicinski protokoli</span><span class="exp-bar-pct">85%</span></div><div class="exp-bar-track"><div class="exp-bar-fill" data-width="85"></div></div></div>
+          <div class="exp-bar-item"><div class="exp-bar-label"><span class="exp-bar-name">Dizajn rezonantnih kola</span><span class="exp-bar-pct">90%</span></div><div class="exp-bar-track"><div class="exp-bar-fill" data-width="90"></div></div></div>
+          <div class="exp-bar-item"><div class="exp-bar-label"><span class="exp-bar-name">Numeričke simulacije i modelovanje</span><span class="exp-bar-pct">82%</span></div><div class="exp-bar-track"><div class="exp-bar-fill" data-width="82"></div></div></div>
+        </div>
+      </div>
+
+      <div class="reveal reveal-delay-2">
+        <div class="eyebrow dark">Karijera</div>
+        <h2 class="section-title dark" style="margin-bottom:40px;">Profesionalni<br>put</h2>
+        <div class="timeline">
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-period">Auron Energetika</div><div class="tl-title">Glavni istraživač — Projekat Rezon</div><div class="tl-org">Beograd, Srbija</div><div class="tl-desc">Vodi razvoj sistema bežičnog prenosa energije od koncepta do prototipa. Definiše tehničke standarde i koordinira međunarodnu saradnju.</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-period">Istraživački centar za energetiku</div><div class="tl-title">Viši naučni saradnik</div><div class="tl-org">Beograd, Srbija</div><div class="tl-desc">Istraživanja u oblasti primenjena elektromagnetike i rezonantnih sistema. Objavila niz naučnih radova iz oblasti bežičnog prenosa.</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-period">Tehnički fakultet</div><div class="tl-title">Doktorat — Primenjena elektromagnetika</div><div class="tl-org">Srbija</div><div class="tl-desc">Disertacija: "Rezonantni prenos energije na daljinu — teorijska osnova i praktična ograničenja". Odbranjena sa najvišom ocenom.</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-period">Elektrotehnički fakultet</div><div class="tl-title">Elektrotehnički inženjering — Elektroenergetika</div><div class="tl-org">Srbija</div><div class="tl-desc">Diplomirala sa počastima, specijalizacija u energetskim sistemima i teorijskoj elektromagnetici.</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- CITAT -->
+<section id="quote-section">
+  <div class="section-wrap">
+    <div class="quote-inner">
+      <div class="quote-portrait reveal">
+        <img src="images/speaker-mara.png" alt="dr Mara Rastovac">
+      </div>
+      <div class="quote-content reveal reveal-delay-1">
+        <p class="big-quote">Teslin san nije bio neizvodljiv — bio je preran. Mi sada imamo materijale, računarsku snagu i razumevanje koje je njemu nedostajalo. REZON nije spekulacija. To je inženjering zasnovan na fizici koja oduvek postoji. Mi je samo primenjujemo na pravi način.</p>
+        <div class="quote-attr"><strong>Dr Mara Rastovac</strong> · Glavni istraživač, Auron Energetika</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- PUBLIKACIJE -->
+<section id="research">
+  <div class="dot-grid"></div>
+  <div class="section-wrap">
+    <div class="reveal">
+      <div class="eyebrow">Istraživački rad</div>
+      <h2 class="section-title">Odabrane publikacije<br>i istraživanja</h2>
+    </div>
+    <div class="pub-grid">
+      <div class="pub-card reveal reveal-delay-1"><div class="pub-type">Naučni rad</div><div class="pub-title">Rezonantni prenos energije visokom efikasnošću na rastojanjima do 1.5m</div><div class="pub-venue">Journal of Applied Electromagnetics, Vol. 14</div><div class="pub-tags"><span class="pub-tag">Rezonancija</span><span class="pub-tag">Efikasnost</span><span class="pub-tag">Bežični prenos</span></div></div>
+      <div class="pub-card reveal reveal-delay-2"><div class="pub-type">Konferencija</div><div class="pub-title">SAR analiza bežičnih sistema za napajanje medicinskih implantata</div><div class="pub-venue">IEEE International Conference on Wireless Power Transfer</div><div class="pub-tags"><span class="pub-tag">Medicina</span><span class="pub-tag">Bezbednost</span><span class="pub-tag">SAR</span></div></div>
+      <div class="pub-card reveal reveal-delay-3"><div class="pub-type">Patent</div><div class="pub-title">Adaptivni sistem za upravljanje rezonantnom frekvencijom u bežičnom prenosu snage</div><div class="pub-venue">Zavod za intelektualnu svojinu</div><div class="pub-tags"><span class="pub-tag">Patent</span><span class="pub-tag">Adaptivni sistem</span></div></div>
+      <div class="pub-card reveal reveal-delay-1"><div class="pub-type">Pregledni rad</div><div class="pub-title">Stanje i perspektive bežičnog prenosa električne energije — pregled dostignuća</div><div class="pub-venue">Elektrotehnika i elektronica, Vol. 58</div><div class="pub-tags"><span class="pub-tag">Pregled</span><span class="pub-tag">Perspektive</span></div></div>
+      <div class="pub-card reveal reveal-delay-2"><div class="pub-type">Naučni rad</div><div class="pub-title">Modelovanje gubitaka u rezonantnim kolima pri visokim frekvencijama</div><div class="pub-venue">Energy Systems Research, Vol. 9</div><div class="pub-tags"><span class="pub-tag">Modelovanje</span><span class="pub-tag">Gubici</span><span class="pub-tag">VF</span></div></div>
+      <div class="pub-card reveal reveal-delay-3"><div class="pub-type">Doktorska disertacija</div><div class="pub-title">Rezonantni prenos energije na daljinu — teorijska osnova i praktična ograničenja</div><div class="pub-venue">Tehnički fakultet</div><div class="pub-tags"><span class="pub-tag">Doktorat</span><span class="pub-tag">Teorija</span><span class="pub-tag">Eksperiment</span></div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- LIVE STATUS -->
+<section id="system-status">
+  <div class="dot-grid"></div>
+  <div class="section-wrap">
+    <div class="status-inner">
+
+      <div class="reveal">
+        <div class="eyebrow" style="margin-bottom:28px;">Rezon laboratorija</div>
+        <div class="oscilloscope">
+          <div class="osc-header">
+            <span class="osc-label">Rezonantni signal — 6.78 MHz</span>
+            <span class="osc-live">Live</span>
+          </div>
+          <div style="position:relative;">
+            <canvas id="oscCanvas" width="600" height="140"></canvas>
+            <div class="osc-grid"></div>
+          </div>
+          <div class="osc-footer">
+            <div class="osc-stat"><div class="osc-stat-val">6.78 MHz</div><div class="osc-stat-key">Frekvencija</div></div>
+            <div class="osc-stat"><div class="osc-stat-val" id="oscEff">94.0%</div><div class="osc-stat-key">Efikasnost</div></div>
+            <div class="osc-stat"><div class="osc-stat-val">±0.01%</div><div class="osc-stat-key">Tolerancija</div></div>
+            <div class="osc-stat"><div class="osc-stat-val" id="oscPow">4.8 kW</div><div class="osc-stat-key">Snaga</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal reveal-delay-2">
+        <div class="eyebrow" style="margin-bottom:28px;">Status projekata</div>
+        <div class="status-list">
+          <div class="status-item"><div class="status-item-left"><div class="status-item-name">REZON Faza II — Efikasnost</div><div class="status-item-desc">Optimizacija rezonantnog para na 94%+</div><div class="status-progress"><div class="status-progress-fill" data-width="87"></div></div></div><span class="status-badge badge-active">Aktivno</span></div>
+          <div class="status-item"><div class="status-item-left"><div class="status-item-name">Medicinska primena — SAR</div><div class="status-item-desc">Protokoli za implantabilne uređaje</div><div class="status-progress"><div class="status-progress-fill" data-width="62"></div></div></div><span class="status-badge badge-active">U toku</span></div>
+          <div class="status-item"><div class="status-item-left"><div class="status-item-name">EV punjač — bežični prototip</div><div class="status-item-desc">Bežično punjenje na 5kW, domet 1.2m</div><div class="status-progress"><div class="status-progress-fill" data-width="74"></div></div></div><span class="status-badge badge-ok">Testiranje</span></div>
+          <div class="status-item"><div class="status-item-left"><div class="status-item-name">Industrijsko skaliranje — 50kW</div><div class="status-item-desc">Studija izvodljivosti i dizajn sistema</div><div class="status-progress"><div class="status-progress-fill" data-width="28"></div></div></div><span class="status-badge badge-hold">Planiranje</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer id="footer">
+  <div class="section-wrap">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-logo"><img src="images/auron-logo-light.png" alt="Auron"><div><div class="footer-brand-name">AURON</div><div class="footer-brand-sub">ENERGETIKA</div></div></div>
+        <p class="footer-tagline">Razvijamo tehnologiju rezonantnog bežičnog prenosa energije — za svet bez kablova i bez granica.</p>
+      </div>
+      <div><div class="footer-col-title">Stranice</div><ul class="footer-links"><li><a href="index.html">Početna</a></li><li><a href="tim.html">Tim</a></li><li><a href="index.html#rezon">Projekat Rezon</a></li><li><a href="index.html#contact">Kontakt</a></li></ul></div>
+      <div><div class="footer-col-title">Tehnologija</div><ul class="footer-links"><li><a href="index.html#technology">Sistem</a></li><li><a href="index.html#applications">Primene</a></li><li><a href="index.html#how">Kako funkcioniše</a></li></ul></div>
+      <div><div class="footer-col-title">Saradnja</div><ul class="footer-links"><li><a href="index.html#contact">Partnerstvo</a></li><li><a href="index.html#contact">Investicije</a></li><li><a href="index.html#contact">Akademska</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© Auron Energetika. Sva prava zadržana.</div>
+      <div class="footer-legal"><a href="#">Politika privatnosti</a><a href="#">Uslovi korišćenja</a></div>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+/* NAV */
+(function(){ const n=document.getElementById('nav'); const upd=()=>n.classList.toggle('scrolled',window.scrollY>40); window.addEventListener('scroll',upd,{passive:true}); upd(); })();
+
+/* REVEAL */
+(function(){ const els=document.querySelectorAll('.reveal'); if(!window.IntersectionObserver){els.forEach(e=>e.classList.add('visible'));return;} const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:0.1,rootMargin:'0px 0px -40px 0px'}); els.forEach(e=>obs.observe(e)); })();
+
+/* COUNT-UP */
+(function(){ const els=document.querySelectorAll('.count-up'); if(!window.IntersectionObserver)return; const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(!e.isIntersecting)return;const el=e.target;const tgt=parseInt(el.dataset.target,10);if(tgt===0){el.textContent='0';obs.unobserve(el);return;}const dur=1400,start=performance.now();function tick(now){const t=Math.min(1,(now-start)/dur);const ease=1-Math.pow(1-t,3);el.textContent=Math.round(ease*tgt);if(t<1)requestAnimationFrame(tick);}requestAnimationFrame(tick);obs.unobserve(el);});},{threshold:0.5}); els.forEach(e=>obs.observe(e)); })();
+
+/* EXPERTISE BARS */
+(function(){ const bars=document.querySelectorAll('.exp-bar-fill'); if(!window.IntersectionObserver){bars.forEach(b=>b.style.width=b.dataset.width+'%');return;} const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(!e.isIntersecting)return;e.target.style.width=e.target.dataset.width+'%';obs.unobserve(e.target);});},{threshold:0.3}); bars.forEach(b=>obs.observe(b)); })();
+
+/* STATUS PROGRESS */
+(function(){ const bars=document.querySelectorAll('.status-progress-fill'); if(!window.IntersectionObserver){bars.forEach(b=>b.style.width=b.dataset.width+'%');return;} const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(!e.isIntersecting)return;e.target.style.width=e.target.dataset.width+'%';obs.unobserve(e.target);});},{threshold:0.3}); bars.forEach(b=>obs.observe(b)); })();
+
+/* OSCILLOSCOPE */
+(function(){
+  const canvas=document.getElementById('oscCanvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  let t=0; let effVal=94.0; let powVal=4.8;
+  const effEl=document.getElementById('oscEff');
+  const powEl=document.getElementById('oscPow');
+  function draw(){
+    const W=canvas.offsetWidth; const H=canvas.offsetHeight;
+    if(canvas.width!==W) canvas.width=W;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#020c18'; ctx.fillRect(0,0,W,H);
+    ctx.beginPath(); ctx.strokeStyle='#4db8ff'; ctx.lineWidth=1.5; ctx.shadowBlur=6; ctx.shadowColor='#4db8ff';
+    for(let x=0;x<W;x++){
+      const noise=Math.sin(x*0.3+t*2.3)*2.5+Math.sin(x*0.7+t*1.1)*1.2;
+      const y=H/2+Math.sin(x*0.06+t)*(H*0.3)+noise;
+      x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.stroke(); ctx.shadowBlur=0;
+    ctx.beginPath(); ctx.strokeStyle='rgba(26,111,212,0.25)'; ctx.lineWidth=1;
+    for(let x=0;x<W;x++){const y=H/2+Math.sin(x*0.035+t*0.6)*(H*0.14); x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+    ctx.stroke();
+    t+=0.04;
+    if(Math.random()>0.97){
+      effVal=93.8+Math.random()*0.4; powVal=4.7+Math.random()*0.2;
+      if(effEl) effEl.textContent=effVal.toFixed(1)+'%';
+      if(powEl) powEl.textContent=powVal.toFixed(1)+' kW';
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+
+</body>
+</html>
