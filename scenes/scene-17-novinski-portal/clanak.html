@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<!--
+  PROP SAJT za seriju "Teslina pošiljka", ep. 105 "Saveznik".
+  Ovo je članak koji Doktorka Rastovac otvara u sceni 516 — Novakov raniji
+  tekst o tajkunu Slavku , sa njegovom izjavom ispred gradilišta.
+  Fiktivan sadržaj. NEMA datuma/vremena objave niti bilo čega što otkriva
+  doba dana. Mesta za slike su "img-slot" blokovi sa nazivom fajla i
+  preporučenim dimenzijama — zameni ih sa <img> kad slike budu spremne.
+-->
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tajkun prvi put javno progovorio o optužbama — Sledbenik</title>
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root{
+  --red: #d81f26;
+  --red-dark: #a8151b;
+  --ink: #1a1a1a;
+  --gray: #6b6b6b;
+  --gray-light: #9a9a9a;
+  --line: #e4e4e4;
+  --bg: #ffffff;
+  --bg-soft: #f7f7f7;
+  --font-head: 'Oswald', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-serif: 'Merriweather', serif;
+  --maxw: 1280px;
+}
+
+*, *::before, *::after{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+body{
+  margin:0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  line-height: 1.5;
+}
+img{ max-width:100%; display:block; }
+a{ color:inherit; text-decoration:none; }
+ul{ margin:0; padding:0; list-style:none; }
+button{ font-family:inherit; cursor:pointer; }
+input, textarea{ font-family:inherit; }
+
+.container{ max-width: var(--maxw); margin:0 auto; padding:0 20px; }
+
+.img-slot{
+  width:100%; height:100%; min-height: 120px;
+  background: repeating-linear-gradient(45deg, #eee 0, #eee 10px, #f6f6f6 10px, #f6f6f6 20px);
+  border: 1px solid var(--line);
+  display:flex; align-items:center; justify-content:center;
+  text-align:center; color: var(--gray);
+  font-size: .72rem; line-height:1.4; padding:8px;
+}
+.img-slot b{ display:block; color: var(--ink); font-size:.76rem; margin-bottom:2px; }
+
+.ad-slot{
+  width:100%; background: var(--bg-soft);
+  border: 1px dashed #c9c9c9; color: var(--gray-light);
+  font-family: var(--font-head); letter-spacing:.05em; font-size:.8rem;
+  display:flex; align-items:center; justify-content:center; text-transform:uppercase;
+}
+
+/* progress bar */
+.progress-bar{
+  position: fixed; top:0; left:0; height:3px;
+  background: var(--red); width:0%;
+  z-index: 300;
+  transition: width .1s linear;
+}
+
+/* header (shared) */
+.site-header{ position: sticky; top:0; z-index: 200; background: var(--bg); border-bottom: 1px solid var(--line); transition: box-shadow .25s ease; }
+.site-header.is-scrolled{ box-shadow: 0 4px 14px rgba(0,0,0,.08); }
+.header-inner{ display:flex; align-items:center; justify-content: space-between; padding: 14px 0; gap: 20px; }
+.logo{ background: var(--red); color:#fff; font-family: var(--font-head); font-weight:700; font-size: 1.4rem; letter-spacing:.04em; padding: 8px 16px; border-radius: 2px; flex-shrink:0; }
+.main-nav{ display:flex; align-items:center; gap: 4px; flex-wrap:wrap; }
+.main-nav a{ font-family: var(--font-head); font-size:.85rem; font-weight:500; letter-spacing:.03em; text-transform:uppercase; padding:8px 12px; border-radius:3px; color: var(--ink); position:relative; }
+.main-nav a::after{ content:""; position:absolute; left:12px; right:12px; bottom:4px; height:2px; background: var(--red); transform: scaleX(0); transform-origin:left; transition: transform .2s ease; }
+.main-nav a:hover::after, .main-nav a.active::after{ transform: scaleX(1); }
+.main-nav a.active{ color: var(--red); }
+.header-tools{ display:flex; align-items:center; gap:10px; }
+.icon-btn{ width:38px; height:38px; border-radius:50%; border:1px solid var(--line); background:#fff; display:flex; align-items:center; justify-content:center; font-size:1rem; transition: background .2s ease, border-color .2s ease; }
+.icon-btn:hover{ background: var(--bg-soft); border-color: var(--gray-light); }
+.search-bar{ max-width: var(--maxw); margin:0 auto; padding:0 20px; max-height:0; overflow:hidden; transition: max-height .3s ease, padding .3s ease; }
+.search-bar.is-open{ max-height:70px; padding-bottom:14px; }
+.search-bar input{ width:100%; padding:12px 16px; border:2px solid var(--ink); border-radius:6px; font-size:.95rem; }
+.search-bar input:focus{ outline:none; border-color: var(--red); }
+.nav-toggle{ display:none; width:40px; height:36px; border:1px solid var(--line); background:#fff; border-radius:6px; position:relative; }
+.nav-toggle span, .nav-toggle span::before, .nav-toggle span::after{ content:""; position:absolute; left:8px; right:8px; height:2px; background: var(--ink); }
+.nav-toggle span{ top:50%; transform: translateY(-50%); }
+.nav-toggle span::before{ top:-7px; }
+.nav-toggle span::after{ top:7px; }
+
+.ticker-bar{ background: var(--red); color:#fff; display:flex; align-items:center; }
+.ticker-label{ font-family: var(--font-head); font-weight:700; font-size:.78rem; letter-spacing:.05em; padding:10px 16px; background: var(--red-dark); flex-shrink:0; white-space:nowrap; }
+.ticker-track-wrap{ overflow:hidden; flex:1; }
+.ticker-track{ display:flex; width:max-content; animation: ticker-scroll 32s linear infinite; }
+.ticker-track:hover{ animation-play-state: paused; }
+.ticker-track a{ font-size:.85rem; padding:10px 26px 10px 0; white-space:nowrap; }
+.ticker-track a::before{ content:"● "; opacity:.7; margin-right:6px; }
+@keyframes ticker-scroll{ from{ transform: translateX(0); } to{ transform: translateX(-50%); } }
+
+/* breadcrumb */
+.breadcrumb{ font-size:.8rem; color: var(--gray); padding: 18px 0 0; }
+.breadcrumb a:hover{ color: var(--red); }
+
+/* article layout */
+.article-layout{
+  display:grid;
+  grid-template-columns: 1fr 320px;
+  gap: 40px;
+  padding: 18px 0 60px;
+  align-items:start;
+}
+.article-main{ min-width:0; }
+.article-side{ display:flex; flex-direction:column; gap:22px; }
+
+.tag{
+  display:inline-block; background: var(--red); color:#fff;
+  font-family: var(--font-head); font-size:.7rem; font-weight:700;
+  letter-spacing:.08em; text-transform:uppercase; padding:5px 11px;
+  border-radius:2px; margin: 18px 0 12px;
+}
+.article-title{
+  font-family: var(--font-head);
+  font-size: clamp(1.8rem, 4vw, 2.7rem);
+  line-height:1.15;
+  text-transform: uppercase;
+  margin: 0 0 18px;
+  letter-spacing:.005em;
+}
+.byline-row{
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:12px;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 22px;
+}
+.byline{ font-size:.88rem; }
+.byline b{ color: var(--ink); }
+.byline .read-time{ color: var(--gray-light); margin-left:10px; font-size:.8rem; }
+.share-row{ display:flex; align-items:center; gap:8px; }
+.share-btn{
+  width:36px; height:36px; border-radius:50%;
+  border:1px solid var(--line); background:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.85rem; font-weight:700; color: var(--gray);
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+.share-btn:hover{ background: var(--ink); color:#fff; border-color: var(--ink); }
+.copy-link-wrap{ position:relative; }
+.copy-tooltip{
+  position:absolute; bottom: 110%; left:50%; transform: translateX(-50%);
+  background: var(--ink); color:#fff; font-size:.7rem; padding:5px 9px;
+  border-radius:4px; white-space:nowrap;
+  opacity:0; pointer-events:none; transition: opacity .2s ease;
+}
+.copy-tooltip.show{ opacity:1; }
+
+.hero-media{ border-radius:4px; overflow:hidden; margin-bottom:8px; }
+.hero-media .img-slot{ min-height: 340px; }
+.media-caption{ font-size:.78rem; color: var(--gray-light); font-style:italic; margin-bottom: 26px; }
+
+.article-body{ font-size: 1.03rem; color:#2a2a2a; }
+.article-body p{ margin: 0 0 20px; }
+.article-body p.lede{
+  font-family: var(--font-serif);
+  font-size: 1.14rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height:1.55;
+}
+
+.pull-quote{
+  border-left: 4px solid var(--red);
+  background: var(--bg-soft);
+  padding: 22px 26px;
+  margin: 30px 0;
+  border-radius: 0 4px 4px 0;
+}
+.pull-quote p{
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height:1.55;
+  color: var(--ink);
+  margin: 0 0 10px;
+}
+.pull-quote cite{
+  font-family: var(--font-head);
+  font-style: normal;
+  font-size:.8rem;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  color: var(--red-dark);
+  font-weight:700;
+}
+
+.mid-media{ border-radius:4px; overflow:hidden; margin: 8px 0 8px; }
+.mid-media .img-slot{ min-height: 260px; }
+
+/* related box */
+.related-box{
+  margin-top: 40px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--bg-soft);
+}
+.related-box h4{
+  font-family: var(--font-head);
+  font-size:.85rem;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  margin: 0 0 14px;
+  color: var(--red-dark);
+}
+.related-box ul li{ padding: 8px 0; border-bottom: 1px solid var(--line); }
+.related-box ul li:last-child{ border-bottom:none; }
+.related-box ul li a{ font-weight:600; font-size:.92rem; }
+.related-box ul li a:hover{ color: var(--red); }
+
+/* comments */
+.comments{ margin-top: 46px; }
+.comments h3{ font-family: var(--font-head); text-transform:uppercase; font-size:1.1rem; letter-spacing:.03em; margin: 0 0 20px; }
+.comment{ display:flex; gap:12px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.comment .avatar{
+  width:40px; height:40px; border-radius:50%; flex-shrink:0;
+  background: var(--ink); color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-family: var(--font-head); font-weight:700; font-size:.85rem;
+}
+.comment .name{ font-weight:700; font-size:.88rem; }
+.comment .text{ font-size:.9rem; color:#333; margin-top:4px; }
+.comment-form{ margin-top: 22px; }
+.comment-form textarea{
+  width:100%; min-height: 90px; padding: 12px 14px;
+  border: 2px solid var(--line); border-radius:6px;
+  font-size:.92rem; resize: vertical;
+}
+.comment-form textarea:focus{ outline:none; border-color: var(--red); }
+.comment-form button{
+  margin-top: 10px;
+  padding: 11px 22px; border:none; border-radius:5px;
+  background: var(--ink); color:#fff;
+  font-family: var(--font-head); font-weight:600; letter-spacing:.05em;
+  font-size:.82rem; text-transform:uppercase;
+  transition: background .2s ease;
+}
+.comment-form button:hover{ background: var(--red); }
+
+/* sidebar widgets (shared look) */
+.widget{ border: 1px solid var(--line); border-radius: 4px; overflow:hidden; background:#fff; }
+.widget-head{ background: var(--red); color:#fff; font-family: var(--font-head); font-weight:700; font-size:.78rem; letter-spacing:.06em; text-transform:uppercase; padding:10px 14px; }
+.widget-body{ padding:14px; }
+.ranked-list li{ display:flex; gap:12px; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--line); }
+.ranked-list li:last-child{ border-bottom:none; }
+.ranked-list .num{ font-family: var(--font-head); font-weight:700; font-size:1.3rem; color: var(--line); line-height:1; flex-shrink:0; }
+.ranked-list a{ font-size:.85rem; font-weight:600; line-height:1.35; }
+.ranked-list a:hover{ color: var(--red); }
+.columnist{ display:flex; gap:12px; padding:12px 0; border-bottom:1px solid var(--line); }
+.columnist:last-child{ border-bottom:none; }
+.columnist .avatar{ width:50px; height:50px; border-radius:50%; overflow:hidden; flex-shrink:0; }
+.columnist .name{ font-weight:700; font-size:.86rem; }
+.columnist .col-title{ color: var(--red); font-size:.82rem; font-weight:600; }
+.columnist .desc{ color: var(--gray); font-size:.78rem; margin-top:2px; }
+.widget-more{ display:block; text-align:center; margin-top:12px; padding:10px; border:1.5px solid var(--ink); border-radius:4px; font-family: var(--font-head); font-size:.76rem; font-weight:600; letter-spacing:.05em; text-transform:uppercase; transition: background .2s ease, color .2s ease; }
+.widget-more:hover{ background: var(--ink); color:#fff; }
+
+.reveal{ opacity:0; transform: translateY(24px); transition: opacity .55s ease, transform .55s ease; }
+.reveal.visible{ opacity:1; transform:none; }
+
+.back-top{ position: fixed; right:22px; bottom:22px; width:46px; height:46px; border-radius:50%; background: var(--ink); color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.2rem; opacity:0; pointer-events:none; transform: translateY(10px); transition: opacity .25s ease, transform .25s ease, background .2s ease; z-index:150; }
+.back-top.show{ opacity:1; pointer-events:all; transform:none; }
+.back-top:hover{ background: var(--red); }
+
+.site-footer{ background: var(--ink); color:#c9c9c9; margin-top:20px; }
+.footer-top{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; padding:30px 0; border-bottom:1px solid #333; }
+.footer-logo{ font-family: var(--font-head); font-weight:700; font-size:1.3rem; color:#fff; letter-spacing:.04em; }
+.footer-socials{ display:flex; gap:10px; }
+.footer-socials a{ width:34px; height:34px; border-radius:50%; border:1px solid #444; display:flex; align-items:center; justify-content:center; font-size:.78rem; font-weight:700; color:#c9c9c9; transition: background .2s ease, color .2s ease; }
+.footer-socials a:hover{ background: var(--red); color:#fff; border-color: var(--red); }
+.footer-bottom{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; padding:18px 0; font-size:.78rem; }
+.footer-bottom a:hover{ color:#fff; }
+
+@media (max-width: 1080px){
+  .article-layout{ grid-template-columns: 1fr; }
+}
+@media (max-width: 780px){
+  .main-nav{ display:none; position:absolute; top:100%; left:0; right:0; background:#fff; flex-direction:column; border-bottom:1px solid var(--line); padding:8px 20px 16px; }
+  .main-nav.is-open{ display:flex; }
+  .main-nav a{ padding:12px 8px; }
+  .nav-toggle{ display:block; }
+  .byline-row{ flex-direction:column; align-items:flex-start; }
+  .hero-media .img-slot{ min-height: 220px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress-bar"></div>
+
+<header class="site-header" id="site-header">
+  <div class="container header-inner">
+    <a href="portal.html" class="logo">SLEDBENIK</a>
+    <nav class="main-nav" id="main-nav">
+      <a href="portal.html">Naslovna</a>
+      <a href="#">Politika</a>
+      <a href="#">Društvo</a>
+      <a href="#">Ekonomija</a>
+      <a href="#" class="active">Hronika</a>
+      <a href="#">Svet</a>
+      <a href="#">Kultura</a>
+      <a href="#">Sport</a>
+      <a href="#">Magazin</a>
+    </nav>
+    <div class="header-tools">
+      <button class="icon-btn" id="search-toggle" aria-label="Pretraga">🔍</button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Meni"><span></span></button>
+    </div>
+  </div>
+  <div class="search-bar" id="search-bar">
+    <input type="text" placeholder="Pretraži portal…">
+  </div>
+</header>
+
+<div class="ticker-bar">
+  <span class="ticker-label">NAJNOVIJE</span>
+  <div class="ticker-track-wrap">
+    <div class="ticker-track" id="ticker-track">
+      <a href="#">POZNATI NOVINAR NOVAK IVANOVIĆ OPTUŽEN ZA UBISTVO</a>
+      <a href="#">Strane energetske kompanije najavljuje nove investicije u regionu</a>
+      <a href="#">Policija rasvetlila seriju prevara na internetu</a>
+      <a href="#">Mladi preduzetnici menjaju pravila igre</a>
+    </div>
+  </div>
+</div>
+
+<main class="container">
+  <p class="breadcrumb"><a href="portal.html">Naslovna</a> / <a href="#">Hronika</a> / Tajkun prvi put javno progovorio o optužbama</p>
+
+  <div class="article-layout">
+
+    <article class="article-main">
+      <span class="tag">Istražujemo</span>
+      <h1 class="article-title">Tajkun prvi put javno progovorio o optužbama novinara Novaka Ivanovića</h1>
+
+      <div class="byline-row">
+        <div class="byline">Piše: <b>Redakcija</b><span class="read-time">Vreme čitanja: ~4 min</span></div>
+        <div class="share-row">
+          <button class="share-btn" aria-label="Podeli na Fejsbuku">f</button>
+          <button class="share-btn" aria-label="Podeli na Iksu">X</button>
+          <button class="share-btn" aria-label="Podeli na Vajberu">V</button>
+          <div class="copy-link-wrap">
+            <button class="share-btn" id="copy-link" aria-label="Kopiraj link">🔗</button>
+            <div class="copy-tooltip" id="copy-tooltip">Link kopiran!</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-media reveal">
+        <div class="img-slot">
+          <img src="images/vranjevac-izjava-gradiliste-wide.jpg">
+        </div>
+      </div>
+      <p class="media-caption">Tajkun daje izjavu novinarima ispred gradilišta na kom njegova firma podiže novi objekat. Foto: Sledbenik</p>
+
+      <div class="article-body reveal">
+        <p class="lede">Vlasnik kompanije "Neba Investments", prvi put se javno oglasio povodom navoda iznetih u seriji tekstova novinara Novaka Ivanovića. Pred okupljenim novinarima, ispred jednog od svojih gradilišta, oštro je odbacio sve optužbe.</p>
+
+        <p>Ivanović je u svojim tekstovima doveo u pitanje okolnosti oko nekoliko poslova kompanije „Neba Investments", otvarajući pitanja koja su, prema pisanju redakcije, uznemirila deo javnosti. Slavko tvrdi da je reč o zlonamernoj kampanji uperenoj protiv njega i njegove firme.</p>
+
+        <div class="pull-quote">
+          <p>„Eto kakvi ljudi mene optužuju. Ni manje ni više nego ubice. Dotle nas je dovela ta sloboda štampe. Pristojne ljude može da pljune ko hoće…"</p>
+          <cite>— Vlasnik "Neba Investments"</cite>
+        </div>
+
+        <p>Tajkun je nastavio da iznosi svoju verziju događaja, okružen saradnicima i obezbeđenjem, dok su prisutni novinari pokušavali da postave dodatna pitanja o konkretnim navodima iz teksta.</p>
+
+
+
+        <p>Redakcija „Sledbenik-a" i dalje prati razvoj slučaja i najavljuje nove detalje čim budu dostupni. Novak Ivanović za sada nije želeo dodatno da komentariše najnovije navode, navodeći da će se o svemu detaljnije oglasiti u narednim tekstovima.</p>
+      </div>
+
+      <div class="related-box reveal">
+        <h4>Pročitajte još</h4>
+        <ul>
+          <li><a href="#">Ko stoji iza kompanije Neba Investments"?</a></li>
+          <li><a href="#">Novak Ivanović: istraživač koji ne odustaje</a></li>
+          <li><a href="#">Analiza: šta nove optužbe znače za tržište nekretnina?</a></li>
+        </ul>
+      </div>
+
+      <div class="comments reveal">
+        <h3>Komentari (3)</h3>
+
+        <div id="comments-list">
+          <div class="comment">
+            <div class="avatar">MK</div>
+            <div>
+              <div class="name">Milan K.</div>
+              <div class="text">Vreme će pokazati ko je u pravu, ali ovakve izjave retko deluju ubedljivo.</div>
+            </div>
+          </div>
+          <div class="comment">
+            <div class="avatar">JS</div>
+            <div>
+              <div class="name">Jovana S.</div>
+              <div class="text">Novak je do sada uvek imao dokaze za ono što napiše. Sačekaćemo nastavak.</div>
+            </div>
+          </div>
+          <div class="comment">
+            <div class="avatar">DR</div>
+            <div>
+              <div class="name">Dragan R.</div>
+              <div class="text">Ozbiljna tema, nadam se da će nadležni organi reagovati brzo.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="comment-form">
+          <textarea id="comment-input" placeholder="Ostavi komentar…"></textarea>
+          <button id="comment-submit">Objavi</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- SIDEBAR -->
+    <aside class="article-side">
+
+      <div class="widget reveal">
+        <div class="widget-head">Najnovije vesti</div>
+        <div class="widget-body">
+          <ul class="ranked-list" style="gap:0;">
+            <li style="border:none; padding:6px 0;"><a href="#">Vanredna sednica skupštine posvećena bezbednosti</a></li>
+            <li style="border:none; padding:6px 0;"><a href="#">Pad proizvodnje u pojedinim industrijskim granama</a></li>
+            <li style="border:none; padding:6px 0;"><a href="#">Naučnici otkrili novi način recikliranja plastike</a></li>
+            <li style="border:none; padding:6px 0;"><a href="#">Pozorišni festival otvara vrata za publiku</a></li>
+            <li style="border:none; padding:6px 0;"><a href="#">Košarkaši u dobroj formi pred važne utakmice</a></li>
+          </ul>
+          <a href="portal.html" class="widget-more">Sve najnovije</a>
+        </div>
+      </div>
+
+      <div class="widget reveal">
+        <div class="widget-head">Kolumne</div>
+        <div class="widget-body">
+          <div class="columnist">
+            <div class=""><div class="" style="font-size:.55rem;">
+              <img src="images/kolumnista-1.png">
+            </div></div>
+            <div>
+              <div class="name">Aleksandar Jovanović</div>
+              <a href="#" class="col-title">Pogled sa strane</a>
+              <div class="desc">Nedeljna analiza političkih dešavanja.</div>
+            </div>
+          </div>
+          <div class="columnist">
+            <div class=""><div class="" style="font-size:.55rem;">
+              <img src="images/kolumnista-2.png">
+            </div></div>
+            <div>
+              <div class="name">Marija Ilić</div>
+              <a href="#" class="col-title">Društvo iz ugla</a>
+              <div class="desc">O temama koje utiču na svakodnevicu.</div>
+            </div>
+          </div>
+          <a href="portal.html" class="widget-more">Sve kolumne</a>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-top">
+    <div class="footer-logo">SLEDBENIK</div>
+    <div class="footer-socials">
+      <a href="#" aria-label="Fejsbuk">f</a>
+      <a href="#" aria-label="Iks">X</a>
+      <a href="#" aria-label="Instagram">ig</a>
+      <a href="#" aria-label="Jutjub">yt</a>
+      <a href="#" aria-label="RSS">rss</a>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <a href="#">Impressum</a>
+    <a href="#">Marketing</a>
+    <a href="#">Uslovi korišćenja</a>
+    <a href="#">Privatnost</a>
+    <a href="#">Kontakt</a>
+    <a href="#">Pretplata</a>
+    <a href="#">Arhiva</a>
+  </div>
+</footer>
+
+<button class="back-top" id="back-top" aria-label="Nazad na vrh">↑</button>
+
+<script>
+(() => {
+  const header = document.getElementById('site-header');
+  const backTop = document.getElementById('back-top');
+  const progressBar = document.getElementById('progress-bar');
+
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    header.classList.toggle('is-scrolled', y > 8);
+    backTop.classList.toggle('show', y > 500);
+    const docH = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.width = docH > 0 ? `${(y / docH) * 100}%` : '0%';
+  }, { passive: true });
+  backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  const navToggle = document.getElementById('nav-toggle');
+  const mainNav = document.getElementById('main-nav');
+  navToggle.addEventListener('click', () => mainNav.classList.toggle('is-open'));
+
+  const searchToggle = document.getElementById('search-toggle');
+  const searchBar = document.getElementById('search-bar');
+  searchToggle.addEventListener('click', () => {
+    searchBar.classList.toggle('is-open');
+    if (searchBar.classList.contains('is-open')) searchBar.querySelector('input').focus();
+  });
+
+  const track = document.getElementById('ticker-track');
+  if (track) track.innerHTML += track.innerHTML;
+
+  const reveals = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+    }, { threshold: .1 });
+    reveals.forEach(el => io.observe(el));
+  } else {
+    reveals.forEach(el => el.classList.add('visible'));
+  }
+
+  // copy link
+  const copyBtn = document.getElementById('copy-link');
+  const copyTip = document.getElementById('copy-tooltip');
+  copyBtn.addEventListener('click', () => {
+    const url = window.location.href;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).catch(() => {});
+    }
+    copyTip.classList.add('show');
+    setTimeout(() => copyTip.classList.remove('show'), 1600);
+  });
+
+  // comments: client-side append
+  const commentInput = document.getElementById('comment-input');
+  const commentSubmit = document.getElementById('comment-submit');
+  const commentsList = document.getElementById('comments-list');
+  commentSubmit.addEventListener('click', () => {
+    const val = commentInput.value.trim();
+    if (!val) return;
+    const el = document.createElement('div');
+    el.className = 'comment';
+    el.innerHTML = `<div class="avatar">VI</div><div><div class="name">Vi</div><div class="text"></div></div>`;
+    el.querySelector('.text').textContent = val;
+    commentsList.appendChild(el);
+    commentInput.value = '';
+  });
+})();
+</script>
+
+</body>
+</html>
