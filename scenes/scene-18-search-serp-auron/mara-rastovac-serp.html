@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>mara rastovac - new angle</title>
+<style>
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: #000;
+}
+
+/* ---- TOPBAR ---- */
+.topbar {
+  width: 100%;
+  padding: 12px 24px;
+  border-bottom: 1px solid #ddd;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo {
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-weight: bold;
+  font-size: 28px;
+  letter-spacing: 1px;
+  background: linear-gradient(180deg, #a8d4e8 0%, #5ba3c9 40%, #4a91ba 60%, #3a7fa8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(2px 2px 0px rgba(90,130,160,0.5)) drop-shadow(3px 3px 1px rgba(60,100,130,0.2));
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.search-wrap {
+  display: flex;
+  align-items: center;
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10), 0 0 0 1px rgba(200,210,220,0.7);
+  height: 44px;
+  flex: 1;
+  max-width: 600px;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  padding: 0 20px;
+  background: #fff;
+  color: #333;
+  border-radius: 999px 0 0 999px;
+}
+
+.search-btn {
+  flex: 0 0 54px;
+  min-width: 54px;
+  height: 100%;
+  background: #4a91ba;
+  border: none;
+  border-radius: 0 999px 999px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-btn svg {
+  width: 20px; height: 20px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+}
+
+/* ---- TABS ---- */
+.tabs {
+  border-bottom: 1px solid #ddd;
+  padding: 0 24px 0 210px;
+  display: flex;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.tab {
+  padding: 10px 16px;
+  color: #444;
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+}
+
+.tab.active {
+  color: #4a91ba;
+  border-bottom-color: #4a91ba;
+  font-weight: bold;
+}
+
+/* ---- LAYOUT ---- */
+.layout {
+  display: flex;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 18px 24px;
+  gap: 40px;
+}
+
+.results-col { flex: 1 1 auto; min-width: 0; }
+.sidebar-col { flex: 0 0 230px; }
+
+.result-info {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 18px;
+}
+
+/* ---- SPELL SUGGESTION ---- */
+.spell-suggest {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 18px;
+}
+.spell-suggest a {
+  color: #0000cc;
+  text-decoration: underline;
+  font-style: italic;
+}
+
+/* ---- FEATURED ---- */
+.result-featured {
+  display: block;
+  text-decoration: none;
+  margin-bottom: 20px;
+  padding: 12px 14px;
+  border: 2px solid #c9a3e6;
+  background: #f9f3ff;
+  border-radius: 4px;
+}
+
+.result-featured:hover { background: #f3eafc; }
+
+.result-featured .r-url { font-size: 13px; color: #4a7c40; margin-bottom: 3px; }
+
+.result-featured .r-title {
+  font-size: 20px;
+  color: #0000cc;
+  text-decoration: underline;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.result-featured .r-desc { font-size: 13px; color: #222; line-height: 1.6; }
+
+/* ---- REGULAR RESULTS ---- */
+.result { display: block; text-decoration: none; margin-bottom: 20px; }
+
+.r-url { font-size: 13px; color: #4a7c40; margin-bottom: 2px; }
+
+.r-title {
+  font-size: 18px;
+  color: #0000cc;
+  text-decoration: underline;
+  margin-bottom: 5px;
+}
+
+.result:hover .r-title { color: #cc0000; }
+
+.r-desc { font-size: 13px; color: #444; line-height: 1.6; }
+
+.result-divider {
+  border: none;
+  border-top: 1px solid #ececec;
+  margin: 0 0 18px 0;
+}
+
+/* ---- SIDEBAR ---- */
+.sidebar-box {
+  border: 1px solid #ddd;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+  font-size: 13px;
+}
+
+.sidebar-box h3 {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 6px;
+}
+
+.sidebar-box ul { list-style: none; }
+
+.sidebar-box ul li {
+  padding: 5px 0;
+  border-bottom: 1px dotted #eee;
+}
+
+.sidebar-box ul li:last-child { border-bottom: none; }
+
+.sidebar-box ul li a { color: #0000cc; text-decoration: underline; font-size: 13px; }
+.sidebar-box ul li a:hover { color: #cc0000; }
+
+/* ---- PROFILE CARD (razlika u odnosu na auron serp) ---- */
+.profile-card {
+  border: 1px solid #ddd;
+  padding: 16px;
+  margin-bottom: 18px;
+  font-size: 13px;
+  text-align: center;
+}
+.profile-card .p-avatar {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  margin: 0 auto 12px;
+  background: linear-gradient(135deg, #a8d4e8, #3a7fa8);
+}
+.profile-card .p-name {
+  font-size: 15px;
+  font-weight: bold;
+  color: #222;
+  margin-bottom: 2px;
+}
+.profile-card .p-role {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 10px;
+}
+.profile-card .p-facts {
+  text-align: left;
+  font-size: 12px;
+  color: #444;
+  line-height: 1.9;
+  border-top: 1px dotted #eee;
+  padding-top: 10px;
+}
+.profile-card .p-facts b { color: #222; }
+
+.sidebar-ad {
+  border: 1px dashed #ccc;
+  background: #fffef0;
+  padding: 12px 14px;
+  font-size: 12px;
+  color: #666;
+}
+
+.ad-label {
+  font-size: 10px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.ad-title {
+  color: #0000cc;
+  text-decoration: underline;
+  font-size: 14px;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 4px;
+  cursor: pointer;
+}
+
+.ad-url { color: #4a7c40; font-size: 12px; }
+
+@media (max-width: 768px) {
+  .sidebar-col {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .topbar {
+    padding: 10px 14px;
+    gap: 12px;
+  }
+
+  .logo {
+    font-size: 22px;
+  }
+
+  .search-wrap {
+    height: 40px;
+  }
+
+  .search-input {
+    font-size: 14px;
+    padding: 0 14px;
+  }
+
+  .search-btn {
+    flex: 0 0 46px;
+    min-width: 46px;
+  }
+
+  .search-btn svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .tabs {
+    padding: 0 14px;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .layout {
+    padding: 16px 14px;
+    gap: 0;
+  }
+
+  .result-info,
+  .result-featured,
+  .result,
+  .pagination {
+    padding-left: 0;
+    margin-left: 0;
+  }
+}
+
+/* ---- PAGINATION ---- */
+.pagination {
+  margin-top: 10px;
+  font-size: 14px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pagination span { color: #777; }
+.pagination .cur { color: #4a91ba; font-weight: bold; }
+.pagination a { color: #0000cc; text-decoration: underline; }
+
+/* ---- FOOTER ---- */
+.pg-footer {
+  text-align: center;
+  padding: 30px 20px;
+  font-size: 13px;
+  color: #777;
+  border-top: 1px solid #eee;
+  margin-top: 20px;
+}
+
+.pg-footer a { color: #0000cc; text-decoration: underline; margin: 0 8px; }
+
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo" onclick="window.location.href='index.html'">new angle</div>
+  <div class="search-wrap">
+    <input class="search-input" value="mara rastovac" readonly>
+    <button class="search-btn" aria-label="Pretraži">
+      <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <span class="tab active">Sve</span>
+  <span class="tab">Slike</span>
+  <span class="tab">Vesti</span>
+  <span class="tab">Mape</span>
+  <span class="tab">Više &raquo;</span>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="layout">
+
+  <div class="results-col">
+
+    <div class="result-info">Oko 612 rezultata (0.44 sekundi)</div>
+
+    <div class="spell-suggest">
+      Da li ste mislili: <a href="mara-rastovac-serp.html">mara rastovac</a>
+    </div>
+
+    <!-- FEATURED - vodi na auronenergetika.html -->
+    <a href="../scene-16-auron-energetika/auron-energetika.html" class="result-featured">
+      <div class="r-url">www.auronenergetika.rs/</div>
+      <div class="r-title">Auron Energetika — Bežični prenos energije</div>
+      <div class="r-desc">
+        Zvanična stranica <b>Auron Energetike</b>, kompanije koju vodi istraživački tim
+        okupljen oko <b>Projekta Rezon</b>. Glavni istraživač je dr Mara Rastovac.
+        Saznajte više o tehnologiji, timu i primenama.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <!-- Sekundarni rezultat - vodi na tim.html -->
+    <a href="../scene-16-auron-energetika/tim.html" class="result">
+      <div class="r-url">www.auronenergetika.rs/tim</div>
+      <div class="r-title">dr Mara Rastovac — Glavni istraživač, Auron Energetika</div>
+      <div class="r-desc">
+        Biografija i profesionalni put dr Mare Rastovac: doktorat iz primenjene
+        elektromagnetike, obrazovanje na Elektrotehničkom i Tehničkom fakultetu, publikacije
+        i vođenje velikog broja <b>istraživačkih programa</b>.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <a href="#" class="result">
+      <div class="r-url">www.startapscena.rs/profili/mara-rastovac</div>
+      <div class="r-title">Mara Rastovac — profil istraživača i saradnja sa Auron Energetikom</div>
+      <div class="r-desc">
+        Profil dr Mare Rastovac: primenjena elektromagnetika, energetski sistemi i
+        rezonantni bežični prenos energije. Trenutna uloga: glavni istraživač u
+        <b>Auron Energetici</b>.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <a href="#" class="result">
+      <div class="r-url">www.tehnickifakultet.rs/alumni/istaknuti-doktoranti</div>
+      <div class="r-title">Istaknuti doktoranti — odsek za primenjenu elektromagnetiku</div>
+      <div class="r-desc">
+        Pregled doktorskih disertacija odbranjenih na odseku, uključujući rad o
+        rezonantnom prenosu energije na daljinu čija je autorka istraživačica koja danas
+        vodi razvoj u <b>Auron Energetici</b>.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <a href="#" class="result">
+      <div class="r-url">www.energetskevesti.rs/intervju/mara-rastovac</div>
+      <div class="r-title">Intervju: "Rezonantni prenos energije rešava usko grlo klasične mreže"</div>
+      <div class="r-desc">
+        Razgovor sa glavnim istraživačem <b>Auron Energetike</b> o tehničkoj strategiji
+        <b>Projekta Rezon</b>, izazovima u istraživanju i planovima za dalji razvoj
+        tehnologije bežičnog prenosa energije.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <a href="#" class="result">
+      <div class="r-url">forum.elektronika.rs/teme/ko-je-mara-rastovac</div>
+      <div class="r-title">Forum Elektronika — Ko je Mara Rastovac?</div>
+      <div class="r-desc">
+        Korisnici foruma raspravljaju o radu i istraživanju dr Mare Rastovac, njenoj
+        ulozi u razvoju <b>Projekta Rezon</b> i dosadašnjim rezultatima tima
+        <b>Auron Energetike</b>.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <a href="#" class="result">
+      <div class="r-url">www.nauka.rs/profili/mara-rastovac</div>
+      <div class="r-title">Profil istraživača: Mara Rastovac, primenjena elektromagnetika</div>
+      <div class="r-desc">
+        Kratak pregled akademske karijere i istraživačkog fokusa: energetski sistemi
+        i rezonantni elektromagnetni prenos. Autorka disertacije o rezonantnom
+        prenosu energije na daljinu.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <span>Stranica:</span>
+      <span class="cur">1</span>
+      <a href="#">2</a>
+      <a href="#">3</a>
+      <a href="#">Sledeća &raquo;</a>
+    </div>
+
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar-col">
+
+    <div class="profile-card">
+      <img src="mara-thumbnail.png">
+      <div class="p-name">dr Mara Rastovac</div>
+      <div class="p-role">Glavni istraživač, Auron Energetika</div>
+      <div class="p-facts">
+        <div><b>Oblast:</b> Primenjena elektromagnetika</div>
+        <div><b>Obrazovanje:</b> Elektrotehnički fakultet, Tehnički fakultet</div>
+      </div>
+    </div>
+
+    <div class="sidebar-ad">
+      <div class="ad-label">Sponzorisano</div>
+      <span class="ad-title">Konferencija Energetika</span>
+      <div style="font-size:12px; color:#555; margin-bottom:4px;">
+        Regionalni skup istraživača u oblasti bežičnog prenosa energije.
+      </div>
+      <div class="ad-url">www.energetika-konferencija.rs</div>
+    </div>
+
+    <div class="sidebar-box" style="margin-top:18px;">
+      <h3>Ljudi takođe traže</h3>
+      <ul>
+        <li><a href="#">mara rastovac auron energetika</a></li>
+        <li><a href="#">projekat rezon istraživači</a></li>
+        <li><a href="#">auron energetika tim</a></li>
+        <li><a href="#">dr mara rastovac disertacija</a></li>
+        <li><a href="#">rezonantni prenos energije</a></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-box">
+      <h3>Korisni linkovi</h3>
+      <ul>
+        <li><a href="#">Energetske vesti</a></li>
+        <li><a href="#">Tehnički fakultet</a></li>
+        <li><a href="#">Forum Elektronika</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="pg-footer">
+  <a href="#">Početna</a>
+  <a href="#">O nama</a>
+  <a href="#">Reklamiranje</a>
+  <a href="#">Pomoć</a>
+  <br><br>
+  &copy; new angle — Sva prava zadržana
+</div>
+
+</body>
+</html>

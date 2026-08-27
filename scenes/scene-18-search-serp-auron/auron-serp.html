@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>auron energetika - new angle</title>
+<style>
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: #000;
+}
+
+/* ---- TOPBAR ---- */
+.topbar {
+  width: 100%;
+  padding: 12px 24px;
+  border-bottom: 1px solid #ddd;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo {
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-weight: bold;
+  font-size: 28px;
+  letter-spacing: 1px;
+  background: linear-gradient(180deg, #a8d4e8 0%, #5ba3c9 40%, #4a91ba 60%, #3a7fa8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(2px 2px 0px rgba(90,130,160,0.5)) drop-shadow(3px 3px 1px rgba(60,100,130,0.2));
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.search-wrap {
+  display: flex;
+  align-items: center;
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10), 0 0 0 1px rgba(200,210,220,0.7);
+  height: 44px;
+  flex: 1;
+  max-width: 600px;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  padding: 0 20px;
+  background: #fff;
+  color: #333;
+  border-radius: 999px 0 0 999px;
+}
+
+.search-btn {
+  flex: 0 0 54px;
+  min-width: 54px;
+  height: 100%;
+  background: #4a91ba;
+  border: none;
+  border-radius: 0 999px 999px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-btn svg {
+  width: 20px; height: 20px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+}
+
+/* ---- TABS ---- */
+.tabs {
+  border-bottom: 1px solid #ddd;
+  padding: 0 24px 0 210px;
+  display: flex;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.tab {
+  padding: 10px 16px;
+  color: #444;
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+}
+
+.tab.active {
+  color: #4a91ba;
+  border-bottom-color: #4a91ba;
+  font-weight: bold;
+}
+
+/* ---- LAYOUT ---- */
+.layout {
+  display: flex;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 18px 24px;
+  gap: 40px;
+}
+
+.results-col { flex: 1 1 auto; min-width: 0; }
+.sidebar-col { flex: 0 0 230px; }
+
+.result-info {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 18px;
+}
+
+/* ---- FEATURED ---- */
+.result-featured {
+  display: block;
+  text-decoration: none;
+  margin-bottom: 20px;
+  padding: 12px 14px;
+  border: 2px solid #c9a3e6;
+  background: #f9f3ff;
+  border-radius: 4px;
+}
+
+.result-featured:hover { background: #f3eafc; }
+
+.result-featured .r-url { font-size: 13px; color: #4a7c40; margin-bottom: 3px; }
+
+.result-featured .r-title {
+  font-size: 20px;
+  color: #0000cc;
+  text-decoration: underline;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.result-featured .r-desc { font-size: 13px; color: #222; line-height: 1.6; }
+
+/* ---- REGULAR RESULTS ---- */
+.result { display: block; text-decoration: none; margin-bottom: 20px; }
+
+.r-url { font-size: 13px; color: #4a7c40; margin-bottom: 2px; }
+
+.r-title {
+  font-size: 18px;
+  color: #0000cc;
+  text-decoration: underline;
+  margin-bottom: 5px;
+}
+
+.result:hover .r-title { color: #cc0000; }
+
+.r-desc { font-size: 13px; color: #444; line-height: 1.6; }
+
+.result-divider {
+  border: none;
+  border-top: 1px solid #ececec;
+  margin: 0 0 18px 0;
+}
+
+/* ---- SIDEBAR ---- */
+.sidebar-box {
+  border: 1px solid #ddd;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+  font-size: 13px;
+}
+
+.sidebar-box h3 {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 6px;
+}
+
+.sidebar-box ul { list-style: none; }
+
+.sidebar-box ul li {
+  padding: 5px 0;
+  border-bottom: 1px dotted #eee;
+}
+
+.sidebar-box ul li:last-child { border-bottom: none; }
+
+.sidebar-box ul li a { color: #0000cc; text-decoration: underline; font-size: 13px; }
+.sidebar-box ul li a:hover { color: #cc0000; }
+
+.sidebar-ad {
+  border: 1px dashed #ccc;
+  background: #fffef0;
+  padding: 12px 14px;
+  font-size: 12px;
+  color: #666;
+}
+
+.ad-label {
+  font-size: 10px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.ad-title {
+  color: #0000cc;
+  text-decoration: underline;
+  font-size: 14px;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 4px;
+  cursor: pointer;
+}
+
+.ad-url { color: #4a7c40; font-size: 12px; }
+
+@media (max-width: 768px) {
+  .sidebar-col {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .topbar {
+    padding: 10px 14px;
+    gap: 12px;
+  }
+
+  .logo {
+    font-size: 22px;
+  }
+
+  .search-wrap {
+    height: 40px;
+  }
+
+  .search-input {
+    font-size: 14px;
+    padding: 0 14px;
+  }
+
+  .search-btn {
+    flex: 0 0 46px;
+    min-width: 46px;
+  }
+
+  .search-btn svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .tabs {
+    padding: 0 14px;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .layout {
+    padding: 16px 14px;
+    gap: 0;
+  }
+
+  .result-info,
+  .result-featured,
+  .result,
+  .pagination {
+    padding-left: 0;
+    margin-left: 0;
+  }
+}
+
+/* ---- PAGINATION ---- */
+.pagination {
+  margin-top: 10px;
+  font-size: 14px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pagination span { color: #777; }
+.pagination .cur { color: #4a91ba; font-weight: bold; }
+.pagination a { color: #0000cc; text-decoration: underline; }
+
+/* ---- FOOTER ---- */
+.pg-footer {
+  text-align: center;
+  padding: 30px 20px;
+  font-size: 13px;
+  color: #777;
+  border-top: 1px solid #eee;
+  margin-top: 20px;
+}
+
+.pg-footer a { color: #0000cc; text-decoration: underline; margin: 0 8px; }
+
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo" onclick="window.location.href='index.html'">new angle</div>
+  <div class="search-wrap">
+    <input class="search-input" value="auron energetika" readonly>
+    <button class="search-btn" aria-label="Pretraži">
+      <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <span class="tab active">Sve</span>
+  <span class="tab">Slike</span>
+  <span class="tab">Vesti</span>
+  <span class="tab">Mape</span>
+  <span class="tab">Više &raquo;</span>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="layout">
+
+  <div class="results-col">
+
+    <div class="result-info">Oko 9.740 rezultata (0.36 sekundi)</div>
+
+    <!-- FEATURED - vodi na auronenergetika.html -->
+    <a href="../scene-16-auron-energetika/auron-energetika.html" class="result-featured">
+      <div class="r-url">www.auronenergetika.rs/</div>
+      <div class="r-title">Auron Energetika | Bežični prenos energije </div>
+      <div class="r-desc">
+        <b>Auron Energetika</b> razvija tehnologiju rezonantnog bežičnog prenosa energije kroz
+        <b>istraživačke projekte</b>. Efikasnost prenosa do 94%, bez fizičke infrastrukture.
+        Saznajte više o tehnologiji, timu i mogućnostima saradnje.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <!-- Sekundarni rezultat - vodi na tim.html -->
+    <a href="../scene-16-auron-energetika/tim.html" class="result">
+      <div class="r-url">www.auronenergetika.rs/tim</div>
+      <div class="r-title">Tim — Auron Energetika | dr Mara Rastovac, glavni istraživač</div>
+      <div class="r-desc">
+        Upoznajte istraživački tim koji stoji iza <b>Auron Energetike</b>. Dr Mara Rastovac je arhitekta i vodi
+        istraživačke programe bežičnog prenosa energije. Biografija, obrazovanje i publikacije.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <a href="#" class="result">
+      <div class="r-url">www.energetskevesti.rs/kompanije/auron-energetika</div>
+      <div class="r-title">Ko stoji iza Auron Energetike i njihovih istraživačkih projekata</div>
+      <div class="r-desc">
+        Pregled rada domaće kompanije koja se bavi istraživanjem rezonantnog elektromagnetnog
+        prenosa energije. Tekst donosi osnovne informacije o tehnologiji, timu i planovima
+        za dalji razvoj bežičnog prenosa energije.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <a href="#" class="result">
+      <div class="r-url">www.tehnoportal.rs/vesti/rezonantni-prenos-energije</div>
+      <div class="r-title">Šta je rezonantni prenos energije i ko ga istražuje u Srbiji</div>
+      <div class="r-desc">
+        Objašnjenje principa rezonantnog elektromagnetnog prenosa energije, sa osvrtom na
+        istraživanja domaćeg tima okupljenog oko <b>Auron Energetike</b> i njihovih
+        eksperimentalnih sistema..
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <a href="#" class="result">
+      <div class="r-url">www.startapscena.com/company/auron-energetika</div>
+      <div class="r-title">Auron Energetika | Startap Scena</div>
+      <div class="r-desc">
+        Istraživačka i razvojna kompanija fokusirana na bežični prenos energije.
+        Pratite objave o napretku, najnovijim <b>istraživačkim projektima</b>, otvorenim pozicijama i
+        saradnji sa akademskim i industrijskim partnerima.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <a href="#" class="result">
+      <div class="r-url">www.startapscena.rs/profili/auron-energetika</div>
+      <div class="r-title">Auron Energetika — profil kompanije i finansiranje</div>
+      <div class="r-desc">
+        Osnovni podaci o kompaniji, oblasti delovanja i istraživačkom fokusu.
+        Kompanija traži istraživačke partnere, investitore i institucije zainteresovane
+        za primenu tehnologije bežičnog prenosa energije.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <a href="#" class="result">
+      <div class="r-url">forum.elektronika.rs/teme/auron-energetika-rezon</div>
+      <div class="r-title">Forum Elektronika — Diskusija o projektu Rezon</div>
+      <div class="r-desc">
+        Korisnici foruma diskutuju o tehničkim aspektima rezonantnog prenosa energije
+        koji razvija <b>Auron Energetika</b>. Pitanja o dometu, bezbednosti i mogućoj
+        primeni u domaćinstvu i industriji.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <a href="#" class="result">
+      <div class="r-url">www.nauka.rs/istrazivanja/bezicni-prenos-energije</div>
+      <div class="r-title">Bežični prenos energije — pregled istraživanja u regionu</div>
+      <div class="r-desc">
+        Pregledni članak o aktuelnim istraživačkim projektima u oblasti bežičnog prenosa
+        energije, uključujući i rad tima okupljenog oko <b>Auron Energetike</b> na
+        rezonantnim elektromagnetnim sistemima.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <a href="#" class="result">
+      <div class="r-url">www.poslovnenovosti.rs/auron-energetika-investicije</div>
+      <div class="r-title">Auron Energetika traži investitore za dalji razvoj tehnologije</div>
+      <div class="r-desc">
+        Kompanija najavljuje otvaranje ka istraživačkim partnerstvima, akademskoj saradnji
+        i investicijama koje bi ubrzale komercijalizaciju rezonantnog sistema za
+        bežični prenos energije.
+      </div>
+    </a>
+
+    <hr class="result-divider">
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <span>Stranica:</span>
+      <span class="cur">1</span>
+      <a href="#">2</a>
+      <a href="#">3</a>
+      <a href="#">4</a>
+      <a href="#">5</a>
+      <a href="#">Sledeća &raquo;</a>
+    </div>
+
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar-col">
+
+    <div class="sidebar-ad">
+      <div class="ad-label">Sponzorisano</div>
+      <span class="ad-title">Energetski Fondovi EU</span>
+      <div style="font-size:12px; color:#555; margin-bottom:4px;">
+        Finansiranje za istraživačke projekte u oblasti obnovljive i bežične energije.
+      </div>
+      <div class="ad-url">www.eufondovi-energija.rs</div>
+    </div>
+
+    <div class="sidebar-ad" style="margin-top:12px;">
+      <div class="ad-label">Sponzorisano</div>
+      <span class="ad-title">TehnoInvest Partneri</span>
+      <div style="font-size:12px; color:#555; margin-bottom:4px;">
+        Povezujemo istraživačke timove sa investitorima u energetskom sektoru.
+      </div>
+      <div class="ad-url">www.tehnoinvest.rs</div>
+    </div>
+
+    <div class="sidebar-box" style="margin-top:18px;">
+      <h3>Srodni pojmovi</h3>
+      <ul>
+        <li><a href="#">bežični prenos energije</a></li>
+        <li><a href="#">istraživački projekti</a></li>
+        <li><a href="#">mara rastovac auron</a></li>
+        <li><a href="#">rezonantna elektromagnetika</a></li>
+        <li><a href="#">auron energetika kontakt</a></li>
+        <li><a href="#">auron energetika investicije</a></li>
+        <li><a href="#">tehnički fakultet elektromagnetika</a></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-box">
+      <h3>Korisni linkovi</h3>
+      <ul>
+        <li><a href="#">Energetske vesti</a></li>
+        <li><a href="#">Tehno portal</a></li>
+        <li><a href="#">Startap scena</a></li>
+        <li><a href="#">Forum Elektronika</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="pg-footer">
+  <a href="#">Početna</a>
+  <a href="#">O nama</a>
+  <a href="#">Reklamiranje</a>
+  <a href="#">Pomoć</a>
+  <br><br>
+  &copy; new angle — Sva prava zadržana
+</div>
+
+</body>
+</html>
