@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>EIVA GLOBAL — Archive Intelligence</title>
+<style>
+*{box-sizing:border-box}
+:root{
+ --bg:#080b0f;--bg2:#0d1218;--bg3:#111820;--line:#242e38;
+ --text:#d9e0e6;--muted:#77838e;--dim:#56616b;
+ --paper:#d9d5ca;--ink:#202020;--danger:#b85b5b;--ok:#72957d;
+}
+html,body{margin:0;width:100%;height:100%;background:var(--bg);color:var(--text);
+font-family:Inter,"Segoe UI",Arial,sans-serif;overflow:hidden}
+button{font:inherit}
+.app{height:100vh;display:grid;grid-template-rows:51px 35px 1fr 27px}
+.top{
+ display:flex;align-items:center;gap:18px;padding:0 15px;
+ background:#090c10;border-bottom:1px solid var(--line)
+}
+.logo{font-size:13px;font-weight:700;letter-spacing:2px}
+.logo small{font-weight:400;color:#68747f}
+.case{font:10px ui-monospace,SFMono-Regular,Consolas,monospace;color:#75818c}
+.actions{margin-left:auto;display:flex;gap:6px}
+.actions button,.viewerbar button{
+ border:1px solid #26313b;background:#10161d;color:#89959f;
+ padding:5px 9px;border-radius:3px;font-size:10px;cursor:pointer
+}
+.actions button:hover,.viewerbar button:hover{color:#e2e7eb;border-color:#46535f}
+.tabs{display:flex;background:#0b0f14;border-bottom:1px solid var(--line);padding-left:10px}
+.tab{border:0;border-right:1px solid #1b232c;background:transparent;color:#68747f;
+padding:0 13px;font-size:10px;cursor:pointer}
+.tab.active{color:#e1e6ea;background:#11171e;box-shadow:inset 0 -2px #8996a2}
+.workspace{min-height:0;display:grid;grid-template-columns:245px minmax(0,1fr) 295px}
+.side{background:#090d12;overflow:auto}
+.left{border-right:1px solid var(--line)}
+.right{border-left:1px solid var(--line)}
+.label{padding:13px 13px 7px;color:#65717c;font-size:9px;letter-spacing:1.4px;text-transform:uppercase}
+.tree{padding:0 7px 15px}
+.row{display:flex;align-items:center;gap:8px;padding:8px 9px;border-radius:3px;color:#9ba6af;
+cursor:pointer;font-size:11px}
+.row:hover{background:#111820;color:#e1e6eb}
+.row.selected{background:#171e26;color:#e6ebef}
+.arrow{width:10px;color:#68747f}.folder{color:#8e9ba6}
+.file{font:10px ui-monospace,SFMono-Regular,Consolas,monospace}
+.tag{margin-left:auto;color:#5f6b76;font-size:8px}
+.main{min-width:0;min-height:0;display:flex;flex-direction:column;background:#0b1016}
+.viewerbar{height:42px;display:flex;align-items:center;gap:6px;padding:0 11px;
+border-bottom:1px solid var(--line);flex:0 0 42px}
+.path{font:9px ui-monospace,SFMono-Regular,Consolas,monospace;color:#5e6a75;
+white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-left:4px}
+.viewer{overflow:auto;min-height:0;padding:21px;
+background:radial-gradient(circle at 50% 0,rgba(130,150,170,.055),transparent 46%),#0b1016}
+.document{width:min(980px,100%);margin:auto;background:var(--paper);color:var(--ink);
+min-height:850px;padding:39px 52px;box-shadow:0 12px 50px rgba(0,0,0,.55);
+font-family:Georgia,"Times New Roman",serif;position:relative;opacity:1;transition:opacity .12s ease}
+.document.swap{opacity:0}
+.paperhead{display:flex;justify-content:space-between;border-bottom:1px solid #888;
+padding-bottom:7px;font:8px Arial,sans-serif;color:#555}
+.doctitle{font:700 18px Arial,sans-serif;letter-spacing:.35px;margin:24px 0 5px}
+.docsub{font:9px Arial,sans-serif;color:#5d5a55;margin-bottom:23px}
+.grid{display:grid;grid-template-columns:1.25fr .75fr;gap:20px}
+.p{font-size:12.5px;line-height:1.63;margin:0 0 14px}
+.hl{background:#c8c2aa;padding:1px 3px}
+.box{border:1px solid #999;background:#e8e4da;padding:11px;margin:13px 0}
+.boxtitle{font:8px Arial,sans-serif;text-transform:uppercase;letter-spacing:1px;color:#65615b;margin-bottom:7px}
+.mono{font:9px ui-monospace,SFMono-Regular,Consolas,monospace;line-height:1.8}
+.asset{border:1px solid #8f8c84;background:#c9c5bb;margin:14px 0;overflow:hidden;position:relative}
+.asset img{width:100%;display:block;max-height:380px;object-fit:contain;filter:grayscale(.92) sepia(.08);background:#c8c4b9}
+.asset .cap{padding:5px 7px;font:8px Arial,sans-serif;color:#5d5a54;background:#ddd9cf}
+.asset .badge{position:absolute;top:7px;left:7px;background:rgba(15,15,15,.75);
+color:#eee;padding:3px 5px;font:7px ui-monospace,monospace}
+.missing-placeholder{padding:46px 20px;text-align:center;font:11px Arial,sans-serif;color:#6b6660;
+background:#c9c5bb;letter-spacing:.6px;border:1px dashed #8f8c84}
+.missing-placeholder small{display:block;margin-top:8px;font:9px ui-monospace,monospace;color:#83807a}
+.timeline{border-left:2px solid #8c8a84;padding-left:13px;margin:17px 0}
+.event{margin:0 0 14px}.event b{font:9px Arial,sans-serif}.event p{font-size:10.5px;margin:4px 0;line-height:1.4}
+.stamp{position:absolute;right:43px;bottom:39px;border:2px solid #966f68;color:#8e6159;
+padding:5px 8px;font:bold 9px Arial,sans-serif;transform:rotate(-5deg);opacity:.68}
+.meta{margin:0 12px 12px;border:1px solid #202a33;background:#0d1319}
+.meta div{display:grid;grid-template-columns:82px 1fr;border-bottom:1px solid #1d2730}
+.meta div:last-child{border-bottom:0}.meta span{padding:8px;font-size:9px}
+.meta span:first-child{color:#66737e;text-transform:uppercase}.meta span:last-child{color:#bdc6cd}
+.signal{margin:0 12px 12px;border:1px solid #38292b;background:#160f11;padding:11px}
+.signal b{font-size:9px;color:#c06b6b;letter-spacing:1px}.signal p{font-size:10px;line-height:1.45;color:#a58d8d;margin:7px 0 0}
+.evidence{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 12px 14px}
+.card{border:1px solid #202a33;background:#0e141a;padding:4px;cursor:pointer}
+.card:hover{border-color:#52606c}.card img{width:100%;aspect-ratio:1.5;object-fit:cover;display:block;filter:grayscale(.55)}
+.card span{display:block;padding:5px 2px 2px;font:8px ui-monospace,monospace;color:#6e7a85}
+.card.active{border-color:#7c8994;background:#161e26}.card.active span{color:#cfd6db}
+.status{display:flex;align-items:center;padding:0 11px;background:#090c10;border-top:1px solid var(--line);
+font:8px ui-monospace,monospace;color:#626e79}.status .r{margin-left:auto}
+.toast{position:fixed;left:50%;bottom:40px;transform:translate(-50%,8px);
+opacity:0;background:#151d25;border:1px solid #3c4a56;color:#d0d7dd;padding:8px 12px;
+font-size:10px;border-radius:3px;transition:.18s;pointer-events:none;z-index:20}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+body.focus .left,body.focus .right{display:none}
+body.focus .workspace{grid-template-columns:1fr}
+/* comparison mode */
+.compare-note{border:1px solid #8c7a6a;background:#e3ddc9;padding:9px 11px;margin-bottom:18px;font:10.5px Arial,sans-serif;color:#544c3c}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.compare-pane{border:1px solid #999;background:#e8e4da;padding:13px;position:relative}
+.compare-pane h3{font:700 12px Arial,sans-serif;margin:0 0 3px;letter-spacing:.3px}
+.compare-pane .ptype{font:9px ui-monospace,monospace;color:#6a655d;margin-bottom:9px}
+.compare-pane img{width:100%;max-height:300px;object-fit:contain;filter:grayscale(.92) sepia(.08);background:#c8c4b9;display:block;border:1px solid #8f8c84}
+.compare-meta{margin-top:9px;font-size:9.5px;line-height:1.7;color:#4c493f}
+.compare-meta b{color:#2c2a24}
+.compare-select{width:100%;margin-top:10px;font:9px ui-monospace,monospace;background:#dcd7c9;
+border:1px solid #999;color:#3a372f;padding:4px}
+.compare-vs{text-align:center;color:#7a746a;font:700 10px Arial,sans-serif;letter-spacing:2px;margin:4px 0 2px}
+.exitbar{display:flex;justify-content:flex-end;margin-bottom:14px}
+.exitbtn{border:1px solid #26313b;background:#10161d;color:#89959f;padding:6px 11px;
+border-radius:3px;font:10px ui-monospace,monospace;cursor:pointer}
+.exitbtn:hover{color:#e2e7eb;border-color:#46535f}
+/* entities mode */
+.entity-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.entity-box{border:1px solid #999;background:#e8e4da;padding:13px;cursor:pointer;transition:background .12s ease}
+.entity-box:hover{background:#ded8c8}
+.entity-box.static{cursor:default}
+.entity-box.static:hover{background:#e8e4da}
+.entity-box b{font:700 11.5px Arial,sans-serif;display:block;margin-bottom:4px}
+.entity-box span{font:9.5px Arial,sans-serif;color:#5d5a55}
+@media(max-width:900px){
+ .workspace{grid-template-columns:205px 1fr}.right{display:none}
+ .document{padding:30px 34px}.grid{grid-template-columns:1fr}
+ .compare-grid{grid-template-columns:1fr}.entity-grid{grid-template-columns:1fr}
+}
+@media(max-width:620px){
+ .workspace{grid-template-columns:1fr}.left{display:none}
+ .case{display:none}.document{padding:23px 18px}.grid{grid-template-columns:1fr}
+ .actions button:nth-child(3){display:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+ <div class="logo"><img src="images/eiva_logo.png" alt="EIVA" style="height:15px;width:auto;vertical-align:-2px;display:inline-block;margin-right:2px"><small>/ GLOBAL ARCHIVE</small></div>
+ <div class="case">CASE: TESLA-DELIVERY / INTERNAL RESEARCH</div>
+ <div class="actions">
+  <button onclick="toast('Record locked for review')">LOCK</button>
+  <button onclick="focusMode()">FOCUS</button>
+  <button onclick="toast('Export unavailable in archive mode')">EXPORT</button>
+ </div>
+</header>
+
+<nav class="tabs">
+ <button class="tab active" data-tab="ARCHIVE" onclick="openArchiveTab()">ARCHIVE</button>
+ <button class="tab" data-tab="NETWORK MAP" onclick="openRecord('network','NETWORK MAP')">NETWORK MAP</button>
+ <button class="tab" data-tab="ENTITIES" onclick="openEntities()">ENTITIES</button>
+ <button class="tab" data-tab="CROSS-REFERENCES" onclick="openCross()">CROSS-REFERENCES</button>
+</nav>
+
+<div class="workspace">
+<aside class="side left">
+ <div class="label">Research archive</div>
+ <div class="tree">
+  <div class="row"><span class="arrow">▾</span><span class="folder">▰</span> TESLA / PRIVATE PAPERS</div>
+  <div class="row"><span class="arrow">▾</span><span class="folder">▰</span> BELGRADE 1938–1941</div>
+  <div class="row"><span class="arrow">▸</span><span class="folder">▰</span> BERLIN / SS FILES</div>
+  <div class="row"><span class="arrow">▸</span><span class="folder">▰</span> POST-WAR TRANSFERS</div>
+  <div class="row"><span class="arrow">▸</span><span class="folder">▰</span> EIVA GLOBAL</div>
+  <div class="label">Recovered material</div>
+
+  <div class="row" data-record="letter" onclick="openRecord('letter')"><span class="arrow">·</span><span class="file">TESLA_LETTER_01</span><span class="tag">SCAN</span></div>
+  <div class="row" data-record="blueprint" onclick="openRecord('blueprint')"><span class="arrow">·</span><span class="file">WIRELESS_ENERGY</span><span class="tag">DRAWING</span></div>
+  <div class="row" data-record="ray" onclick="openRecord('ray')"><span class="arrow">·</span><span class="file">RADIANT_ENERGY</span><span class="tag">PRESS</span></div>
+  <div class="row" data-record="formula" onclick="openRecord('formula')"><span class="arrow">·</span><span class="file">FORMULA_SHEET</span><span class="tag">SCAN</span></div>
+  <div class="row" data-record="eiva" onclick="openRecord('eiva')"><span class="arrow">·</span><span class="file">EIVA_RECORD</span><span class="tag">FILE</span></div>
+  <div class="row" data-record="ss" onclick="openRecord('ss')"><span class="arrow">·</span><span class="file">SS-E-IV</span><span class="tag">RESTRICTED</span></div>
+  <div class="row" data-record="network" onclick="openRecord('network')"><span class="arrow">·</span><span class="file">EIVA_NETWORK</span><span class="tag">MAP</span></div>
+  <div class="row" data-record="package" onclick="openRecord('package')"><span class="arrow">·</span><span class="file">PACKAGE_17</span><span class="tag">TRANSFER</span></div>
+ </div>
+</aside>
+
+<main class="main">
+ <div class="viewerbar">
+  <button onclick="zoom(-.1)">−</button><button onclick="zoom(.1)">+</button>
+  <button onclick="resetZoom()">100%</button>
+  <button onclick="toast('Annotation layer: 7 findings')">ANNOTATE</button>
+  <span class="path" id="path">/archive/tesla/private-papers/correspondence</span>
+ </div>
+
+ <div class="viewer">
+  <article class="document" id="document">
+   <!-- content is generated entirely by JS from the records/entities registry -->
+  </article>
+ </div>
+</main>
+
+<aside class="side right">
+ <div class="label">Selected record</div>
+ <div class="meta">
+  <div><span>Record</span><span id="mRecord">—</span></div>
+  <div><span>Status</span><span id="mStatus">—</span></div>
+  <div><span>Source</span><span id="mSource">—</span></div>
+  <div><span>Confidence</span><span id="mConfidence">—</span></div>
+ </div>
+
+ <div class="signal">
+  <b>PATTERN DETECTED</b>
+  <p id="signalText">Repeated references to energy research, wartime acquisition attempts and later corporate structures.</p>
+ </div>
+
+ <div class="label">Linked evidence</div>
+ <div class="evidence" id="evidence">
+  <div class="card" data-record="letter" onclick="openRecord('letter')"><img src="images/tesla_letter.jpg" onerror="imgError(this)" data-base="images/tesla_letter" data-filename="tesla_letter.jpg" data-fallback-step="0"><span>TESLA_LETTER_01</span></div>
+  <div class="card" data-record="blueprint" onclick="openRecord('blueprint')"><img src="images/energy_blueprint.jpg" onerror="imgError(this)" data-base="images/energy_blueprint" data-filename="energy_blueprint.jpg" data-fallback-step="0"><span>WIRELESS_ENERGY</span></div>
+  <div class="card" data-record="ray" onclick="openRecord('ray')"><img src="images/death_ray_cutting.jpg" onerror="imgError(this)" data-base="images/death_ray_cutting" data-filename="death_ray_cutting.jpg" data-fallback-step="0"><span>RADIANT_ENERGY</span></div>
+  <div class="card" data-record="formula" onclick="openRecord('formula')"><img src="images/tesla_formula_sheet.jpg" onerror="imgError(this)" data-base="images/tesla_formula_sheet" data-filename="tesla_formula_sheet.jpg" data-fallback-step="0"><span>FORMULA_SHEET</span></div>
+  <div class="card" data-record="eiva" onclick="openRecord('eiva')"><img src="images/eiva_corporate_record.jpg" onerror="imgError(this)" data-base="images/eiva_corporate_record" data-filename="eiva_corporate_record.jpg" data-fallback-step="0"><span>EIVA_RECORD</span></div>
+  <div class="card" data-record="ss" onclick="openRecord('ss')"><img src="images/ss_e_iv_document.jpg" onerror="imgError(this)" data-base="images/ss_e_iv_document" data-filename="ss_e_iv_document.jpg" data-fallback-step="0"><span>SS-E-IV</span></div>
+  <div class="card" data-record="network" onclick="openRecord('network')"><img src="images/eiva_network_map.jpg" onerror="imgError(this)" data-base="images/eiva_network_map" data-filename="eiva_network_map.jpg" data-fallback-step="0"><span>EIVA_NETWORK</span></div>
+  <div class="card" data-record="package" onclick="openRecord('package')"><img src="images/tesla_package_inventory.jpg" onerror="imgError(this)" data-base="images/tesla_package_inventory" data-filename="tesla_package_inventory.jpg" data-fallback-step="0"><span>PACKAGE_17</span></div>
+ </div>
+</aside>
+</div>
+
+<footer class="status"><span>ARCHIVE VIEWER / OFFLINE RESEARCH ENVIRONMENT</span><span class="r">8 LINKED RECORDS · 7 FINDINGS · REVIEW MODE</span></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   RECORD REGISTRY — single source of truth for all documents.
+   Every dynamic piece of the central viewer and right sidebar
+   is generated from this object. No content is duplicated in
+   the static HTML above.
+   ============================================================ */
+const records = {
+
+ letter:{
+  title:"TESLA — PRIVATE CORRESPONDENCE",
+  sub:"Recovered correspondence / transfer references",
+  fileRef:"FILE REF. T-P/COR/01",
+  path:"/archive/tesla/private-papers/correspondence",
+  record:"TESLA / CORRESPONDENCE",
+  status:"RESTRICTED",statusColor:"#c98b8b",
+  source:"ARCHIVAL CROSS-REFERENCE",
+  confidence:"UNVERIFIED / HIGH INTEREST",
+  image:{base:"images/tesla_letter",filename:"tesla_letter.jpg",badge:"SCAN / PRIVATE CORRESPONDENCE",
+   cap:"Private correspondence / archival scan",alt:"Tesla letter"},
+  signal:"Repeated references to material being prepared for transfer outside the United States, addressed to contacts in Belgrade.",
+  body:`
+   <section>
+    <p class="p">This folder contains recovered private correspondence attributed to the Tesla estate archive. The letters are undated in several places, but internal references place them in the years immediately preceding the outbreak of war in Europe.</p>
+    <p class="p">A recurring phrase across several pages refers to <span class="hl">papers and technical material being set aside for shipment</span>. The addressee is not fully legible, though partial markings are consistent with a private household in Belgrade.</p>
+    __ASSET__
+   </section>
+   <section>
+    <div class="box">
+     <div class="boxtitle">Archival note</div>
+     <b style="font:12px Arial,sans-serif">Package / shipment reference detected</b>
+     <p class="p" style="font-size:10.5px;margin:7px 0 0">A repeated reference to material transferred to Serbia prior to the war. Original inventory is incomplete. Cross-reference with PACKAGE_17.</p>
+    </div>
+    <div class="box">
+     <div class="boxtitle">Index</div>
+     <div class="mono">01 — Salutation / private tone<br>02 — Reference to "the material" (unspecified)<br>03 — Instruction to a courier or agent<br>04 — Closing remarks, no formal signature block</div>
+    </div>
+   </section>`
+ },
+
+ blueprint:{
+  title:"WIRELESS ENERGY — TECHNICAL DRAWING",
+  sub:"Experimental transmission apparatus / archival technical file",
+  fileRef:"FILE REF. T-P/TEC/02",
+  path:"/archive/tesla/technical/wireless-energy",
+  record:"TESLA / TECHNICAL DRAWING",
+  status:"ARCHIVED",statusColor:"#9bb0a3",
+  source:"ARCHIVAL CROSS-REFERENCE",
+  confidence:"VERIFIED SOURCE",
+  image:{base:"images/energy_blueprint",filename:"energy_blueprint.jpg",badge:"TECHNICAL DRAWING",
+   cap:"Wireless energy transmission apparatus / archival drawing",alt:"Wireless energy apparatus"},
+  signal:"Technical annotations match terminology used elsewhere in the correspondence file — consistent authorship likely.",
+  body:`
+   <section>
+    <p class="p">A technical drawing depicting an experimental apparatus for the transmission of electrical energy without conductive wiring. Annotations along the margins describe coil configuration, resonance frequency estimates and a proposed transmission range.</p>
+    <p class="p">The drawing style and hand-lettering are consistent with other technical material in this collection. Several values in the margin notes are difficult to reconcile with known published Tesla patents, suggesting unpublished experimental work.</p>
+    __ASSET__
+   </section>
+   <section>
+    <div class="box">
+     <div class="boxtitle">Technical notes</div>
+     <div class="mono">COIL CONFIG — dual resonant, elevated<br>EST. RANGE — unspecified, marginal note illegible<br>POWER SOURCE — not indicated on this sheet<br>CROSS-REF — see FORMULA_SHEET</div>
+    </div>
+    <div class="box">
+     <div class="boxtitle">Investigative note</div>
+     <p class="p" style="font-size:10.5px;margin:0">Consistent with dialogue references to Tesla's work on the wireless transmission of energy, later associated in press coverage with directed-energy experiments.</p>
+    </div>
+   </section>`
+ },
+
+ ray:{
+  title:"RADIANT ENERGY — PRESS REFERENCES",
+  sub:"Historical newspaper material / directed-energy experiments",
+  fileRef:"FILE REF. PRESS/RAD/03",
+  path:"/archive/press/radiant-energy",
+  record:"PRESS / RADIANT ENERGY",
+  status:"ARCHIVED",statusColor:"#9bb0a3",
+  source:"HISTORICAL PRESS ARCHIVE",
+  confidence:"HISTORICAL SOURCE",
+  image:{base:"images/death_ray_cutting",filename:"death_ray_cutting.jpg",badge:"PRESS / CONTEMPORARY REPORT",
+   cap:"Press reference / “death ray” terminology",alt:"Historical press clipping"},
+  signal:"Sensationalist press language does not match the more restrained terminology used in the private technical notes.",
+  body:`
+   <section>
+    <p class="p">A newspaper clipping reporting on Tesla's continued experimentation with directed, high-intensity energy beams. Contemporary papers popularised the term <span class="hl">“death ray”</span>, a label the scientific notes in this collection never use directly.</p>
+    <p class="p">The clipping is undated in this scan but the typeface and layout are consistent with pre-war print runs. It is included here as circumstantial evidence of public and, by extension, foreign intelligence interest in the underlying research.</p>
+    __ASSET__
+   </section>
+   <section>
+    <div class="timeline">
+     <div class="event"><b>PRE-WAR</b><p>References to selected Tesla papers being transferred outside the United States.</p></div>
+     <div class="event"><b>WAR YEARS</b><p>Multiple intelligence references indicate foreign interest in unconventional energy research.</p></div>
+     <div class="event"><b>POST-WAR</b><p>Files disappear into private and institutional collections.</p></div>
+     <div class="event"><b>MODERN ERA</b><p>Corporate records reveal recurring geographic and institutional connections.</p></div>
+    </div>
+   </section>`
+ },
+
+ formula:{
+  title:"TESLA — CALCULATIONS AND TECHNICAL NOTES",
+  sub:"Scientific calculations / experimental notes",
+  fileRef:"FILE REF. T-P/TEC/04",
+  path:"/archive/tesla/technical/calculations",
+  record:"TESLA / CALCULATIONS",
+  status:"ARCHIVED",statusColor:"#9bb0a3",
+  source:"ARCHIVAL CROSS-REFERENCE",
+  confidence:"VERIFIED SOURCE",
+  image:{base:"images/tesla_formula_sheet",filename:"tesla_formula_sheet.jpg",badge:"CALCULATIONS / TECHNICAL NOTES",
+   cap:"Scientific notes / mathematical calculations",alt:"Tesla calculations"},
+  signal:"Notation style is internally consistent across multiple sheets, suggesting a single working author over an extended period.",
+  body:`
+   <section>
+    <p class="p">A worksheet of handwritten calculations, apparently supporting the technical drawing indexed under WIRELESS_ENERGY. The notation mixes standard electrical engineering symbols of the period with several idiosyncratic shorthand marks unique to this author.</p>
+    <p class="p">No formal title or heading appears on the page. Researchers have grouped it with the wireless-transmission material on the basis of shared terminology and recurring coefficient values.</p>
+    __ASSET__
+   </section>
+   <section>
+    <div class="box">
+     <div class="boxtitle">Index</div>
+     <div class="mono">01 — Resonance frequency estimates<br>02 — Coil turn-ratio calculations<br>03 — Field strength approximations<br>04 — Marginal cross-references to drawing sheets</div>
+    </div>
+    <div class="box">
+     <div class="boxtitle">Archival note</div>
+     <p class="p" style="font-size:10.5px;margin:0">Cross-reference with WIRELESS_ENERGY for the corresponding technical drawing.</p>
+    </div>
+   </section>`
+ },
+
+ eiva:{
+  title:"EIVA GLOBAL — CORPORATE ENTITY RECORD",
+  sub:"Corporate archive / connected entities and registered activities",
+  fileRef:"FILE REF. ENT/EIVA/01",
+  path:"/archive/entities/eiva-global",
+  record:"EIVA GLOBAL",
+  status:"RESTRICTED",statusColor:"#c98b8b",
+  source:"CORPORATE REGISTRY CROSS-REFERENCE",
+  confidence:"UNVERIFIED / HIGH INTEREST",
+  image:{base:"images/eiva_corporate_record",filename:"eiva_corporate_record.jpg",badge:"CORPORATE FILE",
+   cap:"Corporate entity record / registered activities",alt:"EIVA Global corporate record"},
+  signal:"Registered activity clusters and holding-company structure echo the geographic footprint noted in the historical SS-E-IV file.",
+  body:`
+   <section>
+    <p class="p">EIVA GLOBAL is registered as a multinational holding structure with declared activity across four sectors: <span class="hl">Media</span>, <span class="hl">Energy</span>, <span class="hl">Digital Infrastructure</span>, and <span class="hl">Cultural Foundations</span>. Ownership is layered through a series of intermediate holding entities.</p>
+    <p class="p">Filing addresses and registered agents recur across four cities: <span class="hl">Vienna</span>, <span class="hl">Frankfurt</span>, <span class="hl">Zurich</span>, and <span class="hl">Luxembourg</span>. No single filing discloses a controlling beneficial owner.</p>
+    __ASSET__
+   </section>
+   <section>
+    <div class="box">
+     <div class="boxtitle">Registered activity</div>
+     <div class="mono">MEDIA — publishing &amp; broadcast holdings<br>ENERGY — transmission &amp; grid infrastructure interests<br>DIGITAL INFRASTRUCTURE — data &amp; network holdings<br>CULTURAL FOUNDATIONS — archival &amp; heritage trusts</div>
+    </div>
+    <div class="box">
+     <div class="boxtitle">Registered locations</div>
+     <div class="mono">VIENNA — regional holding office<br>FRANKFURT — financial registry<br>ZURICH — trust administration<br>LUXEMBOURG — parent holding entity</div>
+    </div>
+   </section>`
+ },
+
+ ss:{
+  title:"SS-E-IV — INTERNAL RESEARCH FILE",
+  sub:"Historical archival reference / Entwicklungsstelle IV",
+  fileRef:"FILE REF. HIST/SS-E-IV/01",
+  path:"/archive/historical/ss-e-iv",
+  record:"SS-E-IV / RESEARCH FILE",
+  status:"RESTRICTED",statusColor:"#c98b8b",
+  source:"RECONSTRUCTED ARCHIVAL REFERENCE",
+  confidence:"FILM PROP / CROSS-REFERENCE",
+  image:{base:"images/ss_e_iv_document",filename:"ss_e_iv_document.jpg",badge:"HISTORICAL / RESTRICTED",
+   cap:"Wartime internal file reference / Entwicklungsstelle IV",alt:"SS-E-IV document"},
+  signal:"Sector groupings and city references in this file closely mirror the structure of the modern EIVA GLOBAL corporate record.",
+  body:`
+   <section>
+    <div class="box" style="background:#e3ddc9;border-color:#8c7a6a">
+     <div class="boxtitle" style="color:#544c3c">Production note</div>
+     <p class="p" style="font-size:10.5px;margin:0;color:#4a4636">This document is a fictional archival prop created for the television series <i>“Teslina pošiljka.”</i> It does not represent an authentic historical record and should not be read as a factual claim about any real wartime organisation.</p>
+    </div>
+    <p class="p">Within the fiction of the series, internal designation <span class="hl">SS-E-IV</span> is associated with a wartime research office referred to in surviving fragments as <span class="hl">Entwicklungsstelle IV</span> — a development office tasked, according to the file, with evaluating captured or acquired foreign scientific material.</p>
+    <p class="p">The file's activity groupings and city references bear a structural resemblance to the modern EIVA GLOBAL record, a connection the investigation treats as circumstantial but worth pursuing.</p>
+    __ASSET__
+   </section>
+   <section>
+    <div class="box">
+     <div class="boxtitle">File structure (fictional)</div>
+     <div class="mono">DESIGNATION — SS-E-IV<br>OFFICE — "Entwicklungsstelle IV"<br>REMIT — acquisition &amp; evaluation of foreign research material<br>NOTED CITIES — Vienna · Frankfurt · Zurich</div>
+    </div>
+    <div class="box">
+     <div class="boxtitle">Cross-reference</div>
+     <p class="p" style="font-size:10.5px;margin:0">See EIVA_RECORD and EIVA_NETWORK for the modern-era structural parallel. Open CROSS-REFERENCES to compare both files side by side.</p>
+    </div>
+   </section>`
+ },
+
+ network:{
+  title:"EIVA GLOBAL — RELATIONSHIP MAP",
+  sub:"Cross-border entity relationships and archival connections",
+  fileRef:"FILE REF. ENT/EIVA/NET",
+  path:"/archive/entities/eiva-global/network",
+  record:"EIVA GLOBAL / NETWORK",
+  status:"RESTRICTED",statusColor:"#c98b8b",
+  source:"CORPORATE REGISTRY CROSS-REFERENCE",
+  confidence:"INVESTIGATIVE LEAD",
+  image:{base:"images/eiva_network_map",filename:"eiva_network_map.jpg",badge:"RELATIONSHIP MAP",
+   cap:"Entity relationship map / cross-border holdings",alt:"EIVA Global network map"},
+  signal:"Four-city footprint and four-sector activity split remain constant across every layer of the holding structure.",
+  body:`
+   <section>
+    <p class="p">This map traces registered relationships between EIVA GLOBAL and its subsidiary and affiliate entities. Four cities recur at every layer of the structure: <span class="hl">Vienna</span>, <span class="hl">Frankfurt</span>, <span class="hl">Zurich</span>, and <span class="hl">Luxembourg</span>.</p>
+    <p class="p">Activity across the network clusters consistently into the same four declared sectors: <span class="hl">Energy</span>, <span class="hl">Media</span>, <span class="hl">Infrastructure</span>, and <span class="hl">Cultural Foundations</span>. No node in the visible structure discloses ultimate beneficial ownership.</p>
+    __ASSET__
+   </section>
+   <section>
+    <div class="box">
+     <div class="boxtitle">Node summary</div>
+     <div class="mono">VIENNA — regional coordination<br>FRANKFURT — financial registry node<br>ZURICH — trust administration node<br>LUXEMBOURG — parent holding node</div>
+    </div>
+    <div class="box">
+     <div class="boxtitle">Sector summary</div>
+     <div class="mono">ENERGY · MEDIA · INFRASTRUCTURE · CULTURAL FOUNDATIONS</div>
+    </div>
+   </section>`
+ },
+
+ package:{
+  title:"ARCHIVE TRANSFER RECORD — PACKAGE 17",
+  sub:"Incomplete inventory / transfer to Belgrade",
+  fileRef:"FILE REF. T-P/1939/17",
+  path:"/archive/transfers/package-17",
+  record:"TESLA PACKAGE / T-P/1939/17",
+  status:"UNACCOUNTED FOR",statusColor:"#c98b8b",
+  source:"ARCHIVAL CROSS-REFERENCE",
+  confidence:"HIGH INTEREST",
+  image:{base:"images/tesla_package_inventory",filename:"tesla_package_inventory.jpg",badge:"TRANSFER RECORD",
+   cap:"Transfer inventory / incomplete listing",alt:"Tesla package inventory"},
+  signal:"Inventory line for Package 17 is present but its contents field was never completed — the only such gap in the surviving transfer log.",
+  body:`
+   <section>
+    <p class="p">A partial shipping inventory listing material transferred from a private scientific archive to Belgrade prior to the outbreak of war. Most line items are itemised in some detail; the entry for Package 17 is not.</p>
+    <p class="p">Investigators have repeatedly flagged this gap: <i>“A gde je ta pošiljka? I šta je to uopšte?”</i> — the contents of Package 17 remain the single largest unresolved question in the entire transfer record.</p>
+    __ASSET__
+   </section>
+   <section>
+    <div class="box">
+     <div class="boxtitle">Transfer metadata</div>
+     <div class="mono">ORIGIN — Private scientific archive<br>DESTINATION — Belgrade<br>CONTENTS — Redacted<br>STATUS — Transfer confirmed<br>INVENTORY — Incomplete<br>PACKAGE 17 — Unaccounted for</div>
+    </div>
+    <div class="box">
+     <div class="boxtitle">Archival note</div>
+     <p class="p" style="font-size:10.5px;margin:0">Cross-reference with TESLA_LETTER_01, which contains an earlier reference to material "set aside for shipment."</p>
+    </div>
+   </section>`
+ }
+};
+
+/* Short labels used in comparison-mode selectors */
+const shortLabel = {
+ letter:"TESLA_LETTER_01", blueprint:"WIRELESS_ENERGY", ray:"RADIANT_ENERGY",
+ formula:"FORMULA_SHEET", eiva:"EIVA_RECORD", ss:"SS-E-IV",
+ network:"EIVA_NETWORK", package:"PACKAGE_17"
+};
+
+/* Entity overview registry — each entry maps to a record where applicable */
+const entities = [
+ {label:"EIVA GLOBAL",  note:"Modern holding entity / media, energy, infrastructure, culture", target:"eiva"},
+ {label:"TESLA PAPERS",  note:"Private correspondence and technical archive", target:"letter"},
+ {label:"SS-E-IV",       note:"Historical file reference / Entwicklungsstelle IV (fictional)", target:"ss"},
+ {label:"PACKAGE 17",    note:"Unaccounted-for item in the 1939 transfer inventory", target:"package"},
+ {label:"VIENNA",        note:"Recurring registered location across both eras", target:"network"},
+ {label:"FRANKFURT",     note:"Recurring registered location across both eras", target:"network"},
+ {label:"ZURICH",        note:"Recurring registered location across both eras", target:"network"},
+ {label:"LUXEMBOURG",    note:"Recurring registered location across both eras", target:"network"}
+];
+
+/* ============================================================
+   APPLICATION STATE
+   ============================================================ */
+let appState = {
+ mode:"record",            // 'record' | 'cross' | 'entities'
+ currentRecord:"letter",
+ previousNormalRecord:"letter",
+ crossLeft:"eiva",
+ crossRight:"ss"
+};
+let scale = 1;
+
+/* ============================================================
+   SMALL UTILITIES
+   ============================================================ */
+function toast(msg){
+ const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");
+ clearTimeout(window.__t);window.__t=setTimeout(()=>t.classList.remove("show"),1400);
+}
+function zoom(v){
+ scale=Math.max(.7,Math.min(1.45,scale+v));
+ const d=document.getElementById("document");d.style.transform=`scale(${scale})`;d.style.transformOrigin="top center";
+}
+function resetZoom(){scale=1;document.getElementById("document").style.transform="scale(1)"}
+function focusMode(){document.body.classList.toggle("focus");toast(document.body.classList.contains("focus")?"Focus mode enabled":"Focus mode disabled")}
+
+function setActiveTab(name){
+ document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t.dataset.tab===name));
+}
+
+/* Local (non-CDN) image fallback: tries .jpg, then .jpeg, then .png,
+   then swaps the asset for an elegant "not available" placeholder. */
+function imgError(img){
+ const exts=["jpg","jpeg","png"];
+ let step=parseInt(img.dataset.fallbackStep||"0",10)+1;
+ if(step<exts.length){
+  img.dataset.fallbackStep=step;
+  img.src=img.dataset.base+"."+exts[step];
+ } else {
+  const asset=img.closest(".asset")||img.closest(".compare-pane");
+  if(asset){
+   const ph=document.createElement("div");
+   ph.className="missing-placeholder";
+   ph.innerHTML=`ARCHIVE IMAGE NOT AVAILABLE<small>FILE: ${img.dataset.filename}</small>`;
+   img.replaceWith(ph);
+  } else {
+   img.style.display="none";
+  }
+ }
+}
+
+function assetHTML(image){
+ return `<div class="asset">
+   <img src="${image.base}.${image.filename.split('.').pop()}" alt="${image.alt}"
+    data-base="${image.base}" data-filename="${image.filename}" data-fallback-step="0" onerror="imgError(this)">
+   <span class="badge">${image.badge}</span>
+   <div class="cap">${image.cap}</div>
+  </div>`;
+}
+
+function scrollViewerTop(){
+ const v=document.querySelector(".viewer");if(v)v.scrollTop=0;
+}
+
+/* ============================================================
+   RIGHT SIDEBAR — reflects whatever is currently open
+   ============================================================ */
+function updateRightPanelForRecord(rec){
+ document.getElementById("mRecord").textContent=rec.record;
+ const st=document.getElementById("mStatus");st.textContent=rec.status;st.style.color=rec.statusColor;
+ document.getElementById("mSource").textContent=rec.source;
+ document.getElementById("mConfidence").textContent=rec.confidence;
+ document.getElementById("signalText").textContent=rec.signal;
+}
+function updateRightPanelForMode(label,statusText,statusColor,sourceText,confidenceText,signalText){
+ document.getElementById("mRecord").textContent=label;
+ const st=document.getElementById("mStatus");st.textContent=statusText;st.style.color=statusColor;
+ document.getElementById("mSource").textContent=sourceText;
+ document.getElementById("mConfidence").textContent=confidenceText;
+ document.getElementById("signalText").textContent=signalText;
+}
+function updateEvidenceHighlight(id){
+ document.querySelectorAll(".card").forEach(c=>c.classList.toggle("active", c.dataset.record===id));
+}
+function updateSidebarHighlight(id){
+ document.querySelectorAll(".row[data-record]").forEach(r=>r.classList.toggle("selected", r.dataset.record===id));
+}
+
+/* ============================================================
+   RENDERERS — each mode fully replaces #document content
+   ============================================================ */
+function renderRecord(rec){
+ const doc=document.getElementById("document");
+ doc.classList.add("swap");
+ requestAnimationFrame(()=>{
+  doc.innerHTML=`
+   <div class="paperhead"><span>ARCHIVE COPY / RESEARCH DIVISION</span><span>${rec.fileRef}</span></div>
+   <h1 class="doctitle">${rec.title}</h1>
+   <div class="docsub">${rec.sub}</div>
+   <div class="grid">${rec.body.replace("__ASSET__", assetHTML(rec.image))}</div>
+   <div class="stamp">INTERNAL<br>RESEARCH COPY</div>`;
+  doc.classList.remove("swap");
+ });
+ document.getElementById("path").textContent=rec.path;
+}
+
+function renderEntities(){
+ const doc=document.getElementById("document");
+ doc.classList.add("swap");
+ requestAnimationFrame(()=>{
+  const cards=entities.map(e=>{
+   const clickable=records[e.target]?`onclick="openRecord('${e.target}')"`:"";
+   const cls=records[e.target]?"entity-box":"entity-box static";
+   return `<div class="${cls}" ${clickable}>
+     <b>${e.label}</b>
+     <span>${e.note}</span>
+    </div>`;
+  }).join("");
+  doc.innerHTML=`
+   <div class="paperhead"><span>ARCHIVE COPY / RESEARCH DIVISION</span><span>FILE REF. ENT/OVERVIEW</span></div>
+   <h1 class="doctitle">ENTITY OVERVIEW</h1>
+   <div class="docsub">Cross-referenced people, organisations and locations named across this archive</div>
+   <div class="entity-grid">${cards}</div>`;
+  doc.classList.remove("swap");
+ });
+ document.getElementById("path").textContent="/archive/entities/overview";
+}
+
+function renderCompare(leftId,rightId){
+ const doc=document.getElementById("document");
+ const L=records[leftId], R=records[rightId];
+ doc.classList.add("swap");
+ requestAnimationFrame(()=>{
+  const options=Object.keys(records).map(k=>`<option value="${k}">${shortLabel[k]}</option>`).join("");
+  doc.innerHTML=`
+   <div class="paperhead"><span>ARCHIVE COPY / RESEARCH DIVISION</span><span>FILE REF. CROSS/COMPARE</span></div>
+   <h1 class="doctitle">CROSS-REFERENCE COMPARISON</h1>
+   <div class="docsub">Side-by-side structural comparison of two archival records</div>
+   <div class="compare-note">Direct structural comparison — activity sectors and registered cities are highlighted where they recur in both records.</div>
+   <div class="compare-grid">
+    <div class="compare-pane">
+     <h3>${L.title}</h3>
+     <div class="ptype">${L.record} · ${shortLabel[leftId]}</div>
+     <img src="${L.image.base}.${L.image.filename.split('.').pop()}" alt="${L.image.alt}"
+      data-base="${L.image.base}" data-filename="${L.image.filename}" data-fallback-step="0" onerror="imgError(this)">
+     <div class="compare-meta"><b>Status:</b> ${L.status}<br><b>Confidence:</b> ${L.confidence}</div>
+     <select class="compare-select" onchange="setCompareSide('left',this.value)">${options}</select>
+    </div>
+    <div class="compare-pane">
+     <h3>${R.title}</h3>
+     <div class="ptype">${R.record} · ${shortLabel[rightId]}</div>
+     <img src="${R.image.base}.${R.image.filename.split('.').pop()}" alt="${R.image.alt}"
+      data-base="${R.image.base}" data-filename="${R.image.filename}" data-fallback-step="0" onerror="imgError(this)">
+     <div class="compare-meta"><b>Status:</b> ${R.status}<br><b>Confidence:</b> ${R.confidence}</div>
+     <select class="compare-select" onchange="setCompareSide('right',this.value)">${options}</select>
+    </div>
+   </div>
+   <div class="exitbar" style="margin-top:18px">
+    <button class="exitbtn" onclick="exitCompare()">← BACK TO RECORD</button>
+   </div>`;
+  doc.querySelectorAll(".compare-select").forEach(sel=>{
+   sel.value = sel.closest(".compare-pane")===doc.querySelectorAll(".compare-pane")[0] ? leftId : rightId;
+  });
+  doc.classList.remove("swap");
+ });
+ document.getElementById("path").textContent=`/archive/cross-reference/${leftId}-vs-${rightId}`;
+}
+
+/* ============================================================
+   NAVIGATION ENTRY POINTS
+   (single entry point per interactive element — no duplicated logic)
+   ============================================================ */
+function openRecord(id, tabName){
+ const rec=records[id];if(!rec)return;
+ appState.mode="record";
+ appState.currentRecord=id;
+ appState.previousNormalRecord=id;
+ renderRecord(rec);
+ updateSidebarHighlight(id);
+ updateEvidenceHighlight(id);
+ updateRightPanelForRecord(rec);
+ setActiveTab(tabName||"ARCHIVE");
+ resetZoom();
+ scrollViewerTop();
+}
+
+function openArchiveTab(){
+ openRecord(appState.previousNormalRecord,"ARCHIVE");
+}
+
+function openEntities(){
+ appState.mode="entities";
+ renderEntities();
+ updateSidebarHighlight(null);
+ updateEvidenceHighlight(null);
+ updateRightPanelForMode("ENTITY OVERVIEW","REFERENCE","#9bb0a3","ARCHIVE INDEX","N/A",
+  "Select any entity to open its linked archival record where available.");
+ setActiveTab("ENTITIES");
+ resetZoom();
+ scrollViewerTop();
+}
+
+function openCross(){
+ appState.mode="cross";
+ renderCompare(appState.crossLeft, appState.crossRight);
+ updateSidebarHighlight(null);
+ updateEvidenceHighlight(null);
+ updateRightPanelForMode("CROSS-REFERENCE COMPARISON","IN REVIEW","#c98b8b","ARCHIVAL CROSS-REFERENCE","INVESTIGATIVE LEAD",
+  "Structural overlap between historical and modern entity records under active comparison.");
+ setActiveTab("CROSS-REFERENCES");
+ resetZoom();
+ scrollViewerTop();
+}
+
+function setCompareSide(side,id){
+ if(side==="left")appState.crossLeft=id;else appState.crossRight=id;
+ renderCompare(appState.crossLeft, appState.crossRight);
+}
+
+function exitCompare(){
+ openRecord(appState.previousNormalRecord,"ARCHIVE");
+}
+
+/* ============================================================
+   INITIAL STATE (deterministic — same on every load/take)
+   ============================================================ */
+openRecord("letter","ARCHIVE");
+</script>
+</body>
+</html>
