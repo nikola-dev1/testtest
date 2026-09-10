@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIGMA · Aktivan trag</title>
+<style>
+
+  :root{
+    --bg:            #050a12;
+    --bg-panel:      #0b131f;
+    --bg-panel-2:    #0e1826;
+    --bg-elevated:   #101c2c;
+    --border:        rgba(110,160,210,0.14);
+    --border-soft:   rgba(110,160,210,0.08);
+    --blue:          #2f8fe0;
+    --blue-bright:   #5fb6ff;
+    --blue-dim:      #16324f;
+    --red:           #ff4444;
+    --green:         #38d18c;
+    --amber:         #e0a030;
+    --text:          #e7eefb;
+    --text-dim:      #8ea1bd;
+    --text-faint:    #4c5c76;
+    --mono: "SFMono-Regular","Consolas","Menlo","Courier New",monospace;
+    --sans: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    --ease: cubic-bezier(.22,1,.36,1);
+  }
+
+  *,*::before,*::after{ margin:0; padding:0; box-sizing:border-box; }
+  html,body{ height:100%; }
+  body{
+    background: radial-gradient(ellipse at 20% 0%, #0a1420 0%, var(--bg) 55%);
+    color: var(--text);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x:hidden;
+    min-height:100vh;
+    position:relative;
+  }
+
+  .watermark{
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    display:flex; align-items:center; justify-content:center; overflow:hidden;
+  }
+  .watermark span{
+    display:block; font-size:13vw; font-weight:800; letter-spacing:6px;
+    color:rgba(120,160,210,0.02); transform: rotate(-22deg); white-space:nowrap;
+  }
+
+  /* ============ TOPBAR ============ */
+  .topbar{
+    position:relative; z-index:5;
+    display:flex; align-items:center; gap:28px;
+    padding:14px 28px;
+    background: linear-gradient(180deg, rgba(14,22,36,0.95), rgba(10,16,27,0.95));
+    border-bottom:1px solid var(--border);
+    backdrop-filter: blur(6px);
+  }
+  .brand{ display:flex; align-items:center; gap:12px; flex-shrink:0; }
+  .brand svg{ width:34px; height:34px; flex-shrink:0; }
+  .brand-text{ line-height:1.15; }
+  .brand-name{ display:block; font-size:14px; font-weight:800; letter-spacing:3px; color:var(--text); }
+  .brand-sub{ display:block; font-size:9.5px; letter-spacing:1.6px; color:var(--text-dim); text-transform:uppercase; margin-top:2px; }
+
+  .toptabs{ display:flex; gap:4px; margin-left:8px; }
+  .tab{
+    font-size:11.5px; letter-spacing:1.4px; text-transform:uppercase;
+    color:var(--text-dim); padding:8px 14px; border-radius:6px; cursor:default;
+    border:1px solid transparent;
+  }
+  .tab.active{ color:var(--blue-bright); background:rgba(47,143,224,0.1); border-color:rgba(47,143,224,0.25); }
+
+  .topsearch{
+    margin-left:auto; display:flex; align-items:center; gap:10px;
+    background:var(--bg-panel-2); border:1px solid var(--border); border-radius:8px;
+    padding:9px 14px; width:100%; max-width:340px;
+  }
+  .topsearch input{ flex:1; background:none; border:none; outline:none; color:var(--text); font-size:13px; font-family:var(--sans); }
+  .topsearch input::placeholder{ color:var(--text-faint); }
+  .topsearch svg{ width:15px; height:15px; stroke:var(--text-dim); fill:none; stroke-width:2; flex-shrink:0; }
+
+  @media (max-width:900px){
+    .toptabs{ display:none; }
+    .brand-sub{ display:none; }
+    .topsearch{ max-width:180px; }
+  }
+
+  /* ============ LAYOUT ============ */
+  .app{ position:relative; z-index:2; max-width:1400px; margin:0 auto; padding:22px; }
+
+  #view-map{ display:grid; grid-template-columns: 1fr 300px; gap:20px; align-items:start; }
+  @media (max-width:900px){ #view-map{ grid-template-columns:1fr; } }
+
+  /* ============ MAP CARD ============ */
+  .map-card{ background:var(--bg-panel); border:1px solid var(--border); border-radius:14px; overflow:hidden; position:relative; }
+  .map-toolbar{ display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid var(--border-soft); }
+  .map-toolbar h1{ font-size:13px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-dim); font-weight:700; }
+  .map-toolbar .live{ display:flex; align-items:center; gap:7px; font-family:var(--mono); font-size:11px; color:var(--green); letter-spacing:1px; }
+
+  .map-wrap{ position:relative; aspect-ratio: 16 / 11; background:#061019; }
+  @media (max-width:560px){ .map-wrap{ aspect-ratio: 4/5; } }
+
+  .map-svg{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+
+  .district{
+    position:absolute; transform:translate(-50%,-50%);
+    font-size:10.5px; letter-spacing:2px; color:rgba(160,190,220,0.55);
+    text-transform:uppercase; font-weight:600; pointer-events:none; white-space:nowrap;
+  }
+  .district.main{ font-size:15px; letter-spacing:5px; color:rgba(180,205,230,0.35); font-weight:800; }
+
+  /* breadcrumb trag iza tačke */
+  .trail-dot{
+    position:absolute; width:6px; height:6px; border-radius:50%;
+    background:var(--blue-bright); transform:translate(-50%,-50%);
+    pointer-events:none;
+  }
+
+  .marker{
+    position:absolute; transform:translate(-50%,-50%);
+    display:flex; flex-direction:column; align-items:center;
+    pointer-events:none; will-change: left, top;
+  }
+  .marker-core{ position:relative; width:14px; height:14px; }
+  .marker-dot{
+    position:absolute; inset:0; margin:auto; width:10px; height:10px; border-radius:50%;
+    background:var(--blue-bright); box-shadow:0 0 10px 3px rgba(95,182,255,0.75);
+  }
+  .marker-ring{ position:absolute; inset:-14px; border-radius:50%; border:1px solid rgba(95,182,255,0.55); animation: markerPulse 2.2s ease-out infinite; }
+  .marker-ring.r2{ animation-delay:.7s; }
+  @keyframes markerPulse{ 0%{ transform:scale(0.4); opacity:.9; } 100%{ transform:scale(2.6); opacity:0; } }
+
+  .marker-tag{
+    margin-top:10px; background:rgba(8,14,22,0.92); border:1px solid rgba(95,182,255,0.35);
+    color:#dcefff; font-family:var(--mono); font-size:10.5px; letter-spacing:.5px;
+    padding:5px 10px; border-radius:5px; white-space:nowrap;
+  }
+
+  .map-footer{
+    display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    padding:10px 18px; border-top:1px solid var(--border-soft);
+    font-family:var(--mono); font-size:10.5px; color:var(--text-faint); letter-spacing:.5px;
+  }
+
+  /* ============ SIDE PANEL ============ */
+  .side-panel{ display:flex; flex-direction:column; gap:14px; }
+  .panel-box{ background:var(--bg-panel); border:1px solid var(--border); border-radius:14px; padding:18px; }
+  .panel-title{ font-size:11.5px; letter-spacing:1.6px; text-transform:uppercase; color:var(--text-dim); font-weight:700; margin-bottom:14px; }
+
+  .warn-box{
+    display:flex; gap:10px; align-items:flex-start;
+    background:rgba(224,160,48,0.08); border:1px solid rgba(224,160,48,0.3);
+    border-radius:10px; padding:12px 14px; margin-bottom:16px;
+  }
+  .warn-box svg{ width:16px; height:16px; stroke:var(--amber); flex-shrink:0; margin-top:2px; }
+  .warn-box p{ font-size:11.5px; color:#e6c68a; line-height:1.55; }
+
+  .device-card{ background:var(--bg-panel-2); border:1px solid var(--border); border-radius:10px; padding:14px 16px; }
+  .device-card-head{ display:flex; align-items:center; gap:8px; font-family:var(--mono); font-size:12.5px; font-weight:700; color:var(--text); margin-bottom:10px; }
+  .dot-live{ width:7px; height:7px; border-radius:50%; background:var(--blue-bright); flex-shrink:0; box-shadow:0 0 6px 1px rgba(95,182,255,0.7); animation: blink 1.6s ease-in-out infinite; }
+  @keyframes blink{ 0%,100%{ opacity:1;} 50%{ opacity:.35;} }
+
+  .device-row{ display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--text-dim); padding:5px 0; border-bottom:1px dotted var(--border-soft); }
+  .device-row:last-of-type{ border-bottom:none; }
+  .device-row b{ color:var(--text); font-family:var(--mono); font-weight:600; font-size:12px; }
+  .device-row b.coords{ color:var(--blue-bright); }
+
+  .no-warrant{ color:var(--amber) !important; }
+
+  .legend-row{ display:flex; align-items:center; gap:9px; font-size:11.5px; color:var(--text-dim); }
+
+  /* ============ FOOTER ============ */
+  .app-footer{ position:relative; z-index:2; text-align:center; padding:26px 20px 34px; font-family:var(--mono); font-size:10.5px; letter-spacing:.6px; color:var(--text-faint); }
+
+</style>
+</head>
+<body>
+
+  <div class="watermark"><span>POVERLJIVO&nbsp;&nbsp;&nbsp;POVERLJIVO&nbsp;&nbsp;&nbsp;POVERLJIVO</span></div>
+
+  <!-- ================= TOPBAR ================= -->
+  <header class="topbar">
+    <div class="brand">
+      <svg viewBox="0 0 48 48" fill="none">
+        <path d="M24 3 L43 10 V22 C43 34 35 42 24 45 C13 42 5 34 5 22 V10 Z" stroke="#5fb6ff" stroke-width="2" fill="rgba(47,143,224,0.08)"/>
+        <circle cx="24" cy="21" r="6.5" stroke="#5fb6ff" stroke-width="2" fill="none"/>
+        <path d="M24 27.5 V33" stroke="#5fb6ff" stroke-width="2" stroke-linecap="round"/>
+        <path d="M14 39 Q24 34 34 39" stroke="#5fb6ff" stroke-width="1.4" fill="none" opacity=".6"/>
+      </svg>
+      <div class="brand-text">
+        <span class="brand-name">SIGMA</span>
+        <span class="brand-sub">Jedinica za digitalnu forenziku</span>
+      </div>
+    </div>
+    <nav class="toptabs">
+      <span class="tab active">Mapa</span>
+      <span class="tab">Pretraga</span>
+      <span class="tab">Arhiva</span>
+    </nav>
+    <div class="topsearch">
+      <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></svg>
+      <input type="text" placeholder="Pretraga adrese, IMEI, broja..." />
+    </div>
+  </header>
+
+  <!-- ================= APP ================= -->
+  <main class="app">
+
+    <section id="view-map">
+
+      <div class="map-card">
+        <div class="map-toolbar">
+          <h1>Aktivno praćenje &middot; Beograd</h1>
+          <div class="live"><span class="dot-live" style="background:var(--green);box-shadow:0 0 6px 1px rgba(56,209,140,.7);"></span> UŽIVO</div>
+        </div>
+
+        <div class="map-wrap" id="mapWrap">
+          <svg class="map-svg" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <radialGradient id="bgGlow" cx="72%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#0d1c2e"/>
+                <stop offset="100%" stop-color="#050a12"/>
+              </radialGradient>
+              <pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse">
+                <circle cx="1.2" cy="1.2" r="1.2" fill="rgba(120,160,210,0.10)"/>
+              </pattern>
+              <linearGradient id="riverGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#123049"/>
+                <stop offset="100%" stop-color="#0a1e30"/>
+              </linearGradient>
+            </defs>
+
+            <rect width="1000" height="700" fill="url(#bgGlow)"/>
+            <rect width="1000" height="700" fill="url(#dots)"/>
+
+            <path d="M0,300 C160,290 250,340 350,335 C430,330 470,300 560,315 C610,323 640,350 700,345"
+                  fill="none" stroke="url(#riverGrad)" stroke-width="34" stroke-linecap="round" opacity="0.9"/>
+            <path d="M560,315 C660,300 720,240 780,180 C830,130 880,90 1000,60"
+                  fill="none" stroke="url(#riverGrad)" stroke-width="30" stroke-linecap="round" opacity="0.9"/>
+
+            <g stroke="rgba(120,160,210,0.16)" stroke-width="1.6" fill="none">
+              <path d="M500,20 L500,680"/>
+              <path d="M20,350 L980,350"/>
+              <path d="M120,80 L780,620"/>
+              <path d="M860,90 L260,610"/>
+              <circle cx="500" cy="350" r="150" stroke-dasharray="3 7"/>
+              <circle cx="500" cy="350" r="280" stroke-dasharray="3 7"/>
+            </g>
+          </svg>
+
+          <div class="district" style="left:9%;top:15%">Zemun</div>
+          <div class="district" style="left:27%;top:38%">Novi Beograd</div>
+          <div class="district main" style="left:47%;top:47%">Beograd</div>
+          <div class="district" style="left:53%;top:28%">Stari Grad</div>
+          <div class="district" style="left:58%;top:52%">Vračar</div>
+          <div class="district" style="left:44%;top:66%">Savski Venac</div>
+          <div class="district" style="left:22%;top:70%">Čukarica</div>
+          <div class="district" style="left:31%;top:87%">Rakovica</div>
+          <div class="district" style="left:75%;top:63%">Zvezdara</div>
+          <div class="district" style="left:66%;top:34%">Palilula</div>
+
+          <!-- trag (breadcrumb) i pokretni marker se generišu u JS -->
+          <div id="trailLayer"></div>
+          <div class="marker" id="liveMarker">
+            <span class="marker-core">
+              <span class="marker-ring"></span>
+              <span class="marker-ring r2"></span>
+              <span class="marker-dot"></span>
+            </span>
+            <span class="marker-tag">UREĐAJ #7 &middot; U POKRETU</span>
+          </div>
+        </div>
+
+        <div class="map-footer">
+          <span>PROJEKCIJA: WGS84</span>
+          <span>ZUM: 11 &middot; SEKTOR 07-B</span>
+          <span>OSVEŽAVANJE: 2s</span>
+        </div>
+      </div>
+
+      <aside class="side-panel">
+
+        <div class="panel-box">
+          <div class="warn-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9L1.8 18a1.7 1.7 0 0 0 1.5 2.5h17.4a1.7 1.7 0 0 0 1.5-2.5L13.7 3.9a1.7 1.7 0 0 0-3.4 0z"/></svg>
+            <p>Praćenje pokrenuto bez naloga. Pristup se evidentira i podleže proveri.</p>
+          </div>
+
+          <div class="panel-title">Aktivan trag</div>
+          <div class="device-card">
+            <div class="device-card-head"><span class="dot-live"></span> UREĐAJ #7</div>
+            <div class="device-row"><span>Status</span><b class="no-warrant">U POKRETU</b></div>
+            <div class="device-row"><span>Nalog</span><b class="no-warrant">NIJE IZDAT</b></div>
+            <div class="device-row"><span>Koordinate</span><b class="coords" id="liveCoords">44.804&deg; N, 20.462&deg; E</b></div>
+            <div class="device-row"><span>Brzina</span><b id="liveSpeed">18 km/h</b></div>
+            <div class="device-row"><span>Postavljeno</span><b>01:07</b></div>
+          </div>
+        </div>
+
+        <div class="panel-box">
+          <div class="panel-title">Legenda</div>
+          <div class="legend-row" style="margin-bottom:8px;"><span style="width:7px;height:7px;border-radius:50%;background:var(--blue-bright);display:inline-block;box-shadow:0 0 6px 1px rgba(95,182,255,.7);"></span> Uređaj u pokretu</div>
+          <div class="legend-row"><span style="width:6px;height:6px;border-radius:50%;background:var(--blue-bright);display:inline-block;opacity:.4;"></span> Prethodna pozicija</div>
+        </div>
+
+      </aside>
+
+    </section>
+
+  </main>
+
+  <footer class="app-footer">SIGMA &middot; Sistem za geolokaciju mobilnih uređaja &middot; v2.4.1 &middot; Neovlašćen pristup i korišćenje je krivično delo</footer>
+
+<script>
+  document.querySelector('.topsearch input')?.addEventListener('keydown', e => {
+    if(e.key === 'Enter') e.preventDefault();
+  });
+
+  // --- putanja (u % koordinatama mape) kojom se pomera "praćeni" uređaj ---
+  const path = [
+    {x:71, y:58}, {x:66, y:52}, {x:60, y:47}, {x:53, y:44},
+    {x:47, y:47}, {x:41, y:52}, {x:36, y:58}, {x:41, y:64},
+    {x:49, y:66}, {x:58, y:63}, {x:65, y:60}, {x:71, y:58}
+  ];
+
+  const marker     = document.getElementById('liveMarker');
+  const trailLayer = document.getElementById('trailLayer');
+  const coordsEl   = document.getElementById('liveCoords');
+  const speedEl    = document.getElementById('liveSpeed');
+
+  let segment = 0;
+  let t = 0;
+  const stepsPerSegment = 900; // veći broj = sporije, glatkije kretanje
+  const trailDots = [];
+  const maxTrail = 22;
+
+  function lerp(a,b,f){ return a + (b-a) * f; }
+
+  function fakeCoordsFor(x,y){
+    // groba mapa % pozicije mape na "koordinate" - samo za vizuelni efekat
+    const lat = (44.72 + (100-y) * 0.0016).toFixed(4);
+    const lon = (20.35 + x * 0.0018).toFixed(4);
+    return lat + '\u00B0 N, ' + lon + '\u00B0 E';
+  }
+
+  function dropTrail(x,y){
+    const dot = document.createElement('span');
+    dot.className = 'trail-dot';
+    dot.style.left = x + '%';
+    dot.style.top  = y + '%';
+    dot.style.opacity = '0.55';
+    trailLayer.appendChild(dot);
+    trailDots.push(dot);
+    if(trailDots.length > maxTrail){
+      const old = trailDots.shift();
+      old.remove();
+    }
+    // fade postojeceg traga
+    trailDots.forEach((d,i) => {
+      d.style.opacity = (0.08 + (i/trailDots.length) * 0.45).toFixed(2);
+    });
+  }
+
+  function tick(){
+    const a = path[segment];
+    const b = path[(segment+1) % path.length];
+    const f = t / stepsPerSegment;
+    const x = lerp(a.x, b.x, f);
+    const y = lerp(a.y, b.y, f);
+
+    marker.style.left = x + '%';
+    marker.style.top  = y + '%';
+
+    if(t % 18 === 0){
+      dropTrail(x,y);
+      coordsEl.textContent = fakeCoordsFor(x,y);
+      speedEl.textContent  = (12 + Math.round(Math.random()*14)) + ' km/h';
+    }
+
+    t++;
+    if(t >= stepsPerSegment){
+      t = 0;
+      segment = (segment + 1) % path.length;
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // inicijalna pozicija pre starta animacije
+  marker.style.left = path[0].x + '%';
+  marker.style.top  = path[0].y + '%';
+  requestAnimationFrame(tick);
+</script>
+
+</body>
+</html>
