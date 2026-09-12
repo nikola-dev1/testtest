@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NTB Arhiva · Predmet MR-26/041</title>
+<style>
+
+  :root{
+    --bg:            #d6d7d9;
+    --panel:         #ffffff;
+    --panel-2:       #eceded;
+    --panel-3:       #e0e1e3;
+    --border:        #aeb0b3;
+    --border-strong: #8c8e91;
+    --blue:          #1c4b8c;
+    --blue-dark:     #123564;
+    --text:          #1b1c1e;
+    --text-dim:      #55575a;
+    --text-faint:    #8a8c90;
+    --sans: Tahoma, Verdana, Arial, sans-serif;
+    --mono: "Courier New", Courier, monospace;
+  }
+
+  *,*::before,*::after{ margin:0; padding:0; box-sizing:border-box; }
+  html,body{ height:100%; }
+  body{
+    background: var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    min-height:100vh;
+    position:relative;
+    overflow-x:hidden;
+  }
+
+  .watermark{ position:fixed; inset:0; pointer-events:none; z-index:0; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .watermark span{ font-size:12vw; font-weight:800; letter-spacing:6px; color:rgba(20,20,20,0.035); transform:rotate(-22deg); white-space:nowrap; }
+
+  /* ============ TOPBAR ============ */
+  .topbar{
+    position:relative; z-index:5;
+    display:flex; align-items:center; gap:24px;
+    padding:12px 24px;
+    background:var(--panel);
+    border-bottom:2px solid var(--blue-dark);
+  }
+  .brand-text{ line-height:1.2; cursor:pointer; }
+  .brand-name{ display:block; font-size:14px; font-weight:700; letter-spacing:1px; color:var(--blue-dark); }
+  .brand-sub{ display:block; font-size:9.5px; letter-spacing:.6px; color:var(--text-dim); text-transform:uppercase; margin-top:2px; }
+
+  .toptabs{ display:flex; gap:2px; margin-left:16px; }
+  .tab{
+    font-size:11.5px; letter-spacing:.6px; text-transform:uppercase; color:var(--text-dim);
+    padding:8px 14px; border-bottom:2px solid transparent;
+  }
+  .tab.active{ color:var(--blue-dark); border-bottom-color:var(--blue-dark); font-weight:700; }
+
+  @media (max-width:820px){ .toptabs{ display:none; } .brand-sub{ display:none; } }
+
+  /* ============ BREADCRUMB / CASE HEADER ============ */
+  .app{ position:relative; z-index:2; max-width:1180px; margin:0 auto; padding:26px 24px 60px; }
+
+  .crumbline{
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+    font-size:12px; color:var(--text-faint); margin-bottom:16px;
+  }
+  .crumbline a{ color:var(--blue); text-decoration:none; }
+  .crumbline a:hover{ text-decoration:underline; }
+
+  .case-head{
+    display:flex; align-items:flex-start; justify-content:space-between; gap:16px;
+    flex-wrap:wrap;
+    margin-bottom:22px;
+  }
+  .case-head h1{ font-size:22px; font-weight:700; letter-spacing:.1px; color:var(--text); }
+  .case-head .case-ref{ font-family:var(--mono); font-size:12px; color:var(--text-dim); margin-top:6px; }
+
+  .badge-classified{
+    display:inline-flex; align-items:center; gap:6px;
+    background:var(--blue-dark); border:1px solid var(--blue-dark);
+    color:#ffffff; font-family:var(--mono); font-size:11px; letter-spacing:1.2px;
+    padding:7px 14px; border-radius:2px; text-transform:uppercase; height:fit-content;
+  }
+  .badge-classified .dot{ width:6px; height:6px; border-radius:50%; background:#ffffff; }
+
+  /* ============ TOP GRID: FOTO + INFO ============ */
+  .top-grid{
+    display:grid; grid-template-columns: 230px 1fr; gap:22px;
+    background:var(--panel); border:1px solid var(--border); border-radius:2px;
+    padding:22px; margin-bottom:20px;
+  }
+  @media (max-width:700px){ .top-grid{ grid-template-columns:1fr; } }
+
+  .id-photo-box{ display:flex; flex-direction:column; gap:8px; }
+  .id-photo{
+    width:100%; aspect-ratio:3/4; object-fit:cover; border-radius:2px;
+    border:1px solid var(--border-strong); background:var(--panel-2); display:block;
+  }
+  .id-photo-cap{ font-size:10px; color:var(--text-faint); text-align:center; letter-spacing:.2px; }
+
+  .info-table{ display:flex; flex-direction:column; }
+  .info-row{
+    display:grid; grid-template-columns:170px 1fr; gap:14px;
+    padding:10px 0; border-bottom:1px solid var(--panel-3);
+  }
+  .info-row:last-child{ border-bottom:none; }
+  .info-row .k{ font-size:11px; letter-spacing:.8px; text-transform:uppercase; color:var(--text-dim); padding-top:1px; }
+  .info-row .v{ font-size:13.5px; color:var(--text); font-weight:500; }
+  .info-row .v.status{ color:var(--blue-dark); font-weight:700; }
+  .info-row .v.high{ color:var(--blue-dark); font-weight:700; text-decoration:underline; }
+  @media (max-width:520px){ .info-row{ grid-template-columns:1fr; gap:2px; } }
+
+  /* ============ SECTION CARD ============ */
+  .section-card{
+    background:var(--panel); border:1px solid var(--border); border-radius:2px;
+    padding:22px; margin-bottom:20px;
+  }
+  .section-title{
+    font-family:var(--mono); font-size:11px; letter-spacing:1.4px; text-transform:uppercase;
+    color:var(--blue-dark); margin-bottom:14px; display:flex; align-items:center; gap:10px;
+    border-bottom:1px solid var(--panel-3); padding-bottom:10px;
+  }
+
+  .reason-text{ font-size:14px; line-height:1.8; color:var(--text); max-width:780px; }
+
+  .interest-list{ list-style:none; display:flex; flex-direction:column; gap:9px; margin-top:2px; }
+  .interest-list li{
+    display:flex; align-items:flex-start; gap:9px;
+    font-size:13.5px; color:var(--text); line-height:1.6;
+  }
+  .interest-list li::before{
+    content:""; width:5px; height:5px; background:var(--blue-dark);
+    margin-top:8px; flex-shrink:0;
+  }
+
+  /* ============ PRILOZI / GALLERY ============ */
+  .gallery{ display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; }
+  @media (max-width:640px){ .gallery{ grid-template-columns:1fr; } }
+
+  .thumb-card{
+    background:var(--panel-2); border:1px solid var(--border); border-radius:2px;
+    overflow:hidden; cursor:pointer;
+  }
+  .thumb-card:hover{ border-color:var(--blue-dark); }
+  .thumb-card img{
+    width:100%; aspect-ratio:3/4; object-fit:cover; display:block; background:var(--panel-3);
+  }
+  .thumb-card .tc-cap{
+    padding:11px 13px; font-size:11.5px; color:var(--text-dim); line-height:1.5;
+  }
+  .thumb-card .tc-cap b{ color:var(--text); display:block; margin-bottom:2px; font-size:12px; }
+
+  /* ============ LIGHTBOX ============ */
+  .lightbox{
+    position:fixed; inset:0; z-index:50;
+    background:rgba(10,10,11,0.88);
+    display:none; align-items:center; justify-content:center;
+    padding:40px 20px;
+  }
+  .lightbox.open{ display:flex; }
+  .lightbox-inner{
+    max-width:720px; width:100%;
+    display:flex; flex-direction:column; align-items:center; gap:14px;
+  }
+  .lightbox img{
+    max-width:100%; max-height:70vh; object-fit:contain;
+    border-radius:2px; border:1px solid var(--border-strong);
+    background:#fff;
+  }
+  .lightbox-cap{ color:#d7d8da; font-size:12.5px; text-align:center; }
+  .lightbox-controls{ display:flex; align-items:center; gap:16px; }
+  .lb-btn{
+    background:var(--panel); border:1px solid var(--border-strong); color:var(--text);
+    width:34px; height:34px; border-radius:2px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .lb-btn:hover{ background:var(--panel-2); }
+  .lb-btn svg{ width:15px; height:15px; stroke:var(--text); fill:none; stroke-width:2.4; }
+  .lb-close{
+    position:absolute; top:20px; right:24px;
+    background:var(--panel); border:1px solid var(--border-strong); color:var(--text);
+    width:32px; height:32px; border-radius:2px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .lb-close:hover{ background:var(--panel-2); }
+
+  .footer-note{
+    position:relative; z-index:2; text-align:center; padding:10px 20px 40px;
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.4px; color:var(--text-faint);
+  }
+
+</style>
+</head>
+<body>
+
+  <div class="watermark"><span>OGRANIČENO&nbsp;&nbsp;&nbsp;OGRANIČENO&nbsp;&nbsp;&nbsp;OGRANIČENO</span></div>
+
+  <header class="topbar">
+    <div class="brand-text" onclick="window.location.href='arhiva-pretraga.html'">
+      <span class="brand-name">NTB &middot; ARHIVA</span>
+      <span class="brand-sub">Služba za zaštitu naučno-tehničke baštine</span>
+    </div>
+    <nav class="toptabs">
+      <span class="tab">Pretraga</span>
+      <span class="tab active">Predmeti</span>
+      <span class="tab">Arhiva</span>
+      <span class="tab">Izveštaji</span>
+    </nav>
+  </header>
+
+  <main class="app">
+
+    <div class="crumbline">
+      <a href="arhiva-pretraga.html">Pretraga</a>
+      <span>/</span>
+      <span>Rezultati</span>
+      <span>/</span>
+      <span style="color:var(--text-dim)">MR-26/041</span>
+    </div>
+
+    <div class="case-head">
+      <div>
+        <h1>Dosije lica pod operativnom obradom</h1>
+        <div class="case-ref">Predmet: MR-26/041 &middot; Odeljenje za analitiku i dokumentaciju</div>
+      </div>
+      <div class="badge-classified"><span class="dot"></span> Oznaka: Ograničeno</div>
+    </div>
+
+    <div class="top-grid">
+      <div class="id-photo-box">
+        <img class="id-photo" src="images/mara-rastovac-slika.png" alt="Fotografija lica">
+        <div class="id-photo-cap">Fotografija iz dokumentacije</div>
+      </div>
+
+      <div class="info-table">
+        <div class="info-row"><div class="k">Ime i prezime</div><div class="v">dr Mara Rastovac</div></div>
+        <div class="info-row"><div class="k">Zanimanje</div><div class="v">stručnjak za energetiku</div></div>
+        <div class="info-row"><div class="k">Oblast rada</div><div class="v">bežični prenos energije</div></div>
+        <div class="info-row"><div class="k">Državljanstvo</div><div class="v">Republika Srbija</div></div>
+        <div class="info-row"><div class="k">Prebivalište</div><div class="v">Beograd</div></div>
+        <div class="info-row"><div class="k">Status</div><div class="v status">predmet analitičke obrade</div></div>
+        <div class="info-row"><div class="k">Stepen procene</div><div class="v high">povišen interes</div></div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">Razlog praćenja i formiranja predmeta</div>
+      <p class="reason-text">
+        Dr Mara Rastovac je predmet interesovanja zbog rada na Teslinoj zaostavštini i istraživanja
+        bežičnog prenosa energije. Provere obuhvataju njene kontakte sa stranim organizacijama i
+        okolnosti nestanka poverljive dokumentacije povezane sa Teslinim tehničkim nacrtima i
+        beleškama. Cilj obrade je da se utvrdi da li su navedene aktivnosti međusobno povezane i da
+        li je deo dokumentacije iznet iz propisanog arhivskog toka.
+      </p>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">Predmet interesovanja</div>
+      <ul class="interest-list">
+        <li>Teslina zaostavština i pristup pratećoj arhivskoj građi</li>
+        <li>Istraživanje bežičnog prenosa energije</li>
+        <li>Kontakti sa stranim naučnim, fondacijskim i privatnim organizacijama</li>
+        <li>Nestanak poverljive dokumentacije, nacrta i radnih beležaka</li>
+      </ul>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">Prilozi</div>
+      <div class="gallery">
+
+        <div class="thumb-card" onclick="openLightbox(0)">
+          <img src="images/dosije.png" alt="Arhivski primerak predmeta">
+          <div class="tc-cap"><b>Arhivski primerak predmeta</b>Interna dokumentacija</div>
+        </div>
+
+        <div class="thumb-card" onclick="openLightbox(1)">
+          <img src="images/stipendija.jpeg" alt="Odluka o dodeli istraživačke stipendije">
+          <div class="tc-cap"><b>Odluka o dodeli stipendije</b>Elektrotehnički fakultet</div>
+        </div>
+
+        <div class="thumb-card" onclick="openLightbox(2)">
+          <img src="images/izvod-iz-osnivackog-akta.jpeg" alt="Izvod iz osnivačkog akta">
+          <div class="tc-cap"><b>Izvod iz osnivačkog akta</b>Auron Energetika d.o.o.</div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <div class="footer-note">NTB Arhiva &middot; Interni sistem &middot; Neovlašćen pristup i korišćenje je krivično delo</div>
+
+  <!-- ============ LIGHTBOX ============ -->
+  <div class="lightbox" id="lightbox">
+    <button class="lb-close" onclick="closeLightbox()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="lightbox-inner">
+      <img id="lightboxImg" src="" alt="">
+      <div class="lightbox-cap" id="lightboxCap"></div>
+      <div class="lightbox-controls">
+        <button class="lb-btn" onclick="stepLightbox(-1)" aria-label="Prethodna">
+          <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="lb-btn" onclick="stepLightbox(1)" aria-label="Sledeća">
+          <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const attachments = [
+    { src: "images/dosije.png", cap: "Arhivski primerak predmeta" },
+    { src: "images/stipendija.jpeg",         cap: "Odluka o dodeli istraživačke stipendije — Elektrotehnički fakultet" },
+    { src: "images/izvod-iz-osnivackog-akta.jpeg",       cap: "Izvod iz osnivačkog akta — Auron Energetika d.o.o." },
+  ];
+
+  let currentIdx = 0;
+  const lightbox    = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxCap = document.getElementById('lightboxCap');
+
+  function openLightbox(i){
+    currentIdx = i;
+    renderLightbox();
+    lightbox.classList.add('open');
+  }
+  function renderLightbox(){
+    const item = attachments[currentIdx];
+    lightboxImg.src = item.src;
+    lightboxImg.alt = item.cap;
+    lightboxCap.textContent = item.cap;
+  }
+  function closeLightbox(){ lightbox.classList.remove('open'); }
+  function stepLightbox(dir){
+    currentIdx = (currentIdx + dir + attachments.length) % attachments.length;
+    renderLightbox();
+  }
+
+  lightbox.addEventListener('click', e => { if(e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', e => {
+    if(!lightbox.classList.contains('open')) return;
+    if(e.key === 'Escape') closeLightbox();
+    if(e.key === 'ArrowLeft') stepLightbox(-1);
+    if(e.key === 'ArrowRight') stepLightbox(1);
+  });
+</script>
+
+</body>
+</html>
