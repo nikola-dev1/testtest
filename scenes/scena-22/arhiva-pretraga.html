@@ -92,25 +92,6 @@
   .search-btn:hover{ background:var(--blue-dark); }
   .search-btn:active{ box-shadow: inset -1px -1px 0 rgba(255,255,255,0.15), inset 1px 1px 0 rgba(0,0,0,0.25); }
 
-  .autocom-box{
-    display:none; position:absolute; top:calc(100% + 4px); left:0; right:0;
-    background:var(--panel); border:1px solid var(--border-strong); border-radius:2px;
-    box-shadow:0 4px 12px rgba(0,0,0,0.18);
-    overflow:hidden; text-align:left; z-index:6;
-  }
-  .autocom-box.visible{ display:block; }
-  .autocom-box li{
-    list-style:none; padding:11px 16px; cursor:pointer;
-    display:flex; align-items:center; justify-content:space-between;
-    border-bottom:1px solid var(--panel-3);
-  }
-  .autocom-box li:last-child{ border-bottom:none; }
-  .autocom-box li:hover, .autocom-box li.active{ background:var(--blue-select); }
-  .autocom-box li:hover .ac-name, .autocom-box li.active .ac-name{ color:#ffffff; }
-  .autocom-box li:hover .ac-meta, .autocom-box li.active .ac-meta{ color:#dbe6f7; }
-  .autocom-box .ac-name{ font-size:13.5px; color:var(--text); font-weight:600; }
-  .autocom-box .ac-meta{ font-family:var(--mono); font-size:11px; color:var(--text-dim); }
-
   /* ============ STATS ROW ============ */
   .stats{
     position:relative; z-index:2;
@@ -160,7 +141,6 @@
         <input type="text" id="searchInput" autocomplete="off" spellcheck="false" placeholder="Ime, prezime ili JMBG...">
         <button class="search-btn" id="searchBtn">Pretraži</button>
       </div>
-      <ul class="autocom-box" id="autocomBox"></ul>
     </div>
   </section>
 
@@ -178,9 +158,7 @@
     { name: "Mara Rastovac", jmbg: "0904988710036", route: "mara-dosije.html" },
   ];
 
-  const input  = document.getElementById('searchInput');
-  const box    = document.getElementById('autocomBox');
-  let activeIdx = -1;
+  const input = document.getElementById('searchInput');
 
   function norm(s){
     return s.toLowerCase()
@@ -188,69 +166,21 @@
       .replaceAll('ž','z').replaceAll('đ','dj').trim();
   }
 
-  function matchRecords(q){
+  function matchRecord(q){
     const nq = norm(q);
-    if(!nq) return [];
-    return records.filter(r => norm(r.name).includes(nq) || r.jmbg.includes(nq));
+    if(!nq) return null;
+    return records.find(r => norm(r.name).includes(nq) || r.jmbg.includes(nq)) || null;
   }
-
-  function renderSuggestions(val){
-    const matches = matchRecords(val);
-    if(!matches.length){ hideBox(); return; }
-
-    box.innerHTML = matches.map((r,i) =>
-      `<li data-idx="${i}"><span class="ac-name">${r.name}</span><span class="ac-meta">${r.jmbg}</span></li>`
-    ).join('');
-
-    box.querySelectorAll('li').forEach((li,i) => {
-      li.addEventListener('mousedown', e => {
-        e.preventDefault();
-        input.value = matches[i].name;
-        hideBox();
-        goTo(matches[i].route);
-      });
-    });
-
-    activeIdx = -1;
-    box.classList.add('visible');
-  }
-
-  function hideBox(){ box.classList.remove('visible'); box.innerHTML = ''; activeIdx = -1; }
-
-  function navigateList(dir){
-    const items = box.querySelectorAll('li');
-    if(!items.length) return;
-    items[activeIdx]?.classList.remove('active');
-    activeIdx = (activeIdx + dir + items.length + 1) % (items.length + 1) - 0;
-    if(activeIdx >= items.length) activeIdx = -1;
-    if(activeIdx >= 0) items[activeIdx].classList.add('active');
-  }
-
-  function goTo(route){ window.location.href = route; }
 
   function doSearch(){
-    const matches = matchRecords(input.value);
-    if(matches.length){ goTo(matches[0].route); }
+    const match = matchRecord(input.value);
+    if(match){ window.location.href = match.route; }
   }
 
-  input.addEventListener('input', function(){ renderSuggestions(this.value); });
-
   input.addEventListener('keydown', function(e){
-    if(e.key === 'ArrowDown'){ e.preventDefault(); navigateList(1); return; }
-    if(e.key === 'ArrowUp'){ e.preventDefault(); navigateList(-1); return; }
-    if(e.key === 'Escape'){ hideBox(); return; }
-    if(e.key === 'Enter'){
-      const items = box.querySelectorAll('li');
-      if(activeIdx >= 0 && items.length){
-        items[activeIdx].dispatchEvent(new Event('mousedown'));
-      } else {
-        hideBox();
-        doSearch();
-      }
-    }
+    if(e.key === 'Enter'){ doSearch(); }
   });
 
-  input.addEventListener('blur', () => setTimeout(hideBox, 150));
   document.getElementById('searchBtn').addEventListener('click', doSearch);
 </script>
 
